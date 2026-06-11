@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.MediatRMessagingAbstractions\SystemTools.MediatRMessagingAbstractions.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
+    <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
+    <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
+  </ItemGroup>
+
+</Project>

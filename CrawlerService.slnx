@@ -1,0 +1,41 @@
+<Solution>
+  <Folder Name="/SystemTools/">
+    <Project Path="../SystemTools/SystemTools.ApiContracts/SystemTools.ApiContracts.csproj" />
+    <Project Path="../SystemTools/SystemTools.ApiKeysManagement/SystemTools.ApiKeysManagement.csproj" />
+    <Project Path="../SystemTools/SystemTools.BackgroundTasks/SystemTools.BackgroundTasks.csproj" />
+    <Project Path="../SystemTools/SystemTools.DatabaseToolsShared/SystemTools.DatabaseToolsShared.csproj" />
+    <Project Path="../SystemTools/SystemTools.DependencyInjection/SystemTools.DependencyInjection.csproj" />
+    <Project Path="../SystemTools/SystemTools.MediatRMessagingAbstractions/SystemTools.MediatRMessagingAbstractions.csproj" />
+    <Project Path="../SystemTools/SystemTools.ReCounterAbstraction/SystemTools.ReCounterAbstraction.csproj" />
+    <Project Path="../SystemTools/SystemTools.ReCounterContracts/SystemTools.ReCounterContracts.csproj" />
+    <Project Path="../SystemTools/SystemTools.SystemToolsShared/SystemTools.SystemToolsShared.csproj" />
+    <Project Path="../SystemTools/SystemTools.TestApiContracts/SystemTools.TestApiContracts.csproj" />
+  </Folder>
+  <Folder Name="/CrawlerServiceShared/">
+    <Project Path="../CrawlerServiceShared/CrawlerServiceShared.Contracts/CrawlerServiceShared.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="CrawlerService/CrawlerService.csproj" />
+  <Project Path="CrawlerServiceApi/CrawlerServiceApi.csproj" />
+  <Project Path="CrawlerServiceReCounters/CrawlerServiceReCounters.csproj" />
+  <Folder Name="/WebSystemTools/">
+    <Project Path="../WebSystemTools/WebSystemTools.ApiExceptionHandler/WebSystemTools.ApiExceptionHandler.csproj" />
+    <Project Path="../WebSystemTools/WebSystemTools.ApiKeyIdentity/WebSystemTools.ApiKeyIdentity.csproj" />
+    <Project Path="../WebSystemTools/WebSystemTools.MediatorTools/WebSystemTools.MediatorTools.csproj" />
+    <Project Path="../WebSystemTools/WebSystemTools.SerilogLogger/WebSystemTools.SerilogLogger.csproj" />
+    <Project Path="../WebSystemTools/WebSystemTools.SignalRRecounterMessages/WebSystemTools.SignalRRecounterMessages.csproj" />
+    <Project Path="../WebSystemTools/WebSystemTools.SwaggerTools/WebSystemTools.SwaggerTools.csproj" />
+    <Project Path="../WebSystemTools/WebSystemTools.TestToolsApi/WebSystemTools.TestToolsApi.csproj" />
+    <Project Path="../WebSystemTools/WebSystemTools.TestToolsData/WebSystemTools.TestToolsData.csproj" />
+    <Project Path="../WebSystemTools/WebSystemTools.WindowsServiceTools/WebSystemTools.WindowsServiceTools.csproj" />
+  </Folder>
+    <Project Path="CrawlerDb/CrawlerDb.csproj" />
+    <Project Path="CrawlerDbMigration/CrawlerDbMigration.csproj" />
+    <Project Path="DoCrawler/DoCrawler.csproj" />
+    <Project Path="LibCrawlerRepositories/LibCrawlerRepositories.csproj" />
+    <Project Path="RobotsTxt/RobotsTxt.csproj" />
+</Solution>

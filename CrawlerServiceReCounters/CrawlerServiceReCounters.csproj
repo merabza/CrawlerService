@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
+    <ProjectReference Include="..\CrawlerDb\CrawlerDb.csproj" />
+    <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
+    <ProjectReference Include="..\LibCrawlerRepositories\LibCrawlerRepositories.csproj" />
+  </ItemGroup>
+
+</Project>
