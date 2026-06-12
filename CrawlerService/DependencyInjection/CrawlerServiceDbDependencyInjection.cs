@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Net.Http;
 using CrawlerDb;
 using DoCrawler;
@@ -21,27 +20,14 @@ public static class CrawlerServiceDbDependencyInjection
         debugLogger?.Information("{MethodName} Started", nameof(AddCrawlerServiceDb));
 
         // 1. Crawl parsing parameters (alphabet, punctuations, ...) are loaded from the crawler parameters file.
-        string? crawlerParametersFileName = configuration["CrawlerParametersFileName"];
-        if (string.IsNullOrWhiteSpace(crawlerParametersFileName))
+        var parametersLoader = CrawlerParameters.Create(configuration);
+        if (parametersLoader != null)
         {
-            Console.WriteLine("CrawlerParametersFileName is not specified in configuration");
+            services.AddSingleton(parametersLoader);
         }
         else
         {
-            if (!Path.IsPathRooted(crawlerParametersFileName))
-            {
-                crawlerParametersFileName = Path.Combine(AppContext.BaseDirectory, crawlerParametersFileName);
-            }
-
-            var parametersLoader = CrawlerParameters.Create(configuration);
-            if (parametersLoader != null)
-            {
-                services.AddSingleton(parametersLoader);
-            }
-            else
-            {
-                Console.WriteLine($"Cannot load CrawlerParameters from {crawlerParametersFileName}");
-            }
+            Console.WriteLine("Cannot load CrawlerParameters");
         }
 
         // 2. Database connection comes from configuration (Data:CrawlerServiceDatabase).
