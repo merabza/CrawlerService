@@ -1,10 +1,10 @@
 ﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDb.Models;
+using CrawlerDbModels;
+using CrawlerRepoInterfaces;
 using DoCrawler.Domain;
 using DoCrawler.Models;
-using LibCrawlerRepositories;
 using Microsoft.Extensions.Logging;
 
 namespace DoCrawler.ToolActions;

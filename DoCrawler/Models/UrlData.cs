@@ -1,4 +1,4 @@
-﻿using CrawlerDb.Models;
+﻿using CrawlerDbModels;
 
 namespace DoCrawler.Models;
 

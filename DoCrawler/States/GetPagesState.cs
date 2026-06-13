@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using CrawlerDb.Models;
+using CrawlerDbModels;
+using CrawlerRepoInterfaces;
 using DoCrawler.Models;
-using LibCrawlerRepositories;
 using Microsoft.Extensions.Logging;
 
 namespace DoCrawler.States;

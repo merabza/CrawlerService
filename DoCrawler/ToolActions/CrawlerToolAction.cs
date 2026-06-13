@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
-using CrawlerDb.Configurations;
-using CrawlerDb.Models;
+using CrawlerDbModels;
+using CrawlerDbPersistence.Configurations;
+using CrawlerRepoInterfaces;
 using DoCrawler.Domain;
 using DoCrawler.Models;
-using LibCrawlerRepositories;
 using Microsoft.Extensions.Logging;
 using RobotsTxt;
 using SystemTools.BackgroundTasks;

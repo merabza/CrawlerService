@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using CrawlerDb.Models;
+using CrawlerDbModels;
 using RobotsTxt;
 
 namespace DoCrawler;

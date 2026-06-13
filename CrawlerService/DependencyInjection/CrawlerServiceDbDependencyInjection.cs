@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
-using CrawlerDb;
+using CrawlerDbPersistence;
+using CrawlerRepoInterfaces;
 using DoCrawler;
 using DoCrawler.Models;
 using LibCrawlerRepositories;

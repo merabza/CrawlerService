@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using CrawlerDb;
-using CrawlerDb.Models;
+using CrawlerDbModels;
+using CrawlerDbPersistence;
+using CrawlerRepoInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
