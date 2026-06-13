@@ -37,7 +37,6 @@
     <Project Path="../WebSystemTools/WebSystemTools.TestToolsData/WebSystemTools.TestToolsData.csproj" />
     <Project Path="../WebSystemTools/WebSystemTools.WindowsServiceTools/WebSystemTools.WindowsServiceTools.csproj" />
   </Folder>
-  <Project Path="CrawlerDb/CrawlerDb.csproj" />
   <Project Path="CrawlerDbMigration/CrawlerDbMigration.csproj" />
   <Project Path="CrawlerService/CrawlerService.csproj" />
   <Project Path="CrawlerServiceApi/CrawlerServiceApi.csproj" />

@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\SystemTools\SystemTools.BackgroundTasks\SystemTools.BackgroundTasks.csproj" />
-    <ProjectReference Include="..\CrawlerDb\CrawlerDb.csproj" />
     <ProjectReference Include="..\LibCrawlerRepositories\LibCrawlerRepositories.csproj" />
     <ProjectReference Include="..\RobotsTxt\RobotsTxt.csproj" />
   </ItemGroup>

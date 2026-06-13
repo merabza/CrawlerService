@@ -17,7 +17,6 @@
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.SwaggerTools\WebSystemTools.SwaggerTools.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.WindowsServiceTools\WebSystemTools.WindowsServiceTools.csproj" />
     <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
-    <ProjectReference Include="..\CrawlerDb\CrawlerDb.csproj" />
     <ProjectReference Include="..\CrawlerServiceApi\CrawlerServiceApi.csproj" />
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
