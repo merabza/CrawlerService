@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceShared.Contracts.Errors;
-using DoCrawler.Domain;
 using DoCrawler.Models;
 using DoCrawler.ToolActions;
 using Microsoft.Extensions.Configuration;

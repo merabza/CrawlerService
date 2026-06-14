@@ -4,7 +4,6 @@ using System.Net.Http;
 using CrawlerDbModels;
 using CrawlerDbPersistence.Configurations;
 using CrawlerRepoInterfaces;
-using DoCrawler.Domain;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
 using RobotsTxt;

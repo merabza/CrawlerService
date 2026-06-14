@@ -1,7 +1,6 @@
-﻿using DoCrawler.Models;
-using SystemTools.SystemToolsShared;
+﻿using SystemTools.SystemToolsShared;
 
-namespace DoCrawler.Domain;
+namespace DoCrawler.Models;
 
 public sealed class ParseOnePageParameters
 {

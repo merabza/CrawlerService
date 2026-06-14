@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CrawlerDbModels;
 using CrawlerRepoInterfaces;
-using DoCrawler.Domain;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
 

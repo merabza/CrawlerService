@@ -5,7 +5,6 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using CrawlerDbModels;
-using DoCrawler.Domain;
 using DoCrawler.Models;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;

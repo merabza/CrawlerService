@@ -14,7 +14,6 @@ using System.Xml.Linq;
 using CrawlerDbModels;
 using CrawlerDbPersistence.Configurations;
 using CrawlerRepoInterfaces;
-using DoCrawler.Domain;
 using DoCrawler.Models;
 using DoCrawler.States;
 using Microsoft.Extensions.Logging;
