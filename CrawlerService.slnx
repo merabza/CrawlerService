@@ -42,6 +42,7 @@
   <Project Path="CrawlerServiceApi/CrawlerServiceApi.csproj" />
   <Project Path="CrawlerServiceReCounters/CrawlerServiceReCounters.csproj" />
   <Project Path="DoCrawler/DoCrawler.csproj" />
+  <Project Path="FakeHost/FakeHost.csproj" />
   <Project Path="LibCrawlerRepositories/LibCrawlerRepositories.csproj" />
   <Project Path="RobotsTxt/RobotsTxt.csproj" />
 </Solution>
