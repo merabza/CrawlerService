@@ -48,7 +48,9 @@ internal sealed class TestOnePageCommandHandler : ICommandHandler<TestOnePageCom
             TaskName = request.TaskName,
             Url = request.Url,
             StartPoints = request.StartPoints,
-            UserName = request.UserName
+            UserName = request.UserName,
+            DeleteContentForReanalyze = request.DeleteContentForReanalyze,
+            NewPartsCreateLimit = request.NewPartsCreateLimit
         };
         _backgroundTaskQueue.QueueBackgroundWorkItem(token => Run(crawlRequest, token));
         return Task.FromResult<OneOf<bool, Error[]>>(true);

@@ -18,16 +18,18 @@ public /*open*/ class CrawlerToolAction : ToolAction
 
     private readonly IHttpClientFactory _httpClientFactory;
 
-    //private readonly bool _noPrompt;
     private readonly ParseOnePageParameters _parseOnePageParameters;
     private readonly string? _taskName;
     protected readonly ILogger CrLogger;
     protected readonly CrawlerParameters Par;
     protected readonly TaskModel? Task;
 
+    //ციკლში ახალი ნაწილების შესაქმნელად დარჩენილი ლიმიტი: 0 = აღარ შეიქმნას, -1 = შეუზღუდავად
+    private int _newPartsCreateLimit;
+
     protected CrawlerToolAction(ILogger logger, CrawlerParameters par, string taskName, TaskModel? task,
         ICrawlerRepository crawlerRepository, IHttpClientFactory httpClientFactory,
-        ParseOnePageParameters parseOnePageParameters) : base(logger, taskName, null, null, true)
+        ParseOnePageParameters parseOnePageParameters, int newPartsCreateLimit) : base(logger, taskName, null, null, true)
     {
         CrLogger = logger;
         Par = par;
@@ -36,7 +38,7 @@ public /*open*/ class CrawlerToolAction : ToolAction
         _httpClientFactory = httpClientFactory;
         _parseOnePageParameters = parseOnePageParameters;
         _crawlerRepository = crawlerRepository;
-        //_noPrompt = noPrompt;
+        _newPartsCreateLimit = newPartsCreateLimit;
     }
 
     protected BatchPartRunner? CreateBatchPartRunner(BatchPart? batchPart, Batch batch)
@@ -46,12 +48,11 @@ public /*open*/ class CrawlerToolAction : ToolAction
         bool createNewPart = false;
         if (batchPart == null)
         {
-            //todo ეს ნაწილი გადასატანია კონსოლის მხარეს
-            //createNewPart = IsCreateNewPartAllowed(batch);
-            //if (!createNewPart)
-            //{
-            return null;
-            //}
+            createNewPart = IsCreateNewPartAllowed(batch);
+            if (!createNewPart)
+            {
+                return null;
+            }
         }
 
         if (createNewPart)
@@ -125,11 +126,27 @@ public /*open*/ class CrawlerToolAction : ToolAction
         return batch;
     }
 
-    //private bool IsCreateNewPartAllowed(Batch batch)
-    //{
-    //    return batch.AutoCreateNextPart || _noPrompt ||
-    //           Inputer.InputBool($"Opened part not found for bath {batch.BatchName}, Create new?", true, false);
-    //}
+    private bool IsCreateNewPartAllowed(Batch batch)
+    {
+        //გადაწყვეტილება მიღებულია CrawlerConsole-ის მხარეს და გადმოცემულია NewPartsCreateLimit-ით
+        if (batch.AutoCreateNextPart)
+        {
+            return true;
+        }
+
+        if (_newPartsCreateLimit < 0)
+        {
+            return true;
+        }
+
+        if (_newPartsCreateLimit > 0)
+        {
+            _newPartsCreateLimit--;
+            return true;
+        }
+
+        return false;
+    }
 
     protected (Batch?, BatchPart?) PrepareBatchPart(Batch? startBatch = null)
     {

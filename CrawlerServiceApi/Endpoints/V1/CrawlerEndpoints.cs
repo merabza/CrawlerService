@@ -1,13 +1,16 @@
 using System.Threading;
 using System.Threading.Tasks;
+using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts;
 using CrawlerServiceShared.Contracts.V1.Routes;
+using DoCrawler;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using OneOf;
 using Serilog;
 using SystemTools.ReCounterAbstraction;
@@ -33,6 +36,8 @@ public static class CrawlerEndpoints
         group.MapPost(CrawlerServiceApiRoutes.CrawlerRoute.RunTask, RunTask);
         // POST api/v1/crawler/testonepage
         group.MapPost(CrawlerServiceApiRoutes.CrawlerRoute.TestOnePage, TestOnePage);
+        // GET api/v1/crawler/precheck
+        group.MapGet(CrawlerServiceApiRoutes.CrawlerRoute.PreCheck, PreCheck);
 
         debugLogger?.Information("{MethodName} Finished", nameof(MapCrawlerEndpoints));
 
@@ -42,13 +47,13 @@ public static class CrawlerEndpoints
     // POST api/v1/crawler/runbatch
     private static async Task<IResult> RunBatch(HttpRequest httpRequest, IMediator mediator,
         IProgressDataManager progressDataManager, [FromQuery] string? batchName,
-        CancellationToken cancellationToken = default)
+        [FromQuery] int newPartsCreateLimit = 0, CancellationToken cancellationToken = default)
     {
         string? userName = httpRequest.HttpContext.User.Identity?.Name;
         await progressDataManager.SetProgressData(userName, ReCounterConstants.ProcName, $"{nameof(RunBatch)} started",
             true, cancellationToken);
 
-        var command = new RunBatchCommand(batchName, userName);
+        var command = new RunBatchCommand(batchName, userName, newPartsCreateLimit);
         OneOf<bool, Error[]> result = await mediator.Send(command, cancellationToken);
 
         return result.Match(Results.Ok, Results.BadRequest);
@@ -63,7 +68,7 @@ public static class CrawlerEndpoints
         await progressDataManager.SetProgressData(userName, ReCounterConstants.ProcName, $"{nameof(RunTask)} started",
             true, cancellationToken);
 
-        var command = new RunTaskCommand(request.TaskName, request.StartPoints, userName);
+        var command = new RunTaskCommand(request.TaskName, request.StartPoints, userName, request.NewPartsCreateLimit);
         OneOf<bool, Error[]> result = await mediator.Send(command, cancellationToken);
 
         return result.Match(Results.Ok, Results.BadRequest);
@@ -78,9 +83,39 @@ public static class CrawlerEndpoints
         await progressDataManager.SetProgressData(userName, ReCounterConstants.ProcName,
             $"{nameof(TestOnePage)} started", true, cancellationToken);
 
-        var command = new TestOnePageCommand(request.TaskName, request.Url, request.StartPoints, userName);
+        var command = new TestOnePageCommand(request.TaskName, request.Url, request.StartPoints, userName,
+            request.DeleteContentForReanalyze, request.NewPartsCreateLimit);
         OneOf<bool, Error[]> result = await mediator.Send(command, cancellationToken);
 
         return result.Match(Results.Ok, Results.BadRequest);
+    }
+
+    // GET api/v1/crawler/precheck
+    private static Task<IResult> PreCheck(IServiceScopeFactory scopeFactory, [FromQuery] string name,
+        [FromQuery] string? url)
+    {
+        // ReSharper disable once using
+        using IServiceScope scope = scopeFactory.CreateScope();
+        var crawlerRepository = scope.ServiceProvider.GetRequiredService<ICrawlerRepository>();
+
+        var result = new CrawlerPreCheckResult();
+
+        var batch = crawlerRepository.GetBatchByName(name);
+        if (batch is null)
+        {
+            return Task.FromResult(Results.Ok(result));
+        }
+
+        result.AutoCreateNextPart = batch.AutoCreateNextPart;
+
+        var openPart = crawlerRepository.GetOpenedBatchPart(batch.BatchId);
+        result.HasOpenPart = openPart is not null;
+
+        if (openPart is not null && !string.IsNullOrWhiteSpace(url))
+        {
+            result.PageAlreadyAnalyzed = UrlNameHelper.IsPageAlreadyAnalyzed(crawlerRepository, openPart.BpId, url);
+        }
+
+        return Task.FromResult(Results.Ok(result));
     }
 }

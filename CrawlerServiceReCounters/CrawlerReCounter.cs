@@ -80,7 +80,7 @@ public sealed class CrawlerReCounter : ReCounter
 
         // ReSharper disable once using
         var toolAction = new CrawlerRunnerToolAction(_logger, _httpClientFactory, crawlerRepository, _crawlerParameters,
-            parseOnePageParameters, batchName, batch);
+            parseOnePageParameters, batchName, batch, _request.NewPartsCreateLimit);
         await toolAction.Run(cancellationToken);
     }
 
@@ -90,7 +90,7 @@ public sealed class CrawlerReCounter : ReCounter
         var task = new TaskModel { StartPoints = _request.StartPoints };
         // ReSharper disable once using
         var toolAction = new CrawlerRunnerToolAction(_logger, _httpClientFactory, crawlerRepository, _crawlerParameters,
-            parseOnePageParameters, _request.TaskName ?? string.Empty, task, null);
+            parseOnePageParameters, _request.TaskName ?? string.Empty, task, null, _request.NewPartsCreateLimit);
         await toolAction.Run(cancellationToken);
     }
 
@@ -101,7 +101,7 @@ public sealed class CrawlerReCounter : ReCounter
         // ReSharper disable once using
         var toolAction = new OnePageCrawlerRunnerToolAction(_logger, _httpClientFactory, crawlerRepository,
             _crawlerParameters, parseOnePageParameters, _request.TaskName ?? "TestOnePage", task,
-            _request.Url ?? string.Empty);
+            _request.Url ?? string.Empty, _request.NewPartsCreateLimit, _request.DeleteContentForReanalyze);
         await toolAction.Run(cancellationToken);
     }
 }

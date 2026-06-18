@@ -46,7 +46,8 @@ internal sealed class RunTaskCommandHandler : ICommandHandler<RunTaskCommand, bo
             Kind = ECrawlKind.Task,
             TaskName = request.TaskName,
             StartPoints = request.StartPoints,
-            UserName = request.UserName
+            UserName = request.UserName,
+            NewPartsCreateLimit = request.NewPartsCreateLimit
         };
         _backgroundTaskQueue.QueueBackgroundWorkItem(token => Run(crawlRequest, token));
         return Task.FromResult<OneOf<bool, Error[]>>(true);

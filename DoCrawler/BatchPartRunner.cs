@@ -736,11 +736,7 @@ public sealed class BatchPartRunner
         ExtensionModel extensionModel = TrySaveExtension(crawlerRepository, extension);
         SchemeModel schemeModel = TrySaveScheme(crawlerRepository, scheme);
 
-        string? checkedUrName = HttpUtility.UrlDecode(myUri.AbsoluteUri).Truncate(UrlModelConfiguration.TermTextLength);
-        if (string.IsNullOrWhiteSpace(checkedUrName))
-        {
-            checkedUrName = "InvalidUri";
-        }
+        string checkedUrName = UrlNameHelper.ToCheckedUrlName(urName);
 
         int urlHashCode = checkedUrName.GetDeterministicHashCode();
 
@@ -928,7 +924,8 @@ public sealed class BatchPartRunner
         }
     }
 
-    public async ValueTask<bool> DoOnePage(string strUrName, CancellationToken token = default)
+    public async ValueTask<bool> DoOnePage(string strUrName, bool deleteContentForReanalyze,
+        CancellationToken token = default)
     {
         _procData = new ProcData();
 
@@ -944,13 +941,11 @@ public sealed class BatchPartRunner
             : null;
         if (contentAnalysis != null)
         {
-            //todo ეს ნაწილი გადასატანია კონსოლის მხარეს
-            //if (!_noPrompt && !Inputer.InputBool(
-            //        $"The page {strUrName} already analyzed. Do you wont to delete Content data for reanalyze", true,
-            //        false))
-            //{
-            //    return false;
-            //}
+            //გადაწყვეტილება (წაშლა/არ წაშლა) მიღებულია CrawlerConsole-ის მხარეს და გადმოცემულია პარამეტრად
+            if (!deleteContentForReanalyze)
+            {
+                return false;
+            }
 
             _crawlerRepository.DeleteContentAnalysis(contentAnalysis);
         }

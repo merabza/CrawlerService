@@ -10,4 +10,6 @@ public sealed class CrawlRequest
     public string? TaskName { get; init; }
     public string? Url { get; init; }
     public List<string> StartPoints { get; init; } = [];
+    public bool DeleteContentForReanalyze { get; init; }
+    public int NewPartsCreateLimit { get; init; }
 }

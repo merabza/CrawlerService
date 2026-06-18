@@ -271,6 +271,17 @@ public sealed class CrawlerRepository : ICrawlerRepository
         return _context.ContentsAnalysis.SingleOrDefault(s => s.BatchPartId == batchPartBpId && s.UrlId == urlId);
     }
 
+    public ContentAnalysis? GetContentAnalysisByUrlName(int batchPartBpId, string checkedUrlName)
+    {
+        UrlModel? url = _context.Urls.FirstOrDefault(u => u.UrlName == checkedUrlName);
+        if (url is null)
+        {
+            return null;
+        }
+
+        return _context.ContentsAnalysis.SingleOrDefault(s => s.BatchPartId == batchPartBpId && s.UrlId == url.UrlId);
+    }
+
     public void DeleteContentAnalysis(ContentAnalysis contentAnalysis)
     {
         _changesCount++;
