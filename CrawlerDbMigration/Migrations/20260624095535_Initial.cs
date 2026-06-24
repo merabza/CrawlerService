@@ -69,6 +69,20 @@ namespace CrawlerDbMigration.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tasks",
+                columns: table => new
+                {
+                    TaskId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TaskName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ApiName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tasks", x => x.TaskId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TermTypes",
                 columns: table => new
                 {
@@ -170,6 +184,26 @@ namespace CrawlerDbMigration.Migrations
                         column: x => x.SchemeId,
                         principalTable: "Schemes",
                         principalColumn: "SchId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TaskStartPoints",
+                columns: table => new
+                {
+                    TspId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TaskId = table.Column<int>(type: "int", nullable: false),
+                    StartPoint = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskStartPoints", x => x.TspId);
+                    table.ForeignKey(
+                        name: "FK_TaskStartPoints_Tasks_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "Tasks",
+                        principalColumn: "TaskId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -395,6 +429,17 @@ namespace CrawlerDbMigration.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tasks_TaskName",
+                table: "Tasks",
+                column: "TaskName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskStartPoints_TaskId",
+                table: "TaskStartPoints",
+                column: "TaskId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Terms_TermText",
                 table: "Terms",
                 column: "TermText");
@@ -476,10 +521,16 @@ namespace CrawlerDbMigration.Migrations
                 name: "Robots");
 
             migrationBuilder.DropTable(
+                name: "TaskStartPoints");
+
+            migrationBuilder.DropTable(
                 name: "TermsByUrls");
 
             migrationBuilder.DropTable(
                 name: "UrlGraphNodes");
+
+            migrationBuilder.DropTable(
+                name: "Tasks");
 
             migrationBuilder.DropTable(
                 name: "Terms");

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using RobotsTxt;
 using SystemTools.BackgroundTasks;
 using SystemTools.SystemToolsShared;
+using TaskModel = DoCrawler.Models.TaskModel;
 
 namespace DoCrawler.ToolActions;
 

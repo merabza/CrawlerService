@@ -68,7 +68,7 @@ public static class CrawlerEndpoints
         await progressDataManager.SetProgressData(userName, ReCounterConstants.ProcName, $"{nameof(RunTask)} started",
             true, cancellationToken);
 
-        var command = new RunTaskCommand(request.TaskName, request.StartPoints, userName, request.NewPartsCreateLimit);
+        var command = new RunTaskCommand(request.TaskName, userName, request.NewPartsCreateLimit);
         OneOf<bool, Error[]> result = await mediator.Send(command, cancellationToken);
 
         return result.Match(Results.Ok, Results.BadRequest);
@@ -83,7 +83,7 @@ public static class CrawlerEndpoints
         await progressDataManager.SetProgressData(userName, ReCounterConstants.ProcName,
             $"{nameof(TestOnePage)} started", true, cancellationToken);
 
-        var command = new TestOnePageCommand(request.TaskName, request.Url, request.StartPoints, userName,
+        var command = new TestOnePageCommand(request.TaskName, request.Url, userName,
             request.DeleteContentForReanalyze, request.NewPartsCreateLimit);
         OneOf<bool, Error[]> result = await mediator.Send(command, cancellationToken);
 

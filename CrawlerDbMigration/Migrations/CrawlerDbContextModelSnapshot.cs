@@ -250,6 +250,54 @@ namespace CrawlerDbMigration.Migrations
                     b.ToTable("Schemes", (string)null);
                 });
 
+            modelBuilder.Entity("CrawlerDbModels.TaskModel", b =>
+                {
+                    b.Property<int>("TaskId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TaskId"));
+
+                    b.Property<string>("ApiName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TaskName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("TaskId");
+
+                    b.HasIndex("TaskName")
+                        .IsUnique();
+
+                    b.ToTable("Tasks", (string)null);
+                });
+
+            modelBuilder.Entity("CrawlerDbModels.TaskStartPoint", b =>
+                {
+                    b.Property<int>("TspId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TspId"));
+
+                    b.Property<string>("StartPoint")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TspId");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("TaskStartPoints", (string)null);
+                });
+
             modelBuilder.Entity("CrawlerDbModels.Term", b =>
                 {
                     b.Property<int>("TrmId")
@@ -494,6 +542,17 @@ namespace CrawlerDbMigration.Migrations
                     b.Navigation("SchemeNavigation");
                 });
 
+            modelBuilder.Entity("CrawlerDbModels.TaskStartPoint", b =>
+                {
+                    b.HasOne("CrawlerDbModels.TaskModel", "TaskNavigation")
+                        .WithMany("StartPoints")
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TaskNavigation");
+                });
+
             modelBuilder.Entity("CrawlerDbModels.Term", b =>
                 {
                     b.HasOne("CrawlerDbModels.TermType", "TermTypeNavigation")
@@ -623,6 +682,11 @@ namespace CrawlerDbMigration.Migrations
                     b.Navigation("Robots");
 
                     b.Navigation("Urls");
+                });
+
+            modelBuilder.Entity("CrawlerDbModels.TaskModel", b =>
+                {
+                    b.Navigation("StartPoints");
                 });
 
             modelBuilder.Entity("CrawlerDbModels.Term", b =>

@@ -5,6 +5,7 @@ using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
+using TaskModel = DoCrawler.Models.TaskModel;
 
 namespace DoCrawler.ToolActions;
 

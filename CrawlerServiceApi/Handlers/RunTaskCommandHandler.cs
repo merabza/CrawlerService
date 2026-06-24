@@ -1,8 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceReCounters;
+using CrawlerServiceShared.Contracts.Errors;
 using DoCrawler.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,11 +45,27 @@ internal sealed class RunTaskCommandHandler : ICommandHandler<RunTaskCommand, bo
 
     public Task<OneOf<bool, Error[]>> Handle(RunTaskCommand request, CancellationToken cancellationToken)
     {
+        List<string> startPoints;
+        using (IServiceScope scope = _scopeFactory.CreateScope())
+        {
+            var crawlerRepository = scope.ServiceProvider.GetRequiredService<ICrawlerRepository>();
+            var task = request.TaskName is null ? null : crawlerRepository.GetTaskByName(request.TaskName);
+            if (task is null)
+            {
+                return Task.FromResult<OneOf<bool, Error[]>>(new[]
+                {
+                    CrawlerServiceErrors.TaskWithNameNotFound(request.TaskName)
+                });
+            }
+
+            startPoints = task.StartPoints.Select(sp => sp.StartPoint).ToList();
+        }
+
         var crawlRequest = new CrawlRequest
         {
             Kind = ECrawlKind.Task,
             TaskName = request.TaskName,
-            StartPoints = request.StartPoints,
+            StartPoints = startPoints,
             UserName = request.UserName,
             NewPartsCreateLimit = request.NewPartsCreateLimit
         };

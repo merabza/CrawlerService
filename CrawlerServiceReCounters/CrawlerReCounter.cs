@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SystemTools.ReCounterAbstraction;
+using TaskModel = DoCrawler.Models.TaskModel;
 
 namespace CrawlerServiceReCounters;
 
