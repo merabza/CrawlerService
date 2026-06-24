@@ -11,7 +11,7 @@ public sealed class CrawlerDbDesignTimeDbContextFactory : DesignTimeDbContextFac
 {
     // ReSharper disable once ConvertToPrimaryConstructor
     public CrawlerDbDesignTimeDbContextFactory() : base("CrawlerDbMigration", "ConnectionStringSeed",
-        @"D:\1WorkSecurity\Crawler\FakeHost.json")
+        @"D:\1WorkSecurity\CrawlerService\FakeHost.json")
     {
     }
 }
