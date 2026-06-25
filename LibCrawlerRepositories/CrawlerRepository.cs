@@ -617,7 +617,8 @@ public sealed class CrawlerRepository : ICrawlerRepository
         catch (Exception e)
         {
             _logger.LogError(e, $"Error occurred executing {nameof(GetTasksList)}.");
-            throw new Exception($"Error in {nameof(GetTasksList)}. See inner exception for details.", e);
+            //throw new Exception($"Error in {nameof(GetTasksList)}. See inner exception for details.", e);
+            return [];
         }
     }
 

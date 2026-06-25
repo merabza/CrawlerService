@@ -11,6 +11,10 @@ public static class CrawlerServiceApiDependencyInjection
         debugLogger?.Information("{MethodName} Started", nameof(UseCrawlerApiEndpoints));
 
         endpoints.MapCrawlerEndpoints(debugLogger);
+        endpoints.MapTaskEndpoints(debugLogger);
+        endpoints.MapBatchEndpoints(debugLogger);
+        endpoints.MapHostEndpoints(debugLogger);
+        endpoints.MapSchemeEndpoints(debugLogger);
 
         debugLogger?.Information("{MethodName} Finished", nameof(UseCrawlerApiEndpoints));
 
