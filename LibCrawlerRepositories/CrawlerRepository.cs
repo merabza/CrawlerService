@@ -33,16 +33,8 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public int SaveChanges()
     {
-        try
-        {
-            _changesCount = 0;
-            return _context.SaveChanges();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName}.", nameof(SaveChanges));
-            throw new Exception($"Error occurred executing {nameof(SaveChanges)}. See inner exception for details.", e);
-        }
+        _changesCount = 0;
+        return _context.SaveChanges();
     }
 
     public int SaveChangesWithTransaction()
@@ -174,69 +166,45 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public void RemoveHostNamesByBatch(Batch batch, string schemeName, string hostName)
     {
-        try
-        {
-            HostByBatch? hostByBatch = _context.HostsByBatches.SingleOrDefault(w =>
-                w.BatchId == batch.BatchId && w.SchemeNavigation.SchName == schemeName &&
-                w.HostNavigation.HostName == hostName);
+        HostByBatch? hostByBatch = _context.HostsByBatches.SingleOrDefault(w =>
+            w.BatchId == batch.BatchId && w.SchemeNavigation.SchName == schemeName &&
+            w.HostNavigation.HostName == hostName);
 
-            if (hostByBatch != null)
-            {
-                _context.HostsByBatches.Remove(hostByBatch);
-            }
-        }
-        catch (Exception e)
+        if (hostByBatch != null)
         {
-            _logger.LogError(e,
-                "Error occurred executing {MethodName} for batchId={BatchId}, schemeName={SchemeName}, hostName={HostName}.",
-                nameof(RemoveHostNamesByBatch), batch.BatchId, schemeName, hostName);
-            throw new Exception(
-                $"Error in {nameof(RemoveHostNamesByBatch)} for batchId={batch.BatchId}, schemeName={schemeName}, hostName={hostName}. See inner exception for details.",
-                e);
+            _context.HostsByBatches.Remove(hostByBatch);
         }
     }
 
     public void AddHostNamesByBatch(Batch batch, string schemeName, string hostName)
     {
-        try
+        HostByBatch? hostByBatch = _context.HostsByBatches.SingleOrDefault(w =>
+            w.BatchId == batch.BatchId && w.SchemeNavigation.SchName == schemeName &&
+            w.HostNavigation.HostName == hostName);
+
+        if (hostByBatch != null)
         {
-            HostByBatch? hostByBatch = _context.HostsByBatches.SingleOrDefault(w =>
-                w.BatchId == batch.BatchId && w.SchemeNavigation.SchName == schemeName &&
-                w.HostNavigation.HostName == hostName);
-
-            if (hostByBatch != null)
-            {
-                return;
-            }
-
-            SchemeModel? scheme = _context.Schemes.SingleOrDefault(s => s.SchName == schemeName);
-            if (scheme == null)
-            {
-                _changesCount++;
-                scheme = _context.Schemes.Add(new SchemeModel { SchName = schemeName }).Entity;
-            }
-
-            HostModel? host = _context.Hosts.SingleOrDefault(s => s.HostName == hostName);
-            if (host == null)
-            {
-                _changesCount++;
-                host = _context.Hosts.Add(new HostModel { HostName = hostName }).Entity;
-            }
-
-            _context.HostsByBatches.Add(new HostByBatch
-            {
-                BatchId = batch.BatchId, SchemeNavigation = scheme, HostNavigation = host
-            });
+            return;
         }
-        catch (Exception e)
+
+        SchemeModel? scheme = _context.Schemes.SingleOrDefault(s => s.SchName == schemeName);
+        if (scheme == null)
         {
-            _logger.LogError(e,
-                "Error occurred executing AddHostNamesByBatch for batchId={BatchId}, schemeName={SchemeName}, hostName={HostName}.",
-                batch.BatchId, schemeName, hostName);
-            throw new Exception(
-                $"Error in {nameof(AddHostNamesByBatch)} for batchId={batch.BatchId}, schemeName={schemeName}, hostName={hostName}. See inner exception for details.",
-                e);
+            _changesCount++;
+            scheme = _context.Schemes.Add(new SchemeModel { SchName = schemeName }).Entity;
         }
+
+        HostModel? host = _context.Hosts.SingleOrDefault(s => s.HostName == hostName);
+        if (host == null)
+        {
+            _changesCount++;
+            host = _context.Hosts.Add(new HostModel { HostName = hostName }).Entity;
+        }
+
+        _context.HostsByBatches.Add(new HostByBatch
+        {
+            BatchId = batch.BatchId, SchemeNavigation = scheme, HostNavigation = host
+        });
     }
 
     public BatchPart? GetOpenedBatchPart(int batchId)
@@ -274,12 +242,9 @@ public sealed class CrawlerRepository : ICrawlerRepository
     public ContentAnalysis? GetContentAnalysisByUrlName(int batchPartBpId, string checkedUrlName)
     {
         UrlModel? url = _context.Urls.FirstOrDefault(u => u.UrlName == checkedUrlName);
-        if (url is null)
-        {
-            return null;
-        }
-
-        return _context.ContentsAnalysis.SingleOrDefault(s => s.BatchPartId == batchPartBpId && s.UrlId == url.UrlId);
+        return url is null
+            ? null
+            : _context.ContentsAnalysis.SingleOrDefault(s => s.BatchPartId == batchPartBpId && s.UrlId == url.UrlId);
     }
 
     public void DeleteContentAnalysis(ContentAnalysis contentAnalysis)
@@ -290,17 +255,8 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public UrlModel UpdateUrlData(UrlModel urlForProcess)
     {
-        try
-        {
-            _changesCount++;
-            return _context.Update(urlForProcess).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error occurred executing {nameof(UpdateUrlData)}.");
-            throw new Exception($"Error occurred executing {nameof(UpdateUrlData)}. See inner exception for details.",
-                e);
-        }
+        _changesCount++;
+        return _context.Update(urlForProcess).Entity;
     }
 
     //public void ClearUrlAllows(int hostId)
@@ -407,7 +363,6 @@ public sealed class CrawlerRepository : ICrawlerRepository
     {
         _context.TermsByUrls.RemoveRange(_context.TermsByUrls.Where(s =>
             s.BatchPartId == batchPartId && s.UrlId == urlId && s.Position >= position));
-        //_context.SaveChanges();
     }
 
     public void EditTermByUrl(TermByUrl termByUrl, Term term)
@@ -453,76 +408,27 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public List<HostModel> GetHostsList()
     {
-        try
-        {
-            return _context.Hosts.ToList();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error occurred executing {nameof(GetHostsList)}.");
-            throw new Exception($"Error in {nameof(GetHostsList)}. See inner exception for details.", e);
-        }
+        return _context.Hosts.ToList();
     }
 
     public HostModel? GetHostByName(string hostName)
     {
-        try
-        {
-            return _context.Hosts.SingleOrDefault(w => w.HostName == hostName);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for hostName={HostName}.", nameof(GetHostByName),
-                hostName);
-            throw new Exception(
-                $"Error in {nameof(GetHostByName)} for hostName={hostName}. See inner exception for details.", e);
-        }
+        return _context.Hosts.SingleOrDefault(w => w.HostName == hostName);
     }
 
     public HostModel UpdateHost(HostModel host)
     {
-        try
-        {
-            return _context.Update(host).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for hostId={HostId}.", nameof(UpdateHost),
-                host.HostId);
-            throw new Exception(
-                $"Error in {nameof(UpdateHost)} for hostId={host.HostId}. See inner exception for details.", e);
-        }
+        return _context.Update(host).Entity;
     }
 
     public HostModel CreateHost(HostModel newHost)
     {
-        try
-        {
-            return _context.Hosts.Add(newHost).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for hostName={HostName}.", nameof(CreateHost),
-                newHost.HostName);
-            throw new Exception(
-                $"Error in {nameof(CreateHost)} for hostName={newHost.HostName}. See inner exception for details.", e);
-        }
+        return _context.Hosts.Add(newHost).Entity;
     }
 
     public HostModel DeleteHost(HostModel hostForDelete)
     {
-        try
-        {
-            return _context.Hosts.Remove(hostForDelete).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for hostId={HostId}.", nameof(DeleteHost),
-                hostForDelete.HostId);
-            throw new Exception(
-                $"Error in {nameof(DeleteHost)} for hostId={hostForDelete.HostId}. See inner exception for details.",
-                e);
-        }
+        return _context.Hosts.Remove(hostForDelete).Entity;
     }
 
     #endregion
@@ -531,77 +437,27 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public List<SchemeModel> GetSchemesList()
     {
-        try
-        {
-            return _context.Schemes.ToList();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error occurred executing {nameof(GetSchemesList)}.");
-            throw new Exception($"Error in {nameof(GetSchemesList)}. See inner exception for details.", e);
-        }
+        return _context.Schemes.ToList();
     }
 
     public SchemeModel? GetSchemeByName(string schemeName)
     {
-        try
-        {
-            return _context.Schemes.SingleOrDefault(w => w.SchName == schemeName);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for schemeName={SchemeName}.",
-                nameof(GetSchemeByName), schemeName);
-            throw new Exception(
-                $"Error in {nameof(GetSchemeByName)} for schemeName={schemeName}. See inner exception for details.", e);
-        }
+        return _context.Schemes.SingleOrDefault(w => w.SchName == schemeName);
     }
 
     public SchemeModel UpdateScheme(SchemeModel scheme)
     {
-        try
-        {
-            return _context.Update(scheme).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for schemeId={SchemeId}.", nameof(UpdateScheme),
-                scheme.SchId);
-            throw new Exception(
-                $"Error in {nameof(UpdateScheme)} for schemeId={scheme.SchId}. See inner exception for details.", e);
-        }
+        return _context.Update(scheme).Entity;
     }
 
     public SchemeModel CreateScheme(SchemeModel newScheme)
     {
-        try
-        {
-            return _context.Schemes.Add(newScheme).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for schemeName={SchemeName}.",
-                nameof(CreateScheme), newScheme.SchName);
-            throw new Exception(
-                $"Error in {nameof(CreateScheme)} for schemeName={newScheme.SchName}. See inner exception for details.",
-                e);
-        }
+        return _context.Schemes.Add(newScheme).Entity;
     }
 
     public SchemeModel DeleteScheme(SchemeModel schemeForDelete)
     {
-        try
-        {
-            return _context.Schemes.Remove(schemeForDelete).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for schemeId={SchemeId}.", nameof(DeleteScheme),
-                schemeForDelete.SchId);
-            throw new Exception(
-                $"Error in {nameof(DeleteScheme)} for schemeId={schemeForDelete.SchId}. See inner exception for details.",
-                e);
-        }
+        return _context.Schemes.Remove(schemeForDelete).Entity;
     }
 
     #endregion
@@ -610,138 +466,47 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public List<TaskModel> GetTasksList()
     {
-        try
-        {
-            return _context.Tasks.Include(i => i.StartPoints).ToList();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error occurred executing {nameof(GetTasksList)}.");
-            //throw new Exception($"Error in {nameof(GetTasksList)}. See inner exception for details.", e);
-            return [];
-        }
+        return _context.Tasks.Include(i => i.StartPoints).ToList();
     }
 
     public TaskModel? GetTaskByName(string taskName)
     {
-        try
-        {
-            return _context.Tasks.Include(i => i.StartPoints).SingleOrDefault(w => w.TaskName == taskName);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for taskName={TaskName}.",
-                nameof(GetTaskByName), taskName);
-            throw new Exception(
-                $"Error in {nameof(GetTaskByName)} for taskName={taskName}. See inner exception for details.", e);
-        }
+        return _context.Tasks.Include(i => i.StartPoints).SingleOrDefault(w => w.TaskName == taskName);
     }
 
     public TaskModel CreateTask(TaskModel newTask)
     {
-        try
-        {
-            return _context.Tasks.Add(newTask).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for taskName={TaskName}.", nameof(CreateTask),
-                newTask.TaskName);
-            throw new Exception(
-                $"Error in {nameof(CreateTask)} for taskName={newTask.TaskName}. See inner exception for details.", e);
-        }
+        return _context.Tasks.Add(newTask).Entity;
     }
 
     public TaskModel UpdateTask(TaskModel task)
     {
-        try
-        {
-            return _context.Update(task).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for taskId={TaskId}.", nameof(UpdateTask),
-                task.TaskId);
-            throw new Exception(
-                $"Error in {nameof(UpdateTask)} for taskId={task.TaskId}. See inner exception for details.", e);
-        }
+        return _context.Update(task).Entity;
     }
 
     public TaskModel DeleteTask(TaskModel taskForDelete)
     {
-        try
-        {
-            return _context.Tasks.Remove(taskForDelete).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for taskId={TaskId}.", nameof(DeleteTask),
-                taskForDelete.TaskId);
-            throw new Exception(
-                $"Error in {nameof(DeleteTask)} for taskId={taskForDelete.TaskId}. See inner exception for details.", e);
-        }
+        return _context.Tasks.Remove(taskForDelete).Entity;
     }
 
     public TaskStartPoint AddStartPoint(int taskId, string startPoint)
     {
-        try
-        {
-            return _context.TaskStartPoints.Add(new TaskStartPoint { TaskId = taskId, StartPoint = startPoint }).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for taskId={TaskId}.", nameof(AddStartPoint),
-                taskId);
-            throw new Exception(
-                $"Error in {nameof(AddStartPoint)} for taskId={taskId}. See inner exception for details.", e);
-        }
+        return _context.TaskStartPoints.Add(new TaskStartPoint { TaskId = taskId, StartPoint = startPoint }).Entity;
     }
 
     public TaskStartPoint? GetStartPoint(int taskId, string startPoint)
     {
-        try
-        {
-            return _context.TaskStartPoints.SingleOrDefault(w => w.TaskId == taskId && w.StartPoint == startPoint);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for taskId={TaskId}.", nameof(GetStartPoint),
-                taskId);
-            throw new Exception(
-                $"Error in {nameof(GetStartPoint)} for taskId={taskId}. See inner exception for details.", e);
-        }
+        return _context.TaskStartPoints.SingleOrDefault(w => w.TaskId == taskId && w.StartPoint == startPoint);
     }
 
     public TaskStartPoint UpdateStartPoint(TaskStartPoint startPointForUpdate)
     {
-        try
-        {
-            return _context.Update(startPointForUpdate).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for tspId={TspId}.", nameof(UpdateStartPoint),
-                startPointForUpdate.TspId);
-            throw new Exception(
-                $"Error in {nameof(UpdateStartPoint)} for tspId={startPointForUpdate.TspId}. See inner exception for details.",
-                e);
-        }
+        return _context.Update(startPointForUpdate).Entity;
     }
 
     public TaskStartPoint DeleteStartPoint(TaskStartPoint startPointForDelete)
     {
-        try
-        {
-            return _context.TaskStartPoints.Remove(startPointForDelete).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for tspId={TspId}.", nameof(DeleteStartPoint),
-                startPointForDelete.TspId);
-            throw new Exception(
-                $"Error in {nameof(DeleteStartPoint)} for tspId={startPointForDelete.TspId}. See inner exception for details.",
-                e);
-        }
+        return _context.TaskStartPoints.Remove(startPointForDelete).Entity;
     }
 
     #endregion
@@ -750,77 +515,27 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public List<Batch> GetBatchesList()
     {
-        try
-        {
-            return _context.Batches.ToList();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error occurred executing {nameof(GetBatchesList)}.");
-            throw new Exception($"Error in {nameof(GetBatchesList)}. See inner exception for details.", e);
-        }
+        return _context.Batches.ToList();
     }
 
     public Batch? GetBatchByName(string batchName)
     {
-        try
-        {
-            return _context.Batches.SingleOrDefault(w => w.BatchName == batchName);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for batchName={BatchName}.",
-                nameof(GetBatchByName), batchName);
-            throw new Exception(
-                $"Error in {nameof(GetBatchByName)} for batchName={batchName}. See inner exception for details.", e);
-        }
+        return _context.Batches.SingleOrDefault(w => w.BatchName == batchName);
     }
 
     public Batch UpdateBatch(Batch batch)
     {
-        try
-        {
-            return _context.Update(batch).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for batchId={BatchId}.", nameof(UpdateBatch),
-                batch.BatchId);
-            throw new Exception(
-                $"Error in {nameof(UpdateBatch)} for batchId={batch.BatchId}. See inner exception for details.", e);
-        }
+        return _context.Update(batch).Entity;
     }
 
     public Batch CreateBatch(Batch newBatch)
     {
-        try
-        {
-            return _context.Batches.Add(newBatch).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for batchName={BatchName}.", nameof(CreateBatch),
-                newBatch.BatchName);
-            throw new Exception(
-                $"Error in {nameof(CreateBatch)} for batchName={newBatch.BatchName}. See inner exception for details.",
-                e);
-        }
+        return _context.Batches.Add(newBatch).Entity;
     }
 
     public Batch DeleteBatch(Batch batchForDelete)
     {
-        try
-        {
-            return _context.Batches.Remove(batchForDelete).Entity;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error occurred executing {MethodName} for batchId={BatchId}.", nameof(DeleteBatch),
-                batchForDelete.BatchId);
-            throw new Exception(
-                $"Error in {nameof(DeleteBatch)} for batchId={batchForDelete.BatchId}. See inner exception for details.",
-                e);
-        }
+        return _context.Batches.Remove(batchForDelete).Entity;
     }
 
     #endregion

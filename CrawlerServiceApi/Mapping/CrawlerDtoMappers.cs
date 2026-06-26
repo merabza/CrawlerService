@@ -14,7 +14,6 @@ internal static class CrawlerDtoMappers
         {
             TaskId = task.TaskId,
             TaskName = task.TaskName,
-            ApiName = task.ApiName,
             StartPoints = task.StartPoints.Select(sp => sp.ToDto()).ToList()
         };
     }
@@ -33,7 +32,6 @@ internal static class CrawlerDtoMappers
         return new TaskModel
         {
             TaskName = dto.TaskName,
-            ApiName = dto.ApiName,
             StartPoints = dto.StartPoints.Select(sp => new TaskStartPoint { StartPoint = sp.StartPoint }).ToList()
         };
     }
@@ -41,7 +39,7 @@ internal static class CrawlerDtoMappers
     //განახლებისას მხოლოდ სკალარული ველები ეხება, Start Point-ები ხელუხლებელი რჩება
     public static TaskModel ToUpdateEntity(this TaskDto dto)
     {
-        return new TaskModel { TaskId = dto.TaskId, TaskName = dto.TaskName, ApiName = dto.ApiName };
+        return new TaskModel { TaskId = dto.TaskId, TaskName = dto.TaskName };
     }
 
     #endregion
