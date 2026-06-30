@@ -74,8 +74,7 @@ namespace CrawlerDbMigration.Migrations
                 {
                     TaskId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TaskName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ApiName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+                    TaskName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {

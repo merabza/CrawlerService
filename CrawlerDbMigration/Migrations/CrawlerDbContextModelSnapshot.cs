@@ -258,10 +258,6 @@ namespace CrawlerDbMigration.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TaskId"));
 
-                    b.Property<string>("ApiName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("TaskName")
                         .IsRequired()
                         .HasMaxLength(50)

@@ -1,9 +1,11 @@
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceShared.Contracts.Errors;
+using DoCrawler;
 using DoCrawler.Models;
 using DoCrawler.ToolActions;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +16,7 @@ using TaskModel = DoCrawler.Models.TaskModel;
 
 namespace CrawlerServiceReCounters;
 
-public sealed class CrawlerReCounter : ReCounter
+public sealed class CrawlerReCounter : ReCounter, ICrawlProgressReporter
 {
     private const string SuperName = "Crawler";
     private const string ProcessName = "Crawling";
@@ -36,6 +38,44 @@ public sealed class CrawlerReCounter : ReCounter
         _logger = loggerFactory.CreateLogger<CrawlerReCounter>();
         _crawlerParameters = crawlerParameters;
         _request = request;
+    }
+
+    //ICrawlProgressReporter — DoCrawler-ის ციკლიდან პროგრესის გადმოცემა ReCounter-ის მექანიზმზე.
+    //მონიტორინგის/გაგზავნის შეცდომამ crawl-ი არ უნდა ჩააგდოს, ამიტომ ვიჭერთ exception-ებს
+    public async Task SetLength(int length, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await SetProcLength(length, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error occurred reporting progress length");
+        }
+    }
+
+    public async ValueTask IncreasePosition(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await IncreaseProcPosition(cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error occurred reporting progress position");
+        }
+    }
+
+    public async Task SetMessage(string message, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await LogProcMessage(message, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error occurred reporting progress message");
+        }
     }
 
     protected override async Task RunRecount(CancellationToken cancellationToken = default)
@@ -81,7 +121,7 @@ public sealed class CrawlerReCounter : ReCounter
 
         // ReSharper disable once using
         var toolAction = new CrawlerRunnerToolAction(_logger, _httpClientFactory, crawlerRepository, _crawlerParameters,
-            parseOnePageParameters, batchName, batch, _request.NewPartsCreateLimit);
+            parseOnePageParameters, batchName, batch, _request.NewPartsCreateLimit, this);
         await toolAction.Run(cancellationToken);
     }
 
@@ -91,7 +131,7 @@ public sealed class CrawlerReCounter : ReCounter
         var task = new TaskModel { StartPoints = _request.StartPoints };
         // ReSharper disable once using
         var toolAction = new CrawlerRunnerToolAction(_logger, _httpClientFactory, crawlerRepository, _crawlerParameters,
-            parseOnePageParameters, _request.TaskName ?? string.Empty, task, null, _request.NewPartsCreateLimit);
+            parseOnePageParameters, _request.TaskName ?? string.Empty, task, null, _request.NewPartsCreateLimit, this);
         await toolAction.Run(cancellationToken);
     }
 

@@ -8,7 +8,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 using CrawlerDbModels;
@@ -35,12 +34,14 @@ public sealed class BatchPartRunner
     private readonly CrawlerParameters _par;
 
     private readonly ParseOnePageParameters _parseOnePageParameters;
+    private readonly ICrawlProgressReporter? _progressReporter;
 
     private ProcData _procData = new();
 
     // ReSharper disable once ConvertToPrimaryConstructor
     public BatchPartRunner(ILogger logger, IHttpClientFactory httpClientFactory, ICrawlerRepository crawlerRepository,
-        CrawlerParameters par, ParseOnePageParameters parseOnePageParameters, BatchPart batchPart)
+        CrawlerParameters par, ParseOnePageParameters parseOnePageParameters, BatchPart batchPart,
+        ICrawlProgressReporter? progressReporter = null)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
@@ -48,6 +49,7 @@ public sealed class BatchPartRunner
         _parseOnePageParameters = parseOnePageParameters;
         _batchPart = batchPart;
         _crawlerRepository = crawlerRepository;
+        _progressReporter = progressReporter;
     }
 
     public void InitBachPart(List<string> startPoints, Batch batch)
@@ -83,7 +85,18 @@ public sealed class BatchPartRunner
         //აქედან უნდა დავიწყოთ პორციების ჩატვირთვის ციკლი
         while (true)
         {
+            //თუ მოთხოვნილია პროცესის შეჩერება, გამოვიდეთ მეთოდიდან
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
             _procData = new ProcData();
+
+            if (_progressReporter is not null)
+            {
+                await _progressReporter.SetMessage("Loading next part Urls...", token);
+            }
 
             List<UrlModel> loadedUrls = LoadUrls(_crawlerRepository, _batchPart);
 
@@ -92,13 +105,32 @@ public sealed class BatchPartRunner
                 break;
             }
 
+            if (_progressReporter is not null)
+            {
+                await _progressReporter.SetMessage($"Loading Urls Finished. Urls count in queue is {loadedUrls.Count}",
+                    token);
+                await _progressReporter.SetLength(loadedUrls.Count, token);
+            }
+
             _consoleFormatter.UseCurrentLine();
 
             int analyzedCount = 0;
             foreach (UrlModel urlModel in loadedUrls)
             {
+                //თუ მოთხოვნილია პროცესის შეჩერება, გამოვიდეთ მეთოდიდან
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 await ProcessPage(_crawlerRepository, urlModel, _batchPart, token);
                 analyzedCount++;
+
+                if (_progressReporter is not null)
+                {
+                    await _progressReporter.IncreasePosition(token);
+                }
+
                 if (!_procData.NeedsToReduceCache() && !_crawlerRepository.NeedSaveChanges())
                 {
                     continue;
@@ -109,6 +141,12 @@ public sealed class BatchPartRunner
 
                 StShared.ConsoleWriteInformationLine(_logger, true,
                     $"Analyzed {analyzedCount} from {loadedUrls.Count} loaded Urls");
+
+                if (_progressReporter is not null)
+                {
+                    await _progressReporter.SetMessage($"Analyzed {analyzedCount} from {loadedUrls.Count} loaded Urls",
+                        token);
+                }
 
                 _consoleFormatter.UseCurrentLine();
             }
@@ -193,9 +231,9 @@ public sealed class BatchPartRunner
 
             return new GetOnePageContentResult { StatusCode = response.StatusCode };
         }
-        catch
+        catch(Exception ex)
         {
-            StShared.WriteErrorLine($"Error when downloading {uri}", true, _logger, false);
+            StShared.WriteErrorLine($"Error when downloading {uri}: {ex.Message}", true, _logger, false);
         }
 
         return new GetOnePageContentResult { StatusCode = HttpStatusCode.BadRequest };
@@ -687,6 +725,12 @@ public sealed class BatchPartRunner
     private async Task SaveUrlAndProcessOnePage(ICrawlerRepository crawlerRepository, string strUrl,
         bool isSiteMap = false, bool isRobotsTxt = false, CancellationToken token = default)
     {
+        //თუ მოთხოვნილია პროცესის შეჩერება, გამოვიდეთ მეთოდიდან
+        if (token.IsCancellationRequested)
+        {
+            return;
+        }
+
         UrlModel? urlModel = TrySaveUrl(crawlerRepository, strUrl, 0, _batchPart.BpId, isSiteMap, isRobotsTxt);
         if (urlModel is null)
         {
@@ -817,6 +861,12 @@ public sealed class BatchPartRunner
     private async Task ProcessPage(ICrawlerRepository crawlerRepository, UrlModel urlForProcess, BatchPart batchPart,
         CancellationToken token = default)
     {
+        //თუ მოთხოვნილია პროცესის შეჩერება, გამოვიდეთ მეთოდიდან
+        if (token.IsCancellationRequested)
+        {
+            return;
+        }
+
         try
         {
             var uri = new Uri(urlForProcess.UrlName);
@@ -927,6 +977,12 @@ public sealed class BatchPartRunner
     public async ValueTask<bool> DoOnePage(string strUrName, bool deleteContentForReanalyze,
         CancellationToken token = default)
     {
+        //თუ მოთხოვნილია პროცესის შეჩერება, გამოვიდეთ მეთოდიდან
+        if (token.IsCancellationRequested)
+        {
+            return false;
+        }
+
         _procData = new ProcData();
 
         UrlData? urlData = GetUrlData(_crawlerRepository, strUrName);

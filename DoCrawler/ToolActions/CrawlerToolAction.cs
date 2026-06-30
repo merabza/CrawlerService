@@ -20,6 +20,7 @@ public /*open*/ class CrawlerToolAction : ToolAction
     private readonly IHttpClientFactory _httpClientFactory;
 
     private readonly ParseOnePageParameters _parseOnePageParameters;
+    private readonly ICrawlProgressReporter? _progressReporter;
     private readonly string? _taskName;
     protected readonly ILogger CrLogger;
     protected readonly CrawlerParameters Par;
@@ -30,7 +31,8 @@ public /*open*/ class CrawlerToolAction : ToolAction
 
     protected CrawlerToolAction(ILogger logger, CrawlerParameters par, string taskName, TaskModel? task,
         ICrawlerRepository crawlerRepository, IHttpClientFactory httpClientFactory,
-        ParseOnePageParameters parseOnePageParameters, int newPartsCreateLimit) : base(logger, taskName, null, null, true)
+        ParseOnePageParameters parseOnePageParameters, int newPartsCreateLimit,
+        ICrawlProgressReporter? progressReporter = null) : base(logger, taskName, null, null, true)
     {
         CrLogger = logger;
         Par = par;
@@ -40,6 +42,7 @@ public /*open*/ class CrawlerToolAction : ToolAction
         _parseOnePageParameters = parseOnePageParameters;
         _crawlerRepository = crawlerRepository;
         _newPartsCreateLimit = newPartsCreateLimit;
+        _progressReporter = progressReporter;
     }
 
     protected BatchPartRunner? CreateBatchPartRunner(BatchPart? batchPart, Batch batch)
@@ -65,7 +68,7 @@ public /*open*/ class CrawlerToolAction : ToolAction
         if (batchPart is not null)
         {
             batchPartRunner = new BatchPartRunner(CrLogger, _httpClientFactory, _crawlerRepository, Par,
-                _parseOnePageParameters, batchPart);
+                _parseOnePageParameters, batchPart, _progressReporter);
         }
 
         if (batchPartRunner is null)
