@@ -78,6 +78,18 @@ public sealed class CrawlerReCounter : ReCounter, ICrawlProgressReporter
         }
     }
 
+    public async Task SetMessage(string messageName, string message, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await LogProcMessage(messageName, message, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error occurred reporting progress message");
+        }
+    }
+
     protected override async Task RunRecount(CancellationToken cancellationToken = default)
     {
         var parseOnePageParameters = ParseOnePageParameters.Create(_crawlerParameters);

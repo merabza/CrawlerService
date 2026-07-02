@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using CrawlerDbModels;
 using CrawlerDbPersistence.Configurations;
 using CrawlerRepoInterfaces;
+using CrawlerServiceShared.Contracts;
 using DoCrawler.Models;
 using DoCrawler.States;
 using Microsoft.Extensions.Logging;
@@ -139,7 +140,7 @@ public sealed class BatchPartRunner
                 SaveChangesAndReduceCache(_crawlerRepository);
                 _procData = new ProcData();
 
-                StShared.ConsoleWriteInformationLine(_logger, true,
+                StShared.ConsoleWriteInformationLine(_logger, false,
                     $"Analyzed {analyzedCount} from {loadedUrls.Count} loaded Urls");
 
                 if (_progressReporter is not null)
@@ -157,13 +158,13 @@ public sealed class BatchPartRunner
 
     private List<UrlModel> LoadUrls(ICrawlerRepository crawlerRepository, BatchPart batchPart)
     {
-        StShared.ConsoleWriteInformationLine(_logger, true, "Loading next part Urls...");
+        StShared.ConsoleWriteInformationLine(_logger, false, "Loading next part Urls...");
 
         CountStatistics(crawlerRepository);
 
         var getPagesState = new GetPagesState(_logger, crawlerRepository, _par, batchPart);
         List<UrlModel> urlsLoaded = getPagesState.GetPages();
-        StShared.ConsoleWriteInformationLine(_logger, true,
+        StShared.ConsoleWriteInformationLine(_logger, false,
             $"Loading Urls Finished. Urls count in queue is {urlsLoaded.Count}");
         return urlsLoaded;
     }
@@ -176,7 +177,7 @@ public sealed class BatchPartRunner
 
         long termsCount = crawlerRepository.GetTermsCount();
 
-        StShared.ConsoleWriteInformationLine(_logger, true,
+        StShared.ConsoleWriteInformationLine(_logger, false,
             $"[{DateTime.Now}] Urls {loadedUrlsCount}-{urlsCount} terms {termsCount}");
     }
 
@@ -360,7 +361,7 @@ public sealed class BatchPartRunner
     private void AnalyzeAsRobotsText(ICrawlerRepository crawlerRepository, string content, int fromUrlPageId,
         int batchPartId, int schemeId, int hostId)
     {
-        StShared.ConsoleWriteInformationLine(_logger, true, "Analyze as robots.txt");
+        StShared.ConsoleWriteInformationLine(_logger, false, "Analyze as robots.txt");
 
         crawlerRepository.SaveRobotsTxtToBase(batchPartId, schemeId, hostId, content);
 
@@ -505,7 +506,7 @@ public sealed class BatchPartRunner
     private void AnalyzeSiteMapXml(ICrawlerRepository crawlerRepository, XContainer sitemapElement, int fromUrlPageId,
         int batchPartId, bool isIndex)
     {
-        StShared.ConsoleWriteInformationLine(_logger, true, $"Analyze as Sitemap {(isIndex ? "Index " : " ")}XML");
+        StShared.ConsoleWriteInformationLine(_logger, false, $"Analyze as Sitemap {(isIndex ? "Index " : " ")}XML");
         string sitemapNodeLocName = isIndex ? "sitemap" : "url";
         foreach (XNode smiNode in sitemapElement.Nodes())
         {
@@ -533,7 +534,7 @@ public sealed class BatchPartRunner
     private void AnalyzeAsSiteMapText(ICrawlerRepository crawlerRepository, string content, int fromUrlPageId,
         int batchPartId)
     {
-        StShared.ConsoleWriteInformationLine(_logger, true, "Analyze as Sitemap Text");
+        StShared.ConsoleWriteInformationLine(_logger, false, "Analyze as Sitemap Text");
 
         string[] lines = content.Split('\n');
 
@@ -849,11 +850,11 @@ public sealed class BatchPartRunner
 
     private void SaveChangesAndReduceCache(ICrawlerRepository crawlerRepository)
     {
-        StShared.ConsoleWriteInformationLine(_logger, true, $"[{DateTime.Now}] Save Changes");
+        StShared.ConsoleWriteInformationLine(_logger, false, $"[{DateTime.Now}] Save Changes");
 
         crawlerRepository.SaveChangesWithTransaction();
 
-        StShared.ConsoleWriteInformationLine(_logger, true, $"[{DateTime.Now}] CountStatistics");
+        StShared.ConsoleWriteInformationLine(_logger, false, $"[{DateTime.Now}] CountStatistics");
 
         CountStatistics(crawlerRepository);
     }
@@ -872,17 +873,22 @@ public sealed class BatchPartRunner
             var uri = new Uri(urlForProcess.UrlName);
 
             DateTime startedAt = DateTime.Now;
+            
+            if (_progressReporter is not null)
+            {
+                await _progressReporter.SetMessage(CrawlerReCounterConstants.WorkingOn, uri.ToString(), token);
+            }
+
             _consoleFormatter.WriteInSameLine("Downloading", uri.ToString());
 
-            GetOnePageContentResult getOnePageContentResult;
-            //მოიქაჩოს მისამართის მიხედვით Gz კონტენტი გახსნით
-            getOnePageContentResult =
+            GetOnePageContentResult getOnePageContentResult =
+                //მოიქაჩოს მისამართის მიხედვით Gz კონტენტი გახსნით
                 urlForProcess.IsSiteMap && string.Equals(urlForProcess.ExtensionNavigation.ExtName, ".gz",
-                    StringComparison.OrdinalIgnoreCase)
-                    ? await GetOnePageContent(uri, EContentType.SiteMapGzFile, token)
-                    :
-                    //მოიქაჩოს მისამართის მიხედვით კონტენტი
-                    await GetOnePageContent(uri, EContentType.Http, token);
+                StringComparison.OrdinalIgnoreCase)
+                ? await GetOnePageContent(uri, EContentType.SiteMapGzFile, token)
+                :
+                //მოიქაჩოს მისამართის მიხედვით კონტენტი
+                await GetOnePageContent(uri, EContentType.Http, token);
 
             string? content = getOnePageContentResult.Content;
             HttpStatusCode statusCode = getOnePageContentResult.StatusCode;

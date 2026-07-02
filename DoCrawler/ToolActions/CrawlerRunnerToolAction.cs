@@ -5,6 +5,7 @@ using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using TaskModel = DoCrawler.Models.TaskModel;
 
 namespace DoCrawler.ToolActions;
@@ -46,6 +47,12 @@ public sealed class CrawlerRunnerToolAction : CrawlerToolAction
 
         while (true)
         {
+            //თუ მოთხოვნილია პროცესის შეჩერება, გამოვიდეთ მეთოდიდან
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return true;
+            }
+
             //2. Start
             BatchPartRunner? batchPartRunner = CreateBatchPartRunner(batchPart, batch);
             //2. Finish
