@@ -58,7 +58,8 @@ public sealed class CrawlerReCounter : ReCounter, ICrawlProgressReporter
     {
         try
         {
-            await IncreaseProcPosition(true, cancellationToken);
+            //instantly=false — პოზიცია გროვდება და კლიენტს ეგზავნება ტაიმერით, დაყოვნების პერიოდის დაცვით
+            await IncreaseProcPosition(false, cancellationToken);
         }
         catch (Exception e)
         {
@@ -82,7 +83,9 @@ public sealed class CrawlerReCounter : ReCounter, ICrawlProgressReporter
     {
         try
         {
-            await LogProcMessage(messageName, message, cancellationToken);
+            //instantly=false — გვერდობრივი შეტყობინება გროვდება და კლიენტს ეგზავნება ტაიმერით,
+            //დაყოვნების პერიოდის დაცვით
+            await LogMessage(messageName, message, false, cancellationToken);
         }
         catch (Exception e)
         {

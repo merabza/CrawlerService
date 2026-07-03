@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CrawlerRepoInterfaces;
@@ -47,9 +48,12 @@ public static class CrawlerEndpoints
     // POST api/v1/crawler/runbatch
     private static async Task<IResult> RunBatch(HttpRequest httpRequest, IMediator mediator,
         IProgressDataManager progressDataManager, [FromQuery] string? batchName,
-        [FromQuery] int newPartsCreateLimit = 0, CancellationToken cancellationToken = default)
+        [FromQuery] int newPartsCreateLimit = 0, [FromQuery] int progressDelaySeconds = 1,
+        CancellationToken cancellationToken = default)
     {
         string? userName = httpRequest.HttpContext.User.Identity?.Name;
+        //კლიენტიდან მოსული დაყოვნება დაიმახსოვროს, რომ პროგრესის ინფორმაცია ამ პერიოდზე ხშირად არ გაიგზავნოს
+        progressDataManager.SetSendDelay(TimeSpan.FromSeconds(progressDelaySeconds));
         await progressDataManager.SetProgressData(userName, ReCounterConstants.ProcName, $"{nameof(RunBatch)} started",
             true, cancellationToken);
 
@@ -65,6 +69,8 @@ public static class CrawlerEndpoints
         CancellationToken cancellationToken = default)
     {
         string? userName = httpRequest.HttpContext.User.Identity?.Name;
+        //კლიენტიდან მოსული დაყოვნება დაიმახსოვროს, რომ პროგრესის ინფორმაცია ამ პერიოდზე ხშირად არ გაიგზავნოს
+        progressDataManager.SetSendDelay(TimeSpan.FromSeconds(request.ProgressDelaySeconds));
         await progressDataManager.SetProgressData(userName, ReCounterConstants.ProcName, $"{nameof(RunTask)} started",
             true, cancellationToken);
 
@@ -80,6 +86,8 @@ public static class CrawlerEndpoints
         CancellationToken cancellationToken = default)
     {
         string? userName = httpRequest.HttpContext.User.Identity?.Name;
+        //კლიენტიდან მოსული დაყოვნება დაიმახსოვროს, რომ პროგრესის ინფორმაცია ამ პერიოდზე ხშირად არ გაიგზავნოს
+        progressDataManager.SetSendDelay(TimeSpan.FromSeconds(request.ProgressDelaySeconds));
         await progressDataManager.SetProgressData(userName, ReCounterConstants.ProcName,
             $"{nameof(TestOnePage)} started", true, cancellationToken);
 
