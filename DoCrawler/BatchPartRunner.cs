@@ -28,7 +28,7 @@ public sealed class BatchPartRunner
     public const string CrawlerClient = nameof(CrawlerClient);
 
     private readonly BatchPart _batchPart;
-    private readonly ConsoleFormatter _consoleFormatter = new();
+    //private readonly ConsoleFormatter _consoleFormatter = new();
     private readonly ICrawlerRepository _crawlerRepository;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger _logger;
@@ -108,12 +108,12 @@ public sealed class BatchPartRunner
 
             if (_progressReporter is not null)
             {
-                await _progressReporter.SetMessage($"Loading Urls Finished. Urls count in queue is {loadedUrls.Count}",
+                await _progressReporter.SetMessage($"Crawling. Urls count in queue is {loadedUrls.Count}",
                     token);
                 await _progressReporter.SetLength(loadedUrls.Count, token);
             }
 
-            _consoleFormatter.UseCurrentLine();
+            //_consoleFormatter.UseCurrentLine();
 
             int analyzedCount = 0;
             foreach (UrlModel urlModel in loadedUrls)
@@ -149,7 +149,7 @@ public sealed class BatchPartRunner
                         token);
                 }
 
-                _consoleFormatter.UseCurrentLine();
+                //_consoleFormatter.UseCurrentLine();
             }
 
             SaveChangesAndReduceCache(_crawlerRepository);
@@ -400,13 +400,13 @@ public sealed class BatchPartRunner
 
     private void AnalyzeAsHtml(ICrawlerRepository crawlerRepository, string content, UrlModel url, BatchPart batchPart)
     {
-        var uri = new Uri(url.UrlName);
+        //var uri = new Uri(url.UrlName);
 
-        _consoleFormatter.WriteInSameLine("Parsing", uri.ToString());
+        //_consoleFormatter.WriteInSameLine("Parsing", uri.ToString());
         var parseOnePageState = new ParseOnePageState(_logger, _parseOnePageParameters, content, url);
         parseOnePageState.Execute();
 
-        _consoleFormatter.WriteInSameLine("Save URLs", uri.ToString());
+        //_consoleFormatter.WriteInSameLine("Save URLs", uri.ToString());
         foreach (string childUri in parseOnePageState.ListOfUris)
         {
             TrySaveUrl(crawlerRepository, childUri, url.UrlId, batchPart.BpId);
@@ -414,13 +414,13 @@ public sealed class BatchPartRunner
 
         int position = 0;
 
-        _consoleFormatter.WriteInSameLine("Save Terms", uri.ToString());
+        //_consoleFormatter.WriteInSameLine("Save Terms", uri.ToString());
         foreach (UriTerm uriTerm in parseOnePageState.UriTerms)
         {
             TrySaveTerm(crawlerRepository, uriTerm.TermType, uriTerm.Context, url.UrlId, batchPart.BpId, position++);
         }
 
-        _consoleFormatter.WriteInSameLine("Clear Tail", uri.ToString());
+        //_consoleFormatter.WriteInSameLine("Clear Tail", uri.ToString());
         ClearTermsTail(crawlerRepository, batchPart.BpId, url.UrlId, position);
 
         var urlGraphDeDuplicator = new UrlGraphDeDuplicator(crawlerRepository);
@@ -872,14 +872,14 @@ public sealed class BatchPartRunner
         {
             var uri = new Uri(urlForProcess.UrlName);
 
-            DateTime startedAt = DateTime.Now;
+            //DateTime startedAt = DateTime.Now;
             
             if (_progressReporter is not null)
             {
                 await _progressReporter.SetMessage(CrawlerReCounterConstants.WorkingOn, uri.ToString(), token);
             }
 
-            _consoleFormatter.WriteInSameLine("Downloading", uri.ToString());
+            //_consoleFormatter.WriteInSameLine("Downloading", uri.ToString());
 
             GetOnePageContentResult getOnePageContentResult =
                 //მოიქაჩოს მისამართის მიხედვით Gz კონტენტი გახსნით
@@ -910,8 +910,8 @@ public sealed class BatchPartRunner
                         locationUri = new Uri(uri, location);
                     }
 
-                    _consoleFormatter.WriteInSameLine("Page is redirected to:", locationUri.ToString());
-                    _consoleFormatter.UseCurrentLine();
+                    //_consoleFormatter.WriteInSameLine("Page is redirected to:", locationUri.ToString());
+                    //_consoleFormatter.UseCurrentLine();
                     TrySaveUrl(crawlerRepository, locationUri.ToString(), urlForProcess.UrlId, batchPart.BpId);
                     //დავადასტუროთ, რომ ამ გვერდის გაანალიზება ვერ მოხდა.
                     crawlerRepository.CreateContentAnalysisRecord(batchPart.BpId, urlForProcess.UrlId, statusCode,
@@ -924,8 +924,8 @@ public sealed class BatchPartRunner
                     lastModifiedDate);
 
                 //StShared.WriteWarningLine($"Page is not Loaded: {uri}", true);
-                _consoleFormatter.WriteInSameLine("Page is not Loaded", uri.ToString());
-                _consoleFormatter.UseCurrentLine();
+                //_consoleFormatter.WriteInSameLine("Page is not Loaded", uri.ToString());
+                //_consoleFormatter.UseCurrentLine();
 
                 return;
             }
@@ -935,7 +935,7 @@ public sealed class BatchPartRunner
             //_repository.UpdateUrlData(urlForProcess);
 
             //გაანალიზდეს კონტენტი კონტენტის ტიპის მიხედვით
-            _consoleFormatter.WriteInSameLine("Analyze content of", uri.ToString());
+            //_consoleFormatter.WriteInSameLine("Analyze content of", uri.ToString());
 
             //robots.txt, sitemap, html
             if (uri.LocalPath == "/robots.txt")
@@ -961,7 +961,7 @@ public sealed class BatchPartRunner
 
             //ასევე უნდა დარეგისტრირდეს სიტყვისა და მისამართის თანაკვეთა (ანუ სადაც ვიპოვეთ ეს სიტყვა)1
 
-            _consoleFormatter.WriteInSameLine("Copy Graph", uri.ToString());
+            //_consoleFormatter.WriteInSameLine("Copy Graph", uri.ToString());
 
             var urlGraphDeDuplicator = new UrlGraphDeDuplicator(crawlerRepository);
             urlGraphDeDuplicator.CopyToRepository();
@@ -970,8 +970,8 @@ public sealed class BatchPartRunner
             crawlerRepository.CreateContentAnalysisRecord(batchPart.BpId, urlForProcess.UrlId, statusCode,
                 lastModifiedDate);
 
-            _consoleFormatter.WriteInSameLine("Finished",
-                $"{uri} ({DateTime.Now.MillisecondsDifference(startedAt)}ms)");
+            //_consoleFormatter.WriteInSameLine("Finished",
+            //    $"{uri} ({DateTime.Now.MillisecondsDifference(startedAt)}ms)");
         }
         catch (Exception e)
         {

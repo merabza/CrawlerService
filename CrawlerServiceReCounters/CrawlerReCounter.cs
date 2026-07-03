@@ -58,7 +58,7 @@ public sealed class CrawlerReCounter : ReCounter, ICrawlProgressReporter
     {
         try
         {
-            await IncreaseProcPosition(cancellationToken);
+            await IncreaseProcPosition(true, cancellationToken);
         }
         catch (Exception e)
         {
