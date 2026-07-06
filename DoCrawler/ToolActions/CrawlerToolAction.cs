@@ -157,7 +157,7 @@ public /*open*/ class CrawlerToolAction : ToolAction
         var par = ParseOnePageParameters.Create(Par);
         if (par is null)
         {
-            StShared.WriteErrorLine("ParseOnePageParameters does not created", true);
+            StShared.WriteErrorLine("ParseOnePageParameters does not created", true, CrLogger, false);
             return (null, null);
         }
 
@@ -168,7 +168,7 @@ public /*open*/ class CrawlerToolAction : ToolAction
             return (batch, _crawlerRepository.GetOpenedBatchPart(batch.BatchId));
         }
 
-        StShared.WriteErrorLine("batch is null", true);
+        StShared.WriteErrorLine("batch is null", true, CrLogger, false);
         return (null, null);
     }
 }

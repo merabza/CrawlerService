@@ -72,8 +72,14 @@ public sealed partial class ParseOnePageState // : State
 
     private static string ExtractText(HtmlNode htmlDocDocumentNode)
     {
+        HtmlNodeCollection? textNodes = htmlDocDocumentNode.SelectNodes("//text()");
+        if (textNodes is null)
+        {
+            return string.Empty;
+        }
+
         var sb = new StringBuilder();
-        foreach (HtmlNode node in htmlDocDocumentNode.SelectNodes("//text()"))
+        foreach (HtmlNode node in textNodes)
         {
             if (node.ParentNode.Name is "script" or "style")
             {

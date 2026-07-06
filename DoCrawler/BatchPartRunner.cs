@@ -220,7 +220,8 @@ public sealed class BatchPartRunner
                 };
             }
 
-            if (response.StatusCode == HttpStatusCode.Found)
+            if (response.StatusCode is HttpStatusCode.Found or HttpStatusCode.MovedPermanently
+                or HttpStatusCode.TemporaryRedirect or HttpStatusCode.PermanentRedirect)
             {
                 return new GetOnePageContentResult
                 {
@@ -232,9 +233,9 @@ public sealed class BatchPartRunner
 
             return new GetOnePageContentResult { StatusCode = response.StatusCode };
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            StShared.WriteErrorLine($"Error when downloading {uri}: {ex.Message}", true, _logger, false);
+            _logger.LogError(ex, "Error when downloading {Uri}", uri);
         }
 
         return new GetOnePageContentResult { StatusCode = HttpStatusCode.BadRequest };
@@ -406,6 +407,12 @@ public sealed class BatchPartRunner
         var parseOnePageState = new ParseOnePageState(_logger, _parseOnePageParameters, content, url);
         parseOnePageState.Execute();
 
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            _logger.LogInformation("Parsed {Url}: extracted {LinksCount} links, {TermsCount} terms", url.UrlName,
+                parseOnePageState.ListOfUris.Count, parseOnePageState.UriTerms.Count);
+        }
+
         //_consoleFormatter.WriteInSameLine("Save URLs", uri.ToString());
         foreach (string childUri in parseOnePageState.ListOfUris)
         {
@@ -428,7 +435,7 @@ public sealed class BatchPartRunner
         urlGraphDeDuplicator.CopyToRepository();
     }
 
-    private static bool TryParseXml(string xml, out XElement? element)
+    private bool TryParseXml(string xml, out XElement? element)
     {
         element = null;
         try
@@ -438,12 +445,12 @@ public sealed class BatchPartRunner
         }
         catch (XmlException e)
         {
-            StShared.WriteWarningLine(e.Message, true);
+            StShared.WriteWarningLine(e.Message, true, _logger);
             return false;
         }
         catch (Exception ex)
         {
-            StShared.WriteException(ex, true);
+            StShared.WriteException(ex, true, _logger, false);
             return false;
         }
     }
@@ -569,7 +576,7 @@ public sealed class BatchPartRunner
 
             if (string.IsNullOrWhiteSpace(termText))
             {
-                StShared.WriteErrorLine("termText is empty", true);
+                StShared.WriteErrorLine("termText is empty", true, _logger, false);
                 return;
             }
 
@@ -897,7 +904,7 @@ public sealed class BatchPartRunner
 
             if (content is null)
             {
-                if (statusCode == HttpStatusCode.Redirect && location is not null)
+                if (location is not null)
                 {
                     //თუ location არასრული მისამართია, მაშინ უნდა დაანგარიშდეს სრული მისამართი
                     if (Uri.TryCreate(location, UriKind.Absolute, out Uri? locationUri))
@@ -910,8 +917,11 @@ public sealed class BatchPartRunner
                         locationUri = new Uri(uri, location);
                     }
 
-                    //_consoleFormatter.WriteInSameLine("Page is redirected to:", locationUri.ToString());
-                    //_consoleFormatter.UseCurrentLine();
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogInformation("Page {Uri} is redirected ({StatusCode}) to {Location}", uri,
+                            (int)statusCode, locationUri);
+                    }
                     TrySaveUrl(crawlerRepository, locationUri.ToString(), urlForProcess.UrlId, batchPart.BpId);
                     //დავადასტუროთ, რომ ამ გვერდის გაანალიზება ვერ მოხდა.
                     crawlerRepository.CreateContentAnalysisRecord(batchPart.BpId, urlForProcess.UrlId, statusCode,
@@ -923,11 +933,15 @@ public sealed class BatchPartRunner
                 crawlerRepository.CreateContentAnalysisRecord(batchPart.BpId, urlForProcess.UrlId, statusCode,
                     lastModifiedDate);
 
-                //StShared.WriteWarningLine($"Page is not Loaded: {uri}", true);
-                //_consoleFormatter.WriteInSameLine("Page is not Loaded", uri.ToString());
-                //_consoleFormatter.UseCurrentLine();
+                _logger.LogWarning("Page not loaded {Uri}: status {StatusCode}", uri, (int)statusCode);
 
                 return;
+            }
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Downloaded {Uri}: status {StatusCode}, content length {ContentLength}", uri,
+                    (int)statusCode, content.Length);
             }
 
             //urlForProcess.LastDownloaded = DateTime.Now;
@@ -975,8 +989,7 @@ public sealed class BatchPartRunner
         }
         catch (Exception e)
         {
-            StShared.WriteErrorLine($"Error when working on {urlForProcess.UrlName}", true);
-            StShared.WriteException(e, true);
+            _logger.LogError(e, "Error when working on {Url}", urlForProcess.UrlName);
         }
     }
 
@@ -994,7 +1007,7 @@ public sealed class BatchPartRunner
         UrlData? urlData = GetUrlData(_crawlerRepository, strUrName);
         if (urlData == null)
         {
-            StShared.WriteErrorLine($"Cannot prepare data for uri {strUrName}", true);
+            StShared.WriteErrorLine($"Cannot prepare data for uri {strUrName}", true, _logger, false);
             return false;
         }
 

@@ -386,6 +386,7 @@ public sealed class CrawlerRepository : ICrawlerRepository
                 from g in gj.DefaultIfEmpty()
                 where g == null
                 where bp.BpId == batchPartId && u.IsAllowed
+                orderby u.UrlId
                 select u).Take(maxCount).Include(x => x.ExtensionNavigation)
         ];
     }
