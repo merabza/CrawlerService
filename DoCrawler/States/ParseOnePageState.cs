@@ -51,7 +51,17 @@ public sealed partial class ParseOnePageState // : State
         HtmlAttribute? attributeHref = nodeBase?.Attributes.FirstOrDefault(s => s.Name == "href");
         if (attributeHref != null && !string.IsNullOrEmpty(attributeHref.Value))
         {
-            _currentUri = UriFactory.GetUri(attributeHref.Value);
+            Uri? baseUri = UriFactory.GetUri(attributeHref.Value);
+            //Linux-ზე ფარდობითი base href აბსოლუტურ file:// Uri-დ აღიქმება,
+            //ასეთ შემთხვევაში მიმდინარე მისამართს უნდა მიეწებოს
+            if (baseUri is not null && baseUri.IsAbsoluteUri && baseUri.Scheme != Uri.UriSchemeFile)
+            {
+                _currentUri = baseUri;
+            }
+            else if (_currentUri is not null)
+            {
+                _currentUri = UriFactory.GetUri(_currentUri, attributeHref.Value);
+            }
         }
 
         if (_currentUri == null)
@@ -329,7 +339,9 @@ public sealed partial class ParseOnePageState // : State
         try
         {
             Uri? newUri = UriFactory.GetUri(strUri);
-            if (newUri == null || !newUri.IsAbsoluteUri)
+            //Linux-ზე "/"-ით დაწყებული ფარდობითი მისამართი აბსოლუტურ file:// Uri-დ აღიქმება,
+            //ამიტომ file სქემის მისამართი ფარდობითის მსგავსად უნდა დამუშავდეს
+            if (newUri == null || !newUri.IsAbsoluteUri || newUri.Scheme == Uri.UriSchemeFile)
             {
                 if (_currentUri is null)
                 {
