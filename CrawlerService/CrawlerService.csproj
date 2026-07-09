@@ -7,7 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\CrawlerDomain\CrawlerRepoInterfaces\CrawlerRepoInterfaces.csproj" />
     <ProjectReference Include="..\..\CrawlerInfrastructure\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.DependencyInjection\SystemTools.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.ApiExceptionHandler\WebSystemTools.ApiExceptionHandler.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.ApiKeyIdentity\WebSystemTools.ApiKeyIdentity.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.MediatorTools\WebSystemTools.MediatorTools.csproj" />
@@ -16,7 +15,6 @@
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.TestToolsApi\WebSystemTools.TestToolsApi.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.SwaggerTools\WebSystemTools.SwaggerTools.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.WindowsServiceTools\WebSystemTools.WindowsServiceTools.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
     <ProjectReference Include="..\CrawlerServiceApi\CrawlerServiceApi.csproj" />
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
@@ -33,6 +31,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="SystemTools.DependencyInjection" />
+    <PackageReference Include="SystemTools.ReCounterAbstraction" />
   </ItemGroup>
 
 </Project>
