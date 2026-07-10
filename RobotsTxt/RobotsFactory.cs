@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Logging;
 using RobotsTxt.Entities;
 using RobotsTxt.Enums;
+using SystemTools.SystemToolsShared;
 
 namespace RobotsTxt;
 
 public static class RobotsFactory
 {
-    public static Robots? AnaliseContentAndCreateRobots(string content)
+    public static Robots? AnaliseContentAndCreateRobots(ILogger logger, string content)
     {
         if (string.IsNullOrWhiteSpace(content))
         {
@@ -18,10 +20,10 @@ public static class RobotsFactory
 
         string[] lines = content.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
             .Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
-        return lines.Length == 0 ? null : ReadLinesAndCreateRobots(lines);
+        return lines.Length == 0 ? null : ReadLinesAndCreateRobots(logger, lines);
     }
 
-    private static Robots ReadLinesAndCreateRobots(IEnumerable<string> lines)
+    private static Robots ReadLinesAndCreateRobots(ILogger logger, IEnumerable<string> lines)
     {
         var globalAccessRules = new List<AccessAllowRule>();
         var specificAccessRules = new List<AccessAllowRule>();
@@ -37,6 +39,8 @@ public static class RobotsFactory
 
         foreach (string line in lines)
         {
+            StShared.ConsoleWriteInformationLine(logger, false, "Analyze robots.txt line: {0}", line);
+
             var robotsLine = Line.Create(line);
             switch (robotsLine.Type)
             {

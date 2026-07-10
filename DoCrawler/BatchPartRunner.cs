@@ -366,7 +366,7 @@ public sealed class BatchPartRunner
 
         crawlerRepository.SaveRobotsTxtToBase(batchPartId, schemeId, hostId, content);
 
-        Robots? robots = RobotsFactory.AnaliseContentAndCreateRobots(content);
+        Robots? robots = RobotsFactory.AnaliseContentAndCreateRobots(_logger, content);
 
         if (robots is null)
         {
@@ -753,7 +753,7 @@ public sealed class BatchPartRunner
     private Robots? RobotsFromBase(ICrawlerRepository crawlerRepository, int schemeId, int hostId)
     {
         string? robotsTxt = crawlerRepository.LoadRobotsFromBase(_batchPart.BpId, schemeId, hostId);
-        return robotsTxt is not null ? RobotsFactory.AnaliseContentAndCreateRobots(robotsTxt) : null;
+        return robotsTxt is not null ? RobotsFactory.AnaliseContentAndCreateRobots(_logger, robotsTxt) : null;
     }
 
     private UrlData? GetUrlData(ICrawlerRepository crawlerRepository, string urName)

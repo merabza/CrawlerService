@@ -16,6 +16,7 @@
     <PackageVersion Include="SystemTools.DependencyInjection" Version="1.0.9686.33588" />
     <PackageVersion Include="SystemTools.MediatRMessagingAbstractions" Version="1.0.9686.33588" />
     <PackageVersion Include="SystemTools.ReCounterAbstraction" Version="1.0.9686.33588" />
+    <PackageVersion Include="SystemTools.SystemToolsShared" Version="1.0.9686.33588" />
     <PackageVersion Include="WebSystemTools.ApiExceptionHandler" Version="1.0.9686.34761" />
     <PackageVersion Include="WebSystemTools.ApiKeyIdentity" Version="1.0.9686.34761" />
     <PackageVersion Include="WebSystemTools.MediatorTools" Version="1.0.9686.34761" />
