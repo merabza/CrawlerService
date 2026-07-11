@@ -3,6 +3,7 @@
 using CrawlerDbMigration;
 using CrawlerDbPersistence;
 using Microsoft.EntityFrameworkCore;
+using SystemTools.DatabaseToolsShared;
 
 namespace FakeHost;
 
