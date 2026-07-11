@@ -59,7 +59,7 @@ try
     // @formatter:on
 
     // ReSharper disable once using
-    await using var app = builder.Build();
+    await using WebApplication app = builder.Build();
     app.UseSwaggerServices(debugLogger);
     app.UseApiKeysAuthorization(debugLogger);
     app.UseTestToolsApiEndpoints(debugLogger);

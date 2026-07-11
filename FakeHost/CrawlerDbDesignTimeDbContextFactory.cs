@@ -1,5 +1,6 @@
 //Created by FakeProjectDesignTimeDbContextFactoryCreator at 8/2/2025 5:16:00 PM
 
+using CrawlerDbMigration;
 using CrawlerDbPersistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +15,8 @@ public sealed class CrawlerDbDesignTimeDbContextFactory : DesignTimeDbContextFac
     //ხოლო ConnectionStringSeed, როგორც დაცული ინფორმაცია, FakeHost-ის User Secrets-იდან (UserSecretsId წერია FakeHost.csproj-ში).
     //კონსტრუქტორი აუცილებლად უპარამეტრო უნდა იყოს, რადგან dotnet ef ამ კლასს თვითონ ქმნის რეფლექსიით
     // ReSharper disable once ConvertToPrimaryConstructor
-    public CrawlerDbDesignTimeDbContextFactory() : base(nameof(CrawlerDbMigration), "ConnectionStringSeed", true)
+    public CrawlerDbDesignTimeDbContextFactory() : base(AssemblyReference.Assembly.GetName().Name!,
+        "ConnectionStringSeed", true)
     {
     }
 

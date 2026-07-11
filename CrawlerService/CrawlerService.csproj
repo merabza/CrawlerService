@@ -5,8 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CrawlerDomain\CrawlerDomain.RepoInterfaces\CrawlerDomain.RepoInterfaces.csproj" />
-    <ProjectReference Include="..\..\CrawlerDomain\CrawlerRepoInterfaces\CrawlerRepoInterfaces.csproj" />
     <ProjectReference Include="..\..\CrawlerInfrastructure\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
     <ProjectReference Include="..\CrawlerServiceApi\CrawlerServiceApi.csproj" />
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
@@ -19,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CrawlerDomain.RepoInterfaces" />
     <PackageReference Include="Figgle.Fonts" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -705,15 +705,15 @@ public sealed class BatchPartRunner
 
         UrlModel? url = _procData.GetUrlByHashCode(urlHashCode);
 
-        if ((url is null || url.UrlName != ((Uri)checkedUrlResult).AbsoluteUri) && hostModel.HostId != 0 && extensionModel.ExtId != 0 &&
-            schemeModel.SchId != 0)
+        if ((url is null || url.UrlName != ((Uri)checkedUrlResult).AbsoluteUri) && hostModel.HostId != 0 &&
+            extensionModel.ExtId != 0 && schemeModel.SchId != 0)
         {
             url = crawlerRepository.GetUrl(hostModel.HostId, extensionModel.ExtId, schemeModel.SchId, urlHashCode,
                 ((Uri)checkedUrlResult).AbsoluteUri);
         }
 
-        var urlData = new UrlData(hostModel, extensionModel, schemeModel, ((Uri)checkedUrlResult).AbsoluteUri, absolutePath, urlHashCode,
-            url);
+        var urlData = new UrlData(hostModel, extensionModel, schemeModel, ((Uri)checkedUrlResult).AbsoluteUri,
+            absolutePath, urlHashCode, url);
 
         return urlData;
     }

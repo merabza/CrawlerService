@@ -5,8 +5,8 @@ namespace CrawlerServiceApi.CommandRequests;
 public sealed class TestOnePageCommand : ICommand<bool>
 {
     // ReSharper disable once ConvertToPrimaryConstructor
-    public TestOnePageCommand(string? taskName, string? strUrName, string? userName,
-        bool deleteContentForReanalyze, int newPartsCreateLimit)
+    public TestOnePageCommand(string? taskName, string? strUrName, string? userName, bool deleteContentForReanalyze,
+        int newPartsCreateLimit)
     {
         TaskName = taskName;
         Url = strUrName;

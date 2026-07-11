@@ -1,7 +1,6 @@
 //Created by ProjectParametersClassCreator at 4/22/2021 17:17:01
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +9,6 @@ namespace DoCrawler.Models;
 
 public sealed class CrawlerParameters
 {
-
     private string _punctuationRegex = string.Empty;
     private string _segmentFinisherPunctuationRegex = string.Empty;
     private string _wordDelimiterRegex = string.Empty;
@@ -18,6 +16,7 @@ public sealed class CrawlerParameters
     public string? Alphabet { get; set; }
 
     public Dictionary<string, PunctuationModel> Punctuations { get; init; } = [];
+
     public static CrawlerParameters? Create(IConfiguration configuration)
     {
         IConfigurationSection projectSettingsSection = configuration.GetSection("CrawlerParameters");

@@ -42,7 +42,9 @@ internal sealed class RunBatchCommandHandler : ICommandHandler<RunBatchCommand, 
     {
         var crawlRequest = new CrawlRequest
         {
-            Kind = ECrawlKind.Batch, BatchName = request.BatchName, UserName = request.UserName,
+            Kind = ECrawlKind.Batch,
+            BatchName = request.BatchName,
+            UserName = request.UserName,
             NewPartsCreateLimit = request.NewPartsCreateLimit
         };
         _backgroundTaskQueue.QueueBackgroundWorkItem(token => Run(crawlRequest, token));

@@ -6,13 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CrawlerDomain\CrawlerDomain.RepoInterfaces\CrawlerDomain.RepoInterfaces.csproj" />
+    <ProjectReference Include="..\..\CrawlerInfrastructure\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
     <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
-    <ProjectReference Include="..\LibCrawlerRepositories\LibCrawlerRepositories.csproj" />
     <ProjectReference Include="..\RobotsTxt\RobotsTxt.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CrawlerDomain.RepoInterfaces" />
     <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="SystemTools.BackgroundTasks" />

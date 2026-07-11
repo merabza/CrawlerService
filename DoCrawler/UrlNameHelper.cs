@@ -4,7 +4,6 @@ using System.Web;
 using CrawlerDbPersistence.Configurations;
 using CrawlerDomain.DbModels;
 using CrawlerDomain.RepoInterfaces;
-using DoCrawler.Models;
 using LanguageExt;
 using RobotsTxt;
 

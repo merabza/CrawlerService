@@ -5,13 +5,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CrawlerDomain\CrawlerDomain.RepoInterfaces\CrawlerDomain.RepoInterfaces.csproj" />
     <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CrawlerDomain.RepoInterfaces" />
     <PackageReference Include="SystemTools.MediatRMessagingAbstractions" />
     <PackageReference Include="SystemTools.ReCounterAbstraction" />
   </ItemGroup>
