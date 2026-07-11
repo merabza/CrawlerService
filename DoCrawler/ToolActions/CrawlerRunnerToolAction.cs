@@ -1,11 +1,10 @@
 ﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDbModels;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.DbModels;
+using CrawlerDomain.RepoInterfaces;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using TaskModel = DoCrawler.Models.TaskModel;
 
 namespace DoCrawler.ToolActions;
@@ -19,8 +18,8 @@ public sealed class CrawlerRunnerToolAction : CrawlerToolAction
     public CrawlerRunnerToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
         ICrawlerRepository crawlerRepository, CrawlerParameters par, ParseOnePageParameters parseOnePageParameters,
         string taskName, TaskModel? task, Batch? batch, int newPartsCreateLimit,
-        ICrawlProgressReporter? progressReporter = null) : base(logger, par, taskName, task,
-        crawlerRepository, httpClientFactory, parseOnePageParameters, newPartsCreateLimit, progressReporter)
+        ICrawlProgressReporter? progressReporter = null) : base(logger, par, taskName, task, crawlerRepository,
+        httpClientFactory, parseOnePageParameters, newPartsCreateLimit, progressReporter)
     {
         _batch = batch;
     }
@@ -28,8 +27,8 @@ public sealed class CrawlerRunnerToolAction : CrawlerToolAction
     public CrawlerRunnerToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
         ICrawlerRepository crawlerRepository, CrawlerParameters par, ParseOnePageParameters parseOnePageParameters,
         string taskName, Batch? batch, int newPartsCreateLimit, ICrawlProgressReporter? progressReporter = null) : base(
-        logger, par, taskName, null, crawlerRepository,
-        httpClientFactory, parseOnePageParameters, newPartsCreateLimit, progressReporter)
+        logger, par, taskName, null, crawlerRepository, httpClientFactory, parseOnePageParameters, newPartsCreateLimit,
+        progressReporter)
     {
         _batch = batch;
     }

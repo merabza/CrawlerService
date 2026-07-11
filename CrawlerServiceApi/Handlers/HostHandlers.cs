@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDbModels;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.DbModels;
+using CrawlerDomain.RepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
@@ -19,8 +19,8 @@ internal sealed class GetHostsListQueryHandler(ICrawlerRepository repository)
 {
     public Task<OneOf<List<HostDto>, Error[]>> Handle(GetHostsListQuery request, CancellationToken cancellationToken)
     {
-        return Task.FromResult<OneOf<List<HostDto>, Error[]>>(
-            repository.GetHostsList().Select(host => host.ToDto()).ToList());
+        return Task.FromResult<OneOf<List<HostDto>, Error[]>>(repository.GetHostsList().Select(host => host.ToDto())
+            .ToList());
     }
 }
 
@@ -47,8 +47,7 @@ internal sealed class CreateHostCommandHandler(ICrawlerRepository repository)
     }
 }
 
-internal sealed class UpdateHostCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<UpdateHostCommand, bool>
+internal sealed class UpdateHostCommandHandler(ICrawlerRepository repository) : ICommandHandler<UpdateHostCommand, bool>
 {
     public Task<OneOf<bool, Error[]>> Handle(UpdateHostCommand request, CancellationToken cancellationToken)
     {
@@ -58,8 +57,7 @@ internal sealed class UpdateHostCommandHandler(ICrawlerRepository repository)
     }
 }
 
-internal sealed class DeleteHostCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<DeleteHostCommand, bool>
+internal sealed class DeleteHostCommandHandler(ICrawlerRepository repository) : ICommandHandler<DeleteHostCommand, bool>
 {
     public Task<OneOf<bool, Error[]>> Handle(DeleteHostCommand request, CancellationToken cancellationToken)
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.RepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceReCounters;
 using CrawlerServiceShared.Contracts.Errors;
@@ -15,6 +15,7 @@ using OneOf;
 using SystemTools.MediatRMessagingAbstractions;
 using SystemTools.ReCounterAbstraction;
 using SystemTools.SystemToolsShared.Errors;
+using TaskModel = CrawlerDomain.DbModels.TaskModel;
 
 namespace CrawlerServiceApi.Handlers;
 
@@ -49,7 +50,7 @@ internal sealed class RunTaskCommandHandler : ICommandHandler<RunTaskCommand, bo
         using (IServiceScope scope = _scopeFactory.CreateScope())
         {
             var crawlerRepository = scope.ServiceProvider.GetRequiredService<ICrawlerRepository>();
-            var task = request.TaskName is null ? null : crawlerRepository.GetTaskByName(request.TaskName);
+            TaskModel? task = request.TaskName is null ? null : crawlerRepository.GetTaskByName(request.TaskName);
             if (task is null)
             {
                 return Task.FromResult<OneOf<bool, Error[]>>(new[]

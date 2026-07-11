@@ -1,8 +1,8 @@
 ﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDbModels;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.DbModels;
+using CrawlerDomain.RepoInterfaces;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
 using TaskModel = DoCrawler.Models.TaskModel;

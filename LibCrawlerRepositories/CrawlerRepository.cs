@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using CrawlerDbModels;
 using CrawlerDbPersistence;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.DbModels;
+using CrawlerDomain.RepoInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -239,14 +239,6 @@ public sealed class CrawlerRepository : ICrawlerRepository
         return _context.ContentsAnalysis.SingleOrDefault(s => s.BatchPartId == batchPartBpId && s.UrlId == urlId);
     }
 
-    public ContentAnalysis? GetContentAnalysisByUrlName(int batchPartBpId, string checkedUrlName)
-    {
-        UrlModel? url = _context.Urls.FirstOrDefault(u => u.UrlName == checkedUrlName);
-        return url is null
-            ? null
-            : _context.ContentsAnalysis.SingleOrDefault(s => s.BatchPartId == batchPartBpId && s.UrlId == url.UrlId);
-    }
-
     public void DeleteContentAnalysis(ContentAnalysis contentAnalysis)
     {
         _changesCount++;
@@ -327,6 +319,24 @@ public sealed class CrawlerRepository : ICrawlerRepository
             select u).Count();
     }
 
+    public int GetHostId(string host)
+    {
+        var hostModel = _context.Hosts.FirstOrDefault(h => h.HostName == host);
+        return hostModel?.HostId ?? 0;
+    }
+
+    public int GetExtensionId(string extension)
+    {
+        var extensionModel = _context.Extensions.FirstOrDefault(e => e.ExtName == extension);
+        return extensionModel?.ExtId ?? 0;
+    }
+
+    public int GetSchemeId(string scheme)
+    {
+        var schemeModel = _context.Schemes.FirstOrDefault(s => s.SchName == scheme);
+        return schemeModel?.SchId ?? 0;
+    }
+
     public TermType CheckAddTermType(string termTypeKey)
     {
         return _context.TermTypes.SingleOrDefault(a => a.TtKey == termTypeKey) ??
@@ -379,10 +389,8 @@ public sealed class CrawlerRepository : ICrawlerRepository
             .. (from bp in _context.BatchParts
                 join hbb in _context.HostsByBatches on bp.BatchId equals hbb.BatchId
                 join u in _context.Urls on new { hbb.HostId, hbb.SchemeId } equals new { u.HostId, u.SchemeId }
-                join ca in _context.ContentsAnalysis on new { BatchPartId = bp.BpId, u.UrlId } equals new
-                {
-                    ca.BatchPartId, ca.UrlId
-                } into gj
+                join ca in _context.ContentsAnalysis on new { BatchPartId = bp.BpId, u.UrlId } equals
+                    new { ca.BatchPartId, ca.UrlId } into gj
                 from g in gj.DefaultIfEmpty()
                 where g == null
                 where bp.BpId == batchPartId && u.IsAllowed
@@ -404,6 +412,11 @@ public sealed class CrawlerRepository : ICrawlerRepository
             LastModifiedDateOnServer = lastModifiedDateOnServer
         });
     }
+
+    //public ContentAnalysis? GetContentAnalysisByUrlName(int batchPartBpId, int urlId)
+    //{
+    //    return _context.ContentsAnalysis.SingleOrDefault(s => s.BatchPartId == batchPartBpId && s.UrlId == urlId);
+    //}
 
     #region Host cruder
 

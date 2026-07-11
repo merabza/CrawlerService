@@ -1,7 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.DbModels;
+using CrawlerDomain.RepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts;
 using CrawlerServiceShared.Contracts.V1.Routes;
@@ -91,15 +92,15 @@ public static class CrawlerEndpoints
         await progressDataManager.SetProgressData(userName, ReCounterConstants.ProcName,
             $"{nameof(TestOnePage)} started", true, cancellationToken);
 
-        var command = new TestOnePageCommand(request.TaskName, request.Url, userName,
-            request.DeleteContentForReanalyze, request.NewPartsCreateLimit);
+        var command = new TestOnePageCommand(request.TaskName, request.Url, userName, request.DeleteContentForReanalyze,
+            request.NewPartsCreateLimit);
         OneOf<bool, Error[]> result = await mediator.Send(command, cancellationToken);
 
         return result.Match(Results.Ok, Results.BadRequest);
     }
 
     // GET api/v1/crawler/precheck
-    private static Task<IResult> PreCheck(IServiceScopeFactory scopeFactory, [FromQuery] string name,
+    private static Task<IResult> PreCheck(IServiceScopeFactory scopeFactory, [FromQuery] string batchName,
         [FromQuery] string? url)
     {
         // ReSharper disable once using
@@ -108,7 +109,7 @@ public static class CrawlerEndpoints
 
         var result = new CrawlerPreCheckResult();
 
-        var batch = crawlerRepository.GetBatchByName(name);
+        Batch? batch = crawlerRepository.GetBatchByName(batchName);
         if (batch is null)
         {
             return Task.FromResult(Results.Ok(result));
@@ -116,7 +117,7 @@ public static class CrawlerEndpoints
 
         result.AutoCreateNextPart = batch.AutoCreateNextPart;
 
-        var openPart = crawlerRepository.GetOpenedBatchPart(batch.BatchId);
+        BatchPart? openPart = crawlerRepository.GetOpenedBatchPart(batch.BatchId);
         result.HasOpenPart = openPart is not null;
 
         if (openPart is not null && !string.IsNullOrWhiteSpace(url))

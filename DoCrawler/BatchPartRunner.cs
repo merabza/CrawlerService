@@ -10,12 +10,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using CrawlerDbModels;
 using CrawlerDbPersistence.Configurations;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.DbModels;
+using CrawlerDomain.RepoInterfaces;
 using CrawlerServiceShared.Contracts;
 using DoCrawler.Models;
 using DoCrawler.States;
+using LanguageExt;
 using Microsoft.Extensions.Logging;
 using RobotsTxt;
 using RobotsTxt.Entities;
@@ -28,6 +29,7 @@ public sealed class BatchPartRunner
     public const string CrawlerClient = nameof(CrawlerClient);
 
     private readonly BatchPart _batchPart;
+
     //private readonly ConsoleFormatter _consoleFormatter = new();
     private readonly ICrawlerRepository _crawlerRepository;
     private readonly IHttpClientFactory _httpClientFactory;
@@ -108,8 +110,7 @@ public sealed class BatchPartRunner
 
             if (_progressReporter is not null)
             {
-                await _progressReporter.SetMessage($"Crawling. Urls count in queue is {loadedUrls.Count}",
-                    token);
+                await _progressReporter.SetMessage($"Crawling. Urls count in queue is {loadedUrls.Count}", token);
                 await _progressReporter.SetLength(loadedUrls.Count, token);
             }
 
@@ -241,55 +242,6 @@ public sealed class BatchPartRunner
         return new GetOnePageContentResult { StatusCode = HttpStatusCode.BadRequest };
     }
 
-    //private async Task<GetOnePageContentResult> GetOnePageContent(Uri uri, CancellationToken token = default)
-    //{
-    //    try
-    //    {
-    //        // ReSharper disable once using
-    //        var client = _httpClientFactory.CreateClient(CrawlerClient);
-    //        // ReSharper disable once using
-    //        using var response = await client.GetAsync(uri, token);
-
-    //        //response.Headers.
-
-    //        if (response.IsSuccessStatusCode)
-    //            return new GetOnePageContentResult
-    //            {
-    //                StatusCode = response.StatusCode,
-    //                LastModified = GetPageLastModified(response),
-    //                Content = await response.Content.ReadAsStringAsync(token)
-    //            };
-    //        if (response.StatusCode == HttpStatusCode.Found)
-    //            return new GetOnePageContentResult
-    //            {
-    //                StatusCode = response.StatusCode,
-    //                LastModified = GetPageLastModified(response),
-    //                Location = GetPageLocation(response)
-    //            };
-
-    //        return new GetOnePageContentResult { StatusCode = response.StatusCode };
-    //    }
-    //    catch
-    //    {
-    //        StShared.WriteErrorLine($"Error when downloading {uri}", true, _logger, false);
-    //    }
-
-    //    return new GetOnePageContentResult { StatusCode = HttpStatusCode.BadRequest };
-    //}
-
-    //private DateTime? GetPageLastModified(Uri uri)
-    //{
-    //    // ReSharper disable once using
-    //    var client = _httpClientFactory.CreateClient(CrawlerClient);
-    //    // ReSharper disable once using
-    //    // ReSharper disable once DisposableConstructor
-    //    using var request = new HttpRequestMessage(HttpMethod.Head, uri);
-    //    // ReSharper disable once using
-    //    using var response = client.Send(request);
-
-    //    return GetPageLastModified(response);
-    //}
-
     private static string? GetPageLocation(HttpResponseMessage response)
     {
         return response.Headers.TryGetValues("location", out IEnumerable<string>? values)
@@ -313,51 +265,6 @@ public sealed class BatchPartRunner
 
         return null;
     }
-
-    //private async Task<GetOnePageContentResult> GetSiteMapGzFileContent(Uri uri, CancellationToken token = default)
-    //{
-    //    try
-    //    {
-    //        // ReSharper disable once using
-    //        var client = _httpClientFactory.CreateClient(CrawlerClient);
-    //        // ReSharper disable once using
-    //        using var response = await client.GetAsync(uri, token);
-    //        if (response.IsSuccessStatusCode)
-    //        {
-    //            // ReSharper disable once using
-    //            // ReSharper disable once DisposableConstructor
-    //            await using var stream = await response.Content.ReadAsStreamAsync(token);
-    //            // ReSharper disable once using
-    //            // ReSharper disable once DisposableConstructor
-    //            await using var gzStream = new GZipStream(stream, CompressionMode.Decompress);
-    //            // ReSharper disable once using
-    //            // ReSharper disable once DisposableConstructor
-    //            using var reader = new StreamReader(gzStream);
-    //            var text = await reader.ReadToEndAsync(token);
-    //            return new GetOnePageContentResult
-    //            {
-    //                StatusCode = response.StatusCode, LastModified = GetPageLastModified(response), Content = text
-    //            };
-    //        }
-
-    //        if (response.StatusCode == HttpStatusCode.Found)
-    //            return new GetOnePageContentResult
-    //            {
-    //                StatusCode = response.StatusCode,
-    //                LastModified = GetPageLastModified(response),
-    //                Location = GetPageLocation(response)
-    //            };
-
-    //        return new GetOnePageContentResult { StatusCode = response.StatusCode };
-    //    }
-    //    catch
-    //    {
-    //        StShared.WriteErrorLine($"Error when downloading {uri}", true, _logger, false);
-    //        //StShared.WriteException(e, true);
-    //    }
-
-    //    return new GetOnePageContentResult { StatusCode = HttpStatusCode.BadRequest };
-    //}
 
     private void AnalyzeAsRobotsText(ICrawlerRepository crawlerRepository, string content, int fromUrlPageId,
         int batchPartId, int schemeId, int hostId)
@@ -788,20 +695,24 @@ public sealed class BatchPartRunner
         ExtensionModel extensionModel = TrySaveExtension(crawlerRepository, extension);
         SchemeModel schemeModel = TrySaveScheme(crawlerRepository, scheme);
 
-        string checkedUrName = UrlNameHelper.ToCheckedUrlName(urName);
+        Option<Uri> checkedUrlResult = UrlNameHelper.ToCheckedUrlName(urName);
+        if (checkedUrlResult.IsNone)
+        {
+            return null;
+        }
 
-        int urlHashCode = checkedUrName.GetDeterministicHashCode();
+        int urlHashCode = ((Uri)checkedUrlResult).AbsoluteUri.GetDeterministicHashCode();
 
         UrlModel? url = _procData.GetUrlByHashCode(urlHashCode);
 
-        if ((url is null || url.UrlName != checkedUrName) && hostModel.HostId != 0 && extensionModel.ExtId != 0 &&
+        if ((url is null || url.UrlName != ((Uri)checkedUrlResult).AbsoluteUri) && hostModel.HostId != 0 && extensionModel.ExtId != 0 &&
             schemeModel.SchId != 0)
         {
             url = crawlerRepository.GetUrl(hostModel.HostId, extensionModel.ExtId, schemeModel.SchId, urlHashCode,
-                checkedUrName);
+                ((Uri)checkedUrlResult).AbsoluteUri);
         }
 
-        var urlData = new UrlData(hostModel, extensionModel, schemeModel, checkedUrName, absolutePath, urlHashCode,
+        var urlData = new UrlData(hostModel, extensionModel, schemeModel, ((Uri)checkedUrlResult).AbsoluteUri, absolutePath, urlHashCode,
             url);
 
         return urlData;
@@ -880,7 +791,7 @@ public sealed class BatchPartRunner
             var uri = new Uri(urlForProcess.UrlName);
 
             //DateTime startedAt = DateTime.Now;
-            
+
             if (_progressReporter is not null)
             {
                 await _progressReporter.SetMessage(CrawlerReCounterConstants.WorkingOn, uri.ToString(), token);
@@ -891,11 +802,11 @@ public sealed class BatchPartRunner
             GetOnePageContentResult getOnePageContentResult =
                 //მოიქაჩოს მისამართის მიხედვით Gz კონტენტი გახსნით
                 urlForProcess.IsSiteMap && string.Equals(urlForProcess.ExtensionNavigation.ExtName, ".gz",
-                StringComparison.OrdinalIgnoreCase)
-                ? await GetOnePageContent(uri, EContentType.SiteMapGzFile, token)
-                :
-                //მოიქაჩოს მისამართის მიხედვით კონტენტი
-                await GetOnePageContent(uri, EContentType.Http, token);
+                    StringComparison.OrdinalIgnoreCase)
+                    ? await GetOnePageContent(uri, EContentType.SiteMapGzFile, token)
+                    :
+                    //მოიქაჩოს მისამართის მიხედვით კონტენტი
+                    await GetOnePageContent(uri, EContentType.Http, token);
 
             string? content = getOnePageContentResult.Content;
             HttpStatusCode statusCode = getOnePageContentResult.StatusCode;
@@ -922,6 +833,7 @@ public sealed class BatchPartRunner
                         _logger.LogInformation("Page {Uri} is redirected ({StatusCode}) to {Location}", uri,
                             (int)statusCode, locationUri);
                     }
+
                     TrySaveUrl(crawlerRepository, locationUri.ToString(), urlForProcess.UrlId, batchPart.BpId);
                     //დავადასტუროთ, რომ ამ გვერდის გაანალიზება ვერ მოხდა.
                     crawlerRepository.CreateContentAnalysisRecord(batchPart.BpId, urlForProcess.UrlId, statusCode,

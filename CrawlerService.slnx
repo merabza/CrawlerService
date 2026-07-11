@@ -12,8 +12,8 @@
     <Project Path="../SystemTools/SystemTools.TestApiContracts/SystemTools.TestApiContracts.csproj" />
   </Folder>
   <Folder Name="/CrawlerDomain/">
-    <Project Path="../CrawlerDomain/CrawlerDbModels/CrawlerDbModels.csproj" Id="e39b6cf8-2908-4da1-9503-5f22045ef882" />
-    <Project Path="../CrawlerDomain/CrawlerRepoInterfaces/CrawlerRepoInterfaces.csproj" Id="69b46d4e-67c3-4ea4-9cb0-4824aedcf68c" />
+    <Project Path="../CrawlerDomain/CrawlerDomain.DbModels/CrawlerDomain.DbModels.csproj" />
+    <Project Path="../CrawlerDomain/CrawlerDomain.RepoInterfaces/CrawlerDomain.RepoInterfaces.csproj" />
   </Folder>
   <Folder Name="/CrawlerInfrastructure/">
     <Project Path="../CrawlerInfrastructure/CrawlerDbPersistence/CrawlerDbPersistence.csproj" Id="8cd8fc57-b1c7-4ed3-b100-e6569b70281b" />

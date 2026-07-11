@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDbModels;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.DbModels;
+using CrawlerDomain.RepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
@@ -19,8 +19,8 @@ internal sealed class GetTasksListQueryHandler(ICrawlerRepository repository)
 {
     public Task<OneOf<List<TaskDto>, Error[]>> Handle(GetTasksListQuery request, CancellationToken cancellationToken)
     {
-        return Task.FromResult<OneOf<List<TaskDto>, Error[]>>(
-            repository.GetTasksList().Select(task => task.ToDto()).ToList());
+        return Task.FromResult<OneOf<List<TaskDto>, Error[]>>(repository.GetTasksList().Select(task => task.ToDto())
+            .ToList());
     }
 }
 
@@ -47,8 +47,7 @@ internal sealed class CreateTaskCommandHandler(ICrawlerRepository repository)
     }
 }
 
-internal sealed class UpdateTaskCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<UpdateTaskCommand, bool>
+internal sealed class UpdateTaskCommandHandler(ICrawlerRepository repository) : ICommandHandler<UpdateTaskCommand, bool>
 {
     public Task<OneOf<bool, Error[]>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
     {
@@ -58,15 +57,17 @@ internal sealed class UpdateTaskCommandHandler(ICrawlerRepository repository)
     }
 }
 
-internal sealed class DeleteTaskCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<DeleteTaskCommand, bool>
+internal sealed class DeleteTaskCommandHandler(ICrawlerRepository repository) : ICommandHandler<DeleteTaskCommand, bool>
 {
     public Task<OneOf<bool, Error[]>> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
     {
         TaskModel? task = repository.GetTaskByName(request.Name);
         if (task is null)
         {
-            return Task.FromResult<OneOf<bool, Error[]>>(new[] { CrawlerServiceErrors.TaskWithNameNotFound(request.Name) });
+            return Task.FromResult<OneOf<bool, Error[]>>(new[]
+            {
+                CrawlerServiceErrors.TaskWithNameNotFound(request.Name)
+            });
         }
 
         repository.DeleteTask(task);

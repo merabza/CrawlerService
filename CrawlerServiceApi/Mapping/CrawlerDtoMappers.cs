@@ -1,5 +1,5 @@
 using System.Linq;
-using CrawlerDbModels;
+using CrawlerDomain.DbModels;
 using CrawlerServiceShared.Contracts;
 
 namespace CrawlerServiceApi.Mapping;

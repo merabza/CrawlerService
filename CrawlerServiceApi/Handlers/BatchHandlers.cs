@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDbModels;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.DbModels;
+using CrawlerDomain.RepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
@@ -19,8 +19,8 @@ internal sealed class GetBatchesListQueryHandler(ICrawlerRepository repository)
 {
     public Task<OneOf<List<BatchDto>, Error[]>> Handle(GetBatchesListQuery request, CancellationToken cancellationToken)
     {
-        return Task.FromResult<OneOf<List<BatchDto>, Error[]>>(
-            repository.GetBatchesList().Select(batch => batch.ToDto()).ToList());
+        return Task.FromResult<OneOf<List<BatchDto>, Error[]>>(repository.GetBatchesList()
+            .Select(batch => batch.ToDto()).ToList());
     }
 }
 
@@ -85,8 +85,9 @@ internal sealed class GetHostStartUrlNamesByBatchQueryHandler(ICrawlerRepository
         CancellationToken cancellationToken)
     {
         Batch? batch = repository.GetBatchByName(request.BatchName);
-        return Task.FromResult<OneOf<List<string>, Error[]>>(
-            batch is null ? new List<string>() : repository.GetHostStartUrlNamesByBatch(batch));
+        return Task.FromResult<OneOf<List<string>, Error[]>>(batch is null
+            ? new List<string>()
+            : repository.GetHostStartUrlNamesByBatch(batch));
     }
 }
 

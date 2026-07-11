@@ -1,5 +1,5 @@
 ﻿using System;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.RepoInterfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibCrawlerRepositories;

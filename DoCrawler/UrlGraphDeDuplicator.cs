@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using CrawlerDbModels;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.DbModels;
+using CrawlerDomain.RepoInterfaces;
 
 namespace DoCrawler;
 

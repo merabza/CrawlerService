@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
-using CrawlerDbModels;
 using CrawlerDbPersistence.Configurations;
-using CrawlerRepoInterfaces;
+using CrawlerDomain.DbModels;
+using CrawlerDomain.RepoInterfaces;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
 using RobotsTxt;
