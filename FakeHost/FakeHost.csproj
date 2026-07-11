@@ -11,7 +11,6 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\CrawlerInfrastructure\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
         <ProjectReference Include="..\CrawlerDbMigration\CrawlerDbMigration.csproj" />
     </ItemGroup>
 </Project>

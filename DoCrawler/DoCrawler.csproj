@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CrawlerInfrastructure\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
     <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
+    <ProjectReference Include="..\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
     <ProjectReference Include="..\RobotsTxt\RobotsTxt.csproj" />
   </ItemGroup>
 

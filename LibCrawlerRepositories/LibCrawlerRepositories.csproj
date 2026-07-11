@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CrawlerInfrastructure\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
+    <PackageReference Include="CrawlerDomain.RepoInterfaces" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CrawlerDomain.RepoInterfaces" />
+    <ProjectReference Include="..\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
   </ItemGroup>
 
 </Project>

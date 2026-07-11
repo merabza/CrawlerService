@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CrawlerInfrastructure\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
+    <ProjectReference Include="..\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
     <ProjectReference Include="..\CrawlerServiceApi\CrawlerServiceApi.csproj" />
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />

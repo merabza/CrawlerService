@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\CrawlerDomain\CrawlerDomain.DbModels\CrawlerDomain.DbModels.csproj" />
+        <ProjectReference Include="..\..\SystemTools\SystemTools.DatabaseToolsShared\SystemTools.DatabaseToolsShared.csproj" />
+    </ItemGroup>
+
+</Project>

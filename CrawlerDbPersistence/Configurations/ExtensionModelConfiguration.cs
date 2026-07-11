@@ -1,0 +1,22 @@
+﻿using CrawlerDomain.DbModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace CrawlerDbPersistence.Configurations;
+
+public sealed class ExtensionModelConfiguration : IEntityTypeConfiguration<ExtensionModel>
+{
+    public const int ExtensionNameLength = 50;
+
+    public void Configure(EntityTypeBuilder<ExtensionModel> builder)
+    {
+        const string tableName = "Extensions";
+        builder.ToTable(tableName);
+
+        builder.HasKey(e => e.ExtId);
+        builder.HasIndex(e => e.ExtName).IsUnique();
+
+        builder.Property(e => e.ExtName).HasMaxLength(ExtensionNameLength);
+        builder.Property(e => e.ExtProhibited).HasDefaultValue(0);
+    }
+}

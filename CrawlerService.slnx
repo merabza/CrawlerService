@@ -11,13 +11,6 @@
     <Project Path="../SystemTools/SystemTools.SystemToolsShared/SystemTools.SystemToolsShared.csproj" />
     <Project Path="../SystemTools/SystemTools.TestApiContracts/SystemTools.TestApiContracts.csproj" />
   </Folder>
-  <Folder Name="/CrawlerDomain/">
-    <Project Path="../CrawlerDomain/CrawlerDomain.DbModels/CrawlerDomain.DbModels.csproj" />
-    <Project Path="../CrawlerDomain/CrawlerDomain.RepoInterfaces/CrawlerDomain.RepoInterfaces.csproj" />
-  </Folder>
-  <Folder Name="/CrawlerInfrastructure/">
-    <Project Path="../CrawlerInfrastructure/CrawlerDbPersistence/CrawlerDbPersistence.csproj" Id="8cd8fc57-b1c7-4ed3-b100-e6569b70281b" />
-  </Folder>
   <Folder Name="/CrawlerServiceShared/">
     <Project Path="../CrawlerServiceShared/CrawlerServiceShared.Contracts/CrawlerServiceShared.Contracts.csproj" />
   </Folder>
@@ -38,6 +31,9 @@
     <Project Path="../WebSystemTools/WebSystemTools.WindowsServiceTools/WebSystemTools.WindowsServiceTools.csproj" />
   </Folder>
   <Project Path="CrawlerDbMigration/CrawlerDbMigration.csproj" />
+  <Project Path="CrawlerDbModels/CrawlerDbModels.csproj" Id="84bef1ef-d430-47e7-82f1-15b1fb115aa0" />
+  <Project Path="CrawlerDbPersistence/CrawlerDbPersistence.csproj" />
+  <Project Path="CrawlerRepoInterfaces/CrawlerRepoInterfaces.csproj" Id="68465c19-a051-4bfe-9d78-bd87c5a39ddf" />
   <Project Path="CrawlerService/CrawlerService.csproj" />
   <Project Path="CrawlerServiceApi/CrawlerServiceApi.csproj" />
   <Project Path="CrawlerServiceReCounters/CrawlerServiceReCounters.csproj" />
