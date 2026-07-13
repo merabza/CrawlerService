@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CrawlerDomain.RepoInterfaces" />
+    <PackageReference Include="CrawlerServiceShared.Contracts" />
     <PackageReference Include="SystemTools.ReCounterAbstraction" />
   </ItemGroup>
 
