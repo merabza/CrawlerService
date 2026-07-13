@@ -2,14 +2,13 @@
 using System.Linq;
 using System.Net.Http;
 using CrawlerDbPersistence.Configurations;
-using CrawlerDomain.DbModels;
-using CrawlerDomain.RepoInterfaces;
+using CrawlerDbModels;
+using CrawlerRepoInterfaces;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
 using RobotsTxt;
 using SystemTools.BackgroundTasks;
 using SystemTools.SystemToolsShared;
-using TaskModel = DoCrawler.Models.TaskModel;
 
 namespace DoCrawler.ToolActions;
 
@@ -24,12 +23,12 @@ public /*open*/ class CrawlerToolAction : ToolAction
     private readonly string? _taskName;
     protected readonly ILogger CrLogger;
     protected readonly CrawlerParameters Par;
-    protected readonly TaskModel? Task;
+    protected readonly DoCrawlerTaskModel? Task;
 
     //ციკლში ახალი ნაწილების შესაქმნელად დარჩენილი ლიმიტი: 0 = აღარ შეიქმნას, -1 = შეუზღუდავად
     private int _newPartsCreateLimit;
 
-    protected CrawlerToolAction(ILogger logger, CrawlerParameters par, string taskName, TaskModel? task,
+    protected CrawlerToolAction(ILogger logger, CrawlerParameters par, string taskName, DoCrawlerTaskModel? task,
         ICrawlerRepository crawlerRepository, IHttpClientFactory httpClientFactory,
         ParseOnePageParameters parseOnePageParameters, int newPartsCreateLimit,
         ICrawlProgressReporter? progressReporter = null) : base(logger, taskName, null, null, true)

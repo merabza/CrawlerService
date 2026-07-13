@@ -1,11 +1,10 @@
 ﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDomain.DbModels;
-using CrawlerDomain.RepoInterfaces;
+using CrawlerDbModels;
+using CrawlerRepoInterfaces;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
-using TaskModel = DoCrawler.Models.TaskModel;
 
 namespace DoCrawler.ToolActions;
 
@@ -17,7 +16,7 @@ public sealed class CrawlerRunnerToolAction : CrawlerToolAction
 
     public CrawlerRunnerToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
         ICrawlerRepository crawlerRepository, CrawlerParameters par, ParseOnePageParameters parseOnePageParameters,
-        string taskName, TaskModel? task, Batch? batch, int newPartsCreateLimit,
+        string taskName, DoCrawlerTaskModel? task, Batch? batch, int newPartsCreateLimit,
         ICrawlProgressReporter? progressReporter = null) : base(logger, par, taskName, task, crawlerRepository,
         httpClientFactory, parseOnePageParameters, newPartsCreateLimit, progressReporter)
     {

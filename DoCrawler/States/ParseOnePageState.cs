@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using CrawlerDomain.DbModels;
+using CrawlerDbModels;
 using DoCrawler.Models;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;

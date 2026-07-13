@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Web;
 using CrawlerDbPersistence.Configurations;
-using CrawlerDomain.DbModels;
-using CrawlerDomain.RepoInterfaces;
+using CrawlerDbModels;
+using CrawlerRepoInterfaces;
 using LanguageExt;
 using RobotsTxt;
 

@@ -1,4 +1,4 @@
-﻿using CrawlerDomain.DbModels;
+﻿using CrawlerDbModels;
 using Microsoft.EntityFrameworkCore;
 using SystemTools.DatabaseToolsShared;
 

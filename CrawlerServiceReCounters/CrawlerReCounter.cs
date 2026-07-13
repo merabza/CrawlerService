@@ -2,8 +2,8 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDomain.DbModels;
-using CrawlerDomain.RepoInterfaces;
+using CrawlerDbModels;
+using CrawlerRepoInterfaces;
 using CrawlerServiceShared.Contracts.Errors;
 using DoCrawler;
 using DoCrawler.Models;
@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SystemTools.ReCounterAbstraction;
-using TaskModel = DoCrawler.Models.TaskModel;
 
 namespace CrawlerServiceReCounters;
 
@@ -143,7 +142,7 @@ public sealed class CrawlerReCounter : ReCounter, ICrawlProgressReporter
     private async Task RunTask(ICrawlerRepository crawlerRepository, ParseOnePageParameters parseOnePageParameters,
         CancellationToken cancellationToken)
     {
-        var task = new TaskModel { StartPoints = _request.StartPoints };
+        var task = new DoCrawlerTaskModel { StartPoints = _request.StartPoints };
         // ReSharper disable once using
         var toolAction = new CrawlerRunnerToolAction(_logger, _httpClientFactory, crawlerRepository, _crawlerParameters,
             parseOnePageParameters, _request.TaskName ?? string.Empty, task, null, _request.NewPartsCreateLimit, this);
@@ -153,7 +152,7 @@ public sealed class CrawlerReCounter : ReCounter, ICrawlProgressReporter
     private async Task RunOnePage(ICrawlerRepository crawlerRepository, ParseOnePageParameters parseOnePageParameters,
         CancellationToken cancellationToken)
     {
-        var task = new TaskModel { StartPoints = _request.StartPoints };
+        var task = new DoCrawlerTaskModel { StartPoints = _request.StartPoints };
         // ReSharper disable once using
         var toolAction = new OnePageCrawlerRunnerToolAction(_logger, _httpClientFactory, crawlerRepository,
             _crawlerParameters, parseOnePageParameters, _request.TaskName ?? "TestOnePage", task,

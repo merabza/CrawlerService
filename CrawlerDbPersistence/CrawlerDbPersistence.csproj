@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\CrawlerDomain\CrawlerDomain.DbModels\CrawlerDomain.DbModels.csproj" />
+        <ProjectReference Include="..\CrawlerDbModels\CrawlerDbModels.csproj" />
     </ItemGroup>
 
 </Project>

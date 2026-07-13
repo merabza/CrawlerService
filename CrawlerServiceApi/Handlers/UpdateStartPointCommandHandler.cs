@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDomain.DbModels;
-using CrawlerDomain.RepoInterfaces;
+using CrawlerDbModels;
+using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using OneOf;
 using SystemTools.MediatRMessagingAbstractions;

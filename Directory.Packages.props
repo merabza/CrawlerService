@@ -4,7 +4,6 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="CrawlerDomain.RepoInterfaces" Version="1.0.9688.19727" />
     <PackageVersion Include="CrawlerServiceShared.Contracts" Version="1.0.9690.7970" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.9" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
