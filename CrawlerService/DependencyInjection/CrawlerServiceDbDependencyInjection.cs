@@ -32,6 +32,13 @@ public static class CrawlerServiceDbDependencyInjection
         }
 
         // 2. Database connection comes from configuration (Data:CrawlerServiceDatabase).
+        string? databaseProvider = configuration["Data:CrawlerServiceDatabase:DatabaseProvider"];
+
+        if (!Enum.TryParse<EDatabaseProvider>(databaseProvider ?? string.Empty, true, out EDatabaseProvider result))
+        {
+            Console.WriteLine("Invalid database provider");
+        }
+
         string? connectionString = configuration["Data:CrawlerServiceDatabase:ConnectionString"];
         if (string.IsNullOrWhiteSpace(connectionString))
         {
