@@ -10,6 +10,16 @@
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
     <ProjectReference Include="..\LibCrawlerRepositories\LibCrawlerRepositories.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.DependencyInjection\SystemTools.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.ApiExceptionHandler\WebSystemTools.ApiExceptionHandler.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.ApiKeyIdentity\WebSystemTools.ApiKeyIdentity.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.MediatorTools\WebSystemTools.MediatorTools.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.SerilogLogger\WebSystemTools.SerilogLogger.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.SignalRRecounterMessages\WebSystemTools.SignalRRecounterMessages.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.SwaggerTools\WebSystemTools.SwaggerTools.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.TestToolsApi\WebSystemTools.TestToolsApi.csproj" />
+    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.WindowsServiceTools\WebSystemTools.WindowsServiceTools.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,16 +32,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SystemTools.DependencyInjection" />
-    <PackageReference Include="SystemTools.ReCounterAbstraction" />
-    <PackageReference Include="WebSystemTools.ApiExceptionHandler" />
-    <PackageReference Include="WebSystemTools.ApiKeyIdentity" />
-    <PackageReference Include="WebSystemTools.MediatorTools" />
-    <PackageReference Include="WebSystemTools.SerilogLogger" />
-    <PackageReference Include="WebSystemTools.SignalRRecounterMessages" />
-    <PackageReference Include="WebSystemTools.SwaggerTools" />
-    <PackageReference Include="WebSystemTools.TestToolsApi" />
-    <PackageReference Include="WebSystemTools.WindowsServiceTools" />
   </ItemGroup>
 
 </Project>

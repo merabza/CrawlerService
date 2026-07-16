@@ -9,13 +9,13 @@
     <ProjectReference Include="..\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
     <ProjectReference Include="..\CrawlerRepoInterfaces\CrawlerRepoInterfaces.csproj" />
     <ProjectReference Include="..\RobotsTxt\RobotsTxt.csproj" />
+    <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.BackgroundTasks\SystemTools.BackgroundTasks.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CrawlerServiceShared.Contracts" />
     <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="Microsoft.Extensions.Http" />
-    <PackageReference Include="SystemTools.BackgroundTasks" />
   </ItemGroup>
 
 </Project>

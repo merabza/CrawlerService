@@ -9,12 +9,9 @@
     <ProjectReference Include="..\CrawlerRepoInterfaces\CrawlerRepoInterfaces.csproj" />
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CrawlerServiceShared.Contracts" />
-    <PackageReference Include="SystemTools.MediatRMessagingAbstractions" />
-    <PackageReference Include="SystemTools.ReCounterAbstraction" />
+    <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.MediatRMessagingAbstractions\SystemTools.MediatRMessagingAbstractions.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
   </ItemGroup>
 
 </Project>

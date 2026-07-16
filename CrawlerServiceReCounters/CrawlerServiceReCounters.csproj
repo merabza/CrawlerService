@@ -3,11 +3,8 @@
   <ItemGroup>
     <ProjectReference Include="..\CrawlerRepoInterfaces\CrawlerRepoInterfaces.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CrawlerServiceShared.Contracts" />
-    <PackageReference Include="SystemTools.ReCounterAbstraction" />
+    <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
   </ItemGroup>
 
 </Project>
