@@ -34,7 +34,7 @@ public static class CrawlerServiceDbDependencyInjection
         // 2. Database connection comes from configuration (Data:CrawlerServiceDatabase).
         string? databaseProvider = configuration["Data:CrawlerServiceDatabase:DatabaseProvider"];
 
-        if (!Enum.TryParse<EDatabaseProvider>(databaseProvider ?? string.Empty, true, out EDatabaseProvider result))
+        if (!Enum.TryParse(databaseProvider ?? string.Empty, true, out EDatabaseProvider result))
         {
             Console.WriteLine("Invalid database provider");
         }
@@ -50,7 +50,7 @@ public static class CrawlerServiceDbDependencyInjection
                 out int parsedTimeout)
                 ? parsedTimeout
                 : -1;
-            services.AddContextByProvider<CrawlerDbContext>(EDatabaseProvider.SqlServer, connectionString,
+            services.AddContextByProvider<CrawlerDbContext>(result, connectionString,
                 commandTimeout);
         }
 
