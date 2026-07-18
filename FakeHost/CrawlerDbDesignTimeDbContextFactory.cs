@@ -10,7 +10,7 @@ namespace FakeHost;
 //ეს კლასი საჭიროა იმისათვის, რომ შესაძლებელი გახდეს მიგრაციასთან მუშაობა.
 //ანუ დეველოპერ ბაზის წაშლა და ახლიდან დაგენერირება, ან მიგრაციაში ცვლილებების გაკეთება
 // ReSharper disable once UnusedType.Global
-public sealed class CrawlerDbDesignTimeDbContextFactory : DesignTimeDbContextFactory<CrawlerDbContext>
+public sealed class CrawlerDbDesignTimeDbContextFactory : SqlServerDesignTimeDbContextFactory<CrawlerDbContext>
 {
     //DataProvider მოდის FakeHost პროექტის appsettings.json ფაილიდან,
     //ხოლო ConnectionStringSeed, როგორც დაცული ინფორმაცია, FakeHost-ის User Secrets-იდან (UserSecretsId წერია FakeHost.csproj-ში).
@@ -23,6 +23,7 @@ public sealed class CrawlerDbDesignTimeDbContextFactory : DesignTimeDbContextFac
 
     protected override CrawlerDbContext CreateDbContext(DbContextOptions<CrawlerDbContext> options)
     {
+        // ReSharper disable once DisposableConstructor
         return new CrawlerDbContext(options);
     }
 }
