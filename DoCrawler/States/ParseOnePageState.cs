@@ -82,11 +82,11 @@ public sealed partial class ParseOnePageState // : State
 
     private static string ExtractText(HtmlNode htmlDocDocumentNode)
     {
-        HtmlNodeCollection? textNodes = htmlDocDocumentNode.SelectNodes("//text()");
-        if (textNodes is null)
-        {
-            return string.Empty;
-        }
+        HtmlNodeCollection textNodes = htmlDocDocumentNode.SelectNodes("//text()");
+        //if (textNodes is null)
+        //{
+        //    return string.Empty;
+        //}
 
         var sb = new StringBuilder();
         foreach (HtmlNode node in textNodes)
@@ -188,7 +188,7 @@ public sealed partial class ParseOnePageState // : State
             return;
         }
 
-        var re = new Regex(_par.SegmentFinisherPunctuationsRegex);
+        var re = new Regex(_par.SegmentFinisherPunctuationsRegex, RegexOptions.None, TimeSpan.FromSeconds(1));
         string[] strTestParts = re.Split(context);
         if (strTestParts.Length == 1)
         {
@@ -247,7 +247,8 @@ public sealed partial class ParseOnePageState // : State
             return;
         }
 
-        var re = new Regex(_par.PunctuationsRegex); //ყველა პუნქტუაციის ნიშანი
+        var re = new Regex(_par.PunctuationsRegex, RegexOptions.None,
+            TimeSpan.FromSeconds(1)); //ყველა პუნქტუაციის ნიშანი
         string[] strTestParts = re.Split(context);
 
         if (strTestParts.Length == 1)
@@ -285,7 +286,7 @@ public sealed partial class ParseOnePageState // : State
         }
 
         //ყველა ის პუნქტუაციის ნიშანი, რომელიც არ შეიძლება აღიქმებოდეს სიტყვის ნაწილად
-        var re = new Regex(_par.WordDelimiterRegex);
+        var re = new Regex(_par.WordDelimiterRegex, RegexOptions.None, TimeSpan.FromSeconds(1));
         string[] strTestParts = re.Split(context);
         if (strTestParts.Length < 3)
         {
