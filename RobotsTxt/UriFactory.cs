@@ -16,7 +16,10 @@ public static class UriFactory
             // Intentionally left blank: return null if format is invalid
         }
 
-        return newUri;
+        //Linux-ზე "/"-ით დაწყებული ბილიკი წარმატებით პარსდება როგორც file:/// მისამართი,
+        //Windows-ზე კი UriFormatException ვარდება და null ბრუნდება.
+        //რომ ორივე OS-ზე ქცევა ერთნაირი იყოს, file სქემიანი შედეგი აქვე null-ად ითვლება.
+        return newUri is null || newUri.Scheme == Uri.UriSchemeFile ? null : newUri;
     }
 
     public static Uri? GetUri(Uri baseUri, string relativeUrName)

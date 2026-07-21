@@ -818,15 +818,9 @@ public sealed class BatchPartRunner
                 if (location is not null)
                 {
                     //თუ location არასრული მისამართია, მაშინ უნდა დაანგარიშდეს სრული მისამართი
-                    if (Uri.TryCreate(location, UriKind.Absolute, out Uri? locationUri))
-                    {
-                        // location is already absolute
-                    }
-                    else
-                    {
-                        // location is relative, resolve against original uri
-                        locationUri = new Uri(uri, location);
-                    }
+                    //(Uri.TryCreate UriKind.Absolute-ით აქ არ ვარგა: Linux-ზე "/"-ით დაწყებულ location-ს
+                    //აბსოლუტურ file:/// მისამართად თვლის)
+                    var locationUri = new Uri(uri, location);
 
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
