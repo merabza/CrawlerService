@@ -8,10 +8,10 @@ internal static class EnumHelper
     {
         return field switch
         {
-            "user-agent" => LineType.UserAgent,
-            "allow" or "disallow" => LineType.AccessRule,
-            "crawl-delay" => LineType.CrawlDelayRule,
-            "sitemap" => LineType.Sitemap,
+            "USER-AGENT" => LineType.UserAgent,
+            "ALLOW" or "DISALLOW" => LineType.AccessRule,
+            "CRAWL-DELAY" => LineType.CrawlDelayRule,
+            "SITEMAP" => LineType.Sitemap,
             _ => LineType.Unknown
         };
     }

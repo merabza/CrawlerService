@@ -30,6 +30,8 @@ public interface ICrawlerRepository
     Batch UpdateBatch(Batch batch);
     Batch CreateBatch(Batch newBatch);
     Batch DeleteBatch(Batch batchForDelete);
+    List<int> GetBatchExclusiveHostIds(int batchId);
+    int DeleteUrlsByHostIds(List<int> hostIds);
 
     List<TaskModel> GetTasksList();
     TaskModel? GetTaskByName(string taskName);

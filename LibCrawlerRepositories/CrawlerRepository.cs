@@ -552,5 +552,29 @@ public sealed class CrawlerRepository : ICrawlerRepository
         return _context.Batches.Remove(batchForDelete).Entity;
     }
 
+    public List<int> GetBatchExclusiveHostIds(int batchId)
+    {
+        return
+        [
+            .. _context.HostsByBatches.Where(w => w.BatchId == batchId)
+                .Where(w => !_context.HostsByBatches.Any(o => o.BatchId != batchId && o.HostId == w.HostId))
+                .Select(s => s.HostId).Distinct()
+        ];
+    }
+
+    public int DeleteUrlsByHostIds(List<int> hostIds)
+    {
+        if (hostIds.Count == 0)
+        {
+            return 0;
+        }
+
+        //წაიშლება მხოლოდ ის Urls-ები, რომლებზეც გრაფის კვანძები აღარ მიუთითებენ,
+        //რადგან UrlGraphNodes→Urls FK-ს ბაზაში NO ACTION აქვს
+        return _context.Urls.Where(w => hostIds.Contains(w.HostId))
+            .Where(w => !_context.UrlGraphNodes.Any(g => g.FromUrlId == w.UrlId || g.GotUrlId == w.UrlId))
+            .ExecuteDelete();
+    }
+
     #endregion
 }

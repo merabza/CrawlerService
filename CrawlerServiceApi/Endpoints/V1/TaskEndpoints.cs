@@ -28,6 +28,7 @@ public static class TaskEndpoints
         group.MapPost(CrawlerServiceApiRoutes.TaskRoute.Create, CreateTask);
         group.MapPut(CrawlerServiceApiRoutes.TaskRoute.Update, UpdateTask);
         group.MapDelete(CrawlerServiceApiRoutes.TaskRoute.Delete, DeleteTask);
+        group.MapDelete(CrawlerServiceApiRoutes.TaskRoute.ClearFetchedData, ClearTaskFetchedData);
 
         group.MapGet(CrawlerServiceApiRoutes.TaskRoute.StartPointGet, GetStartPoint);
         group.MapPost(CrawlerServiceApiRoutes.TaskRoute.StartPointAdd, AddStartPoint);
@@ -69,6 +70,13 @@ public static class TaskEndpoints
         CancellationToken cancellationToken = default)
     {
         return (await mediator.Send(new DeleteTaskCommand(name), cancellationToken)).Match(Results.Ok,
+            Results.BadRequest);
+    }
+
+    private static async Task<IResult> ClearTaskFetchedData(IMediator mediator, [FromQuery] string name,
+        CancellationToken cancellationToken = default)
+    {
+        return (await mediator.Send(new ClearTaskFetchedDataCommand(name), cancellationToken)).Match(Results.Ok,
             Results.BadRequest);
     }
 
