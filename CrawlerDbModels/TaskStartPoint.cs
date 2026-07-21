@@ -4,16 +4,13 @@ namespace CrawlerDbModels;
 
 public sealed class TaskStartPoint
 {
-    private TaskModel? _taskNavigation;
-
-    public int TspId { get; set; }
-    public int TaskId { get; set; }
-    public required string StartPoint { get; set; }
+    public int TspId { get; init; }
+    public int TaskId { get; init; }
+    public required string StartPoint { get; init; }
 
     public TaskModel TaskNavigation
     {
-        get =>
-            _taskNavigation ?? throw new InvalidOperationException("Uninitialized property: " + nameof(TaskNavigation));
-        set => _taskNavigation = value;
+        get => field ?? throw new InvalidOperationException("Uninitialized property: " + nameof(TaskNavigation));
+        init;
     }
 }
