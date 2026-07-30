@@ -18,7 +18,7 @@ internal sealed class GetHostStartUrlNamesByBatchQueryHandler(ICrawlerRepository
     {
         Batch? batch = repository.GetBatchByName(request.BatchName);
         return Task.FromResult<OneOf<List<string>, Error[]>>(batch is null
-            ? new List<string>()
+            ? []
             : repository.GetHostStartUrlNamesByBatch(batch));
     }
 }

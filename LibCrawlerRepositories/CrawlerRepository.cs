@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using CrawlerDbPersistence;
 using CrawlerDbModels;
+using CrawlerDbPersistence;
 using CrawlerRepoInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -110,9 +110,11 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public UrlModel? GetUrl(int hostId, int extId, int scmId, int urlHashCode, string urName)
     {
-        List<UrlModel> matchUrls = _context.Urls.Where(w =>
+        List<UrlModel> matchUrls =
+        [
+            .. _context.Urls.Where(w =>
                 w.UrlHashCode == urlHashCode && w.HostId == hostId && w.ExtensionId == extId && w.SchemeId == scmId)
-            .ToList();
+        ];
         return matchUrls.FirstOrDefault(url => url.UrlName == urName);
     }
 
@@ -422,7 +424,7 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public List<HostModel> GetHostsList()
     {
-        return _context.Hosts.ToList();
+        return [.. _context.Hosts];
     }
 
     public HostModel? GetHostByName(string hostName)
@@ -451,7 +453,7 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public List<SchemeModel> GetSchemesList()
     {
-        return _context.Schemes.ToList();
+        return [.. _context.Schemes];
     }
 
     public SchemeModel? GetSchemeByName(string schemeName)
@@ -480,7 +482,7 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public List<TaskModel> GetTasksList()
     {
-        return _context.Tasks.Include(i => i.StartPoints).ToList();
+        return [.. _context.Tasks.Include(i => i.StartPoints)];
     }
 
     public TaskModel? GetTaskByName(string taskName)
@@ -529,7 +531,7 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public List<Batch> GetBatchesList()
     {
-        return _context.Batches.ToList();
+        return [.. _context.Batches];
     }
 
     public Batch? GetBatchByName(string batchName)

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceReCounters;
@@ -49,7 +50,7 @@ internal sealed class RunTaskCommandHandler : ICommandHandler<RunTaskCommand, bo
         using (IServiceScope scope = _scopeFactory.CreateScope())
         {
             var crawlerRepository = scope.ServiceProvider.GetRequiredService<ICrawlerRepository>();
-            CrawlerDbModels.TaskModel? task = request.TaskName is null ? null : crawlerRepository.GetTaskByName(request.TaskName);
+            TaskModel? task = request.TaskName is null ? null : crawlerRepository.GetTaskByName(request.TaskName);
             if (task is null)
             {
                 return Task.FromResult<OneOf<bool, Error[]>>(new[]
@@ -58,7 +59,7 @@ internal sealed class RunTaskCommandHandler : ICommandHandler<RunTaskCommand, bo
                 });
             }
 
-            startPoints = task.StartPoints.Select(sp => sp.StartPoint).ToList();
+            startPoints = [.. task.StartPoints.Select(sp => sp.StartPoint)];
         }
 
         var crawlRequest = new CrawlRequest

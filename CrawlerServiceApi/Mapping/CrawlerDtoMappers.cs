@@ -14,7 +14,7 @@ internal static class CrawlerDtoMappers
         {
             TaskId = task.TaskId,
             TaskName = task.TaskName,
-            StartPoints = task.StartPoints.Select(sp => sp.ToDto()).ToList()
+            StartPoints = [.. task.StartPoints.Select(sp => sp.ToDto())]
         };
     }
 
@@ -32,7 +32,7 @@ internal static class CrawlerDtoMappers
         return new TaskModel
         {
             TaskName = dto.TaskName,
-            StartPoints = dto.StartPoints.Select(sp => new TaskStartPoint { StartPoint = sp.StartPoint }).ToList()
+            StartPoints = [.. dto.StartPoints.Select(sp => new TaskStartPoint { StartPoint = sp.StartPoint })]
         };
     }
 
