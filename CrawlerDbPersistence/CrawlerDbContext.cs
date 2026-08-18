@@ -36,7 +36,7 @@ public sealed class CrawlerDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CrawlerDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
