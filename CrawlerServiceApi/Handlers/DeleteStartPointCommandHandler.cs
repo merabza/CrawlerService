@@ -13,12 +13,12 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class DeleteStartPointCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<DeleteStartPointCommand, bool>
 {
-    public Task<OneOf<bool, Error[]>> Handle(DeleteStartPointCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteStartPointCommand request, CancellationToken cancellationToken)
     {
         TaskStartPoint? startPoint = repository.GetStartPoint(request.TaskId, request.StartPoint);
         if (startPoint is null)
         {
-            return Task.FromResult<OneOf<bool, Error[]>>(new[]
+            return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
             {
                 CrawlerServiceErrors.StartPointNotFound(request.TaskId, request.StartPoint)
             });
@@ -26,6 +26,6 @@ internal sealed class DeleteStartPointCommandHandler(ICrawlerRepository reposito
 
         repository.DeleteStartPoint(startPoint);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, Error[]>>(true);
+        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
     }
 }

@@ -38,7 +38,7 @@ internal sealed class RunBatchCommandHandler : ICommandHandler<RunBatchCommand, 
         _crawlerParameters = crawlerParameters;
     }
 
-    public Task<OneOf<bool, Error[]>> Handle(RunBatchCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<bool, ErrorOmd[]>> Handle(RunBatchCommand request, CancellationToken cancellationToken)
     {
         var crawlRequest = new CrawlRequest
         {
@@ -48,7 +48,7 @@ internal sealed class RunBatchCommandHandler : ICommandHandler<RunBatchCommand, 
             NewPartsCreateLimit = request.NewPartsCreateLimit
         };
         _backgroundTaskQueue.QueueBackgroundWorkItem(token => Run(crawlRequest, token));
-        return Task.FromResult<OneOf<bool, Error[]>>(true);
+        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
     }
 
     private Task Run(CrawlRequest crawlRequest, CancellationToken cancellationToken)

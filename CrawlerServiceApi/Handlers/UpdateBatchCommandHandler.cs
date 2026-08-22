@@ -12,10 +12,10 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class UpdateBatchCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<UpdateBatchCommand, bool>
 {
-    public Task<OneOf<bool, Error[]>> Handle(UpdateBatchCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<bool, ErrorOmd[]>> Handle(UpdateBatchCommand request, CancellationToken cancellationToken)
     {
         repository.UpdateBatch(request.Batch.ToEntity());
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, Error[]>>(true);
+        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
     }
 }

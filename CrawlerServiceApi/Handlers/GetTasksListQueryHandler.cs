@@ -15,9 +15,9 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class GetTasksListQueryHandler(ICrawlerRepository repository)
     : IQueryHandler<GetTasksListQuery, List<TaskDto>>
 {
-    public Task<OneOf<List<TaskDto>, Error[]>> Handle(GetTasksListQuery request, CancellationToken cancellationToken)
+    public Task<OneOf<List<TaskDto>, ErrorOmd[]>> Handle(GetTasksListQuery request, CancellationToken cancellationToken)
     {
-        return Task.FromResult<OneOf<List<TaskDto>, Error[]>>(repository.GetTasksList().Select(task => task.ToDto())
+        return Task.FromResult<OneOf<List<TaskDto>, ErrorOmd[]>>(repository.GetTasksList().Select(task => task.ToDto())
             .ToList());
     }
 }

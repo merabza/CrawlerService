@@ -15,9 +15,9 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class GetHostsListQueryHandler(ICrawlerRepository repository)
     : IQueryHandler<GetHostsListQuery, List<HostDto>>
 {
-    public Task<OneOf<List<HostDto>, Error[]>> Handle(GetHostsListQuery request, CancellationToken cancellationToken)
+    public Task<OneOf<List<HostDto>, ErrorOmd[]>> Handle(GetHostsListQuery request, CancellationToken cancellationToken)
     {
-        return Task.FromResult<OneOf<List<HostDto>, Error[]>>(repository.GetHostsList().Select(host => host.ToDto())
+        return Task.FromResult<OneOf<List<HostDto>, ErrorOmd[]>>(repository.GetHostsList().Select(host => host.ToDto())
             .ToList());
     }
 }

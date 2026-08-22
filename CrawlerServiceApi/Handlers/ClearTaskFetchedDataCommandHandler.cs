@@ -15,7 +15,7 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class ClearTaskFetchedDataCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<ClearTaskFetchedDataCommand, bool>
 {
-    public async Task<OneOf<bool, Error[]>> Handle(ClearTaskFetchedDataCommand request,
+    public async Task<OneOf<bool, ErrorOmd[]>> Handle(ClearTaskFetchedDataCommand request,
         CancellationToken cancellationToken)
     {
         TaskModel? task = repository.GetTaskByName(request.Name);

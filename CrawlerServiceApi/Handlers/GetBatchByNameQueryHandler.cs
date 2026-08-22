@@ -14,11 +14,11 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class GetBatchByNameQueryHandler(ICrawlerRepository repository)
     : IQueryHandler<GetBatchByNameQuery, ApiNullableResult<BatchDto>>
 {
-    public Task<OneOf<ApiNullableResult<BatchDto>, Error[]>> Handle(GetBatchByNameQuery request,
+    public Task<OneOf<ApiNullableResult<BatchDto>, ErrorOmd[]>> Handle(GetBatchByNameQuery request,
         CancellationToken cancellationToken)
     {
         Batch? batch = repository.GetBatchByName(request.Name);
-        return Task.FromResult<OneOf<ApiNullableResult<BatchDto>, Error[]>>(
+        return Task.FromResult<OneOf<ApiNullableResult<BatchDto>, ErrorOmd[]>>(
             new ApiNullableResult<BatchDto> { Value = batch?.ToDto() });
     }
 }

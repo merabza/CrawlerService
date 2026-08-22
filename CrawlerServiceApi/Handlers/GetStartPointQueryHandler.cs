@@ -14,11 +14,11 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class GetStartPointQueryHandler(ICrawlerRepository repository)
     : IQueryHandler<GetStartPointQuery, ApiNullableResult<TaskStartPointDto>>
 {
-    public Task<OneOf<ApiNullableResult<TaskStartPointDto>, Error[]>> Handle(GetStartPointQuery request,
+    public Task<OneOf<ApiNullableResult<TaskStartPointDto>, ErrorOmd[]>> Handle(GetStartPointQuery request,
         CancellationToken cancellationToken)
     {
         TaskStartPoint? startPoint = repository.GetStartPoint(request.TaskId, request.StartPoint);
-        return Task.FromResult<OneOf<ApiNullableResult<TaskStartPointDto>, Error[]>>(
+        return Task.FromResult<OneOf<ApiNullableResult<TaskStartPointDto>, ErrorOmd[]>>(
             new ApiNullableResult<TaskStartPointDto> { Value = startPoint?.ToDto() });
     }
 }

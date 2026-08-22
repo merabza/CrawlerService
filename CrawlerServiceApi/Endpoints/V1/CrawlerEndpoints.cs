@@ -59,7 +59,7 @@ public static class CrawlerEndpoints
             true, cancellationToken);
 
         var command = new RunBatchCommand(batchName, userName, newPartsCreateLimit);
-        OneOf<bool, Error[]> result = await mediator.Send(command, cancellationToken);
+        OneOf<bool, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
 
         return result.Match(Results.Ok, Results.BadRequest);
     }
@@ -76,7 +76,7 @@ public static class CrawlerEndpoints
             true, cancellationToken);
 
         var command = new RunTaskCommand(request.TaskName, userName, request.NewPartsCreateLimit);
-        OneOf<bool, Error[]> result = await mediator.Send(command, cancellationToken);
+        OneOf<bool, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
 
         return result.Match(Results.Ok, Results.BadRequest);
     }
@@ -94,7 +94,7 @@ public static class CrawlerEndpoints
 
         var command = new TestOnePageCommand(request.TaskName, request.Url, userName, request.DeleteContentForReanalyze,
             request.NewPartsCreateLimit);
-        OneOf<bool, Error[]> result = await mediator.Send(command, cancellationToken);
+        OneOf<bool, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
 
         return result.Match(Results.Ok, Results.BadRequest);
     }

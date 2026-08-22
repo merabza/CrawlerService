@@ -14,11 +14,11 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class AddStartPointCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<AddStartPointCommand, TaskStartPointDto>
 {
-    public Task<OneOf<TaskStartPointDto, Error[]>> Handle(AddStartPointCommand request,
+    public Task<OneOf<TaskStartPointDto, ErrorOmd[]>> Handle(AddStartPointCommand request,
         CancellationToken cancellationToken)
     {
         TaskStartPoint added = repository.AddStartPoint(request.TaskId, request.StartPoint);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<TaskStartPointDto, Error[]>>(added.ToDto());
+        return Task.FromResult<OneOf<TaskStartPointDto, ErrorOmd[]>>(added.ToDto());
     }
 }

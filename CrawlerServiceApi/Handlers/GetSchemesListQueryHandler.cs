@@ -15,10 +15,10 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class GetSchemesListQueryHandler(ICrawlerRepository repository)
     : IQueryHandler<GetSchemesListQuery, List<SchemeDto>>
 {
-    public Task<OneOf<List<SchemeDto>, Error[]>> Handle(GetSchemesListQuery request,
+    public Task<OneOf<List<SchemeDto>, ErrorOmd[]>> Handle(GetSchemesListQuery request,
         CancellationToken cancellationToken)
     {
-        return Task.FromResult<OneOf<List<SchemeDto>, Error[]>>(repository.GetSchemesList()
+        return Task.FromResult<OneOf<List<SchemeDto>, ErrorOmd[]>>(repository.GetSchemesList()
             .Select(scheme => scheme.ToDto()).ToList());
     }
 }

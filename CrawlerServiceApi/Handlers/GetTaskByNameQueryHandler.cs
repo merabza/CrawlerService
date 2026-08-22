@@ -14,11 +14,11 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class GetTaskByNameQueryHandler(ICrawlerRepository repository)
     : IQueryHandler<GetTaskByNameQuery, ApiNullableResult<TaskDto>>
 {
-    public Task<OneOf<ApiNullableResult<TaskDto>, Error[]>> Handle(GetTaskByNameQuery request,
+    public Task<OneOf<ApiNullableResult<TaskDto>, ErrorOmd[]>> Handle(GetTaskByNameQuery request,
         CancellationToken cancellationToken)
     {
         TaskModel? task = repository.GetTaskByName(request.Name);
-        return Task.FromResult<OneOf<ApiNullableResult<TaskDto>, Error[]>>(
+        return Task.FromResult<OneOf<ApiNullableResult<TaskDto>, ErrorOmd[]>>(
             new ApiNullableResult<TaskDto> { Value = task?.ToDto() });
     }
 }

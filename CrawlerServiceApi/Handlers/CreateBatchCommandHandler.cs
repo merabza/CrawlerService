@@ -14,10 +14,10 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class CreateBatchCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<CreateBatchCommand, BatchDto>
 {
-    public Task<OneOf<BatchDto, Error[]>> Handle(CreateBatchCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<BatchDto, ErrorOmd[]>> Handle(CreateBatchCommand request, CancellationToken cancellationToken)
     {
         Batch created = repository.CreateBatch(request.Batch.ToEntity());
         repository.SaveChanges();
-        return Task.FromResult<OneOf<BatchDto, Error[]>>(created.ToDto());
+        return Task.FromResult<OneOf<BatchDto, ErrorOmd[]>>(created.ToDto());
     }
 }

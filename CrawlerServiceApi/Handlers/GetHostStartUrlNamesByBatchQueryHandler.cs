@@ -13,11 +13,11 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class GetHostStartUrlNamesByBatchQueryHandler(ICrawlerRepository repository)
     : IQueryHandler<GetHostStartUrlNamesByBatchQuery, List<string>>
 {
-    public Task<OneOf<List<string>, Error[]>> Handle(GetHostStartUrlNamesByBatchQuery request,
+    public Task<OneOf<List<string>, ErrorOmd[]>> Handle(GetHostStartUrlNamesByBatchQuery request,
         CancellationToken cancellationToken)
     {
         Batch? batch = repository.GetBatchByName(request.BatchName);
-        return Task.FromResult<OneOf<List<string>, Error[]>>(batch is null
+        return Task.FromResult<OneOf<List<string>, ErrorOmd[]>>(batch is null
             ? []
             : repository.GetHostStartUrlNamesByBatch(batch));
     }

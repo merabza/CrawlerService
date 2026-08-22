@@ -14,10 +14,10 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class CreateSchemeCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<CreateSchemeCommand, SchemeDto>
 {
-    public Task<OneOf<SchemeDto, Error[]>> Handle(CreateSchemeCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<SchemeDto, ErrorOmd[]>> Handle(CreateSchemeCommand request, CancellationToken cancellationToken)
     {
         SchemeModel created = repository.CreateScheme(request.Scheme.ToEntity());
         repository.SaveChanges();
-        return Task.FromResult<OneOf<SchemeDto, Error[]>>(created.ToDto());
+        return Task.FromResult<OneOf<SchemeDto, ErrorOmd[]>>(created.ToDto());
     }
 }

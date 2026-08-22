@@ -14,11 +14,11 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class GetSchemeByNameQueryHandler(ICrawlerRepository repository)
     : IQueryHandler<GetSchemeByNameQuery, ApiNullableResult<SchemeDto>>
 {
-    public Task<OneOf<ApiNullableResult<SchemeDto>, Error[]>> Handle(GetSchemeByNameQuery request,
+    public Task<OneOf<ApiNullableResult<SchemeDto>, ErrorOmd[]>> Handle(GetSchemeByNameQuery request,
         CancellationToken cancellationToken)
     {
         SchemeModel? scheme = repository.GetSchemeByName(request.Name);
-        return Task.FromResult<OneOf<ApiNullableResult<SchemeDto>, Error[]>>(
+        return Task.FromResult<OneOf<ApiNullableResult<SchemeDto>, ErrorOmd[]>>(
             new ApiNullableResult<SchemeDto> { Value = scheme?.ToDto() });
     }
 }

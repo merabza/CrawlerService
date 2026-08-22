@@ -11,10 +11,10 @@ namespace CrawlerServiceApi.Handlers;
 
 internal sealed class UpdateTaskCommandHandler(ICrawlerRepository repository) : ICommandHandler<UpdateTaskCommand, bool>
 {
-    public Task<OneOf<bool, Error[]>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<bool, ErrorOmd[]>> Handle(UpdateTaskCommand request, CancellationToken cancellationToken)
     {
         repository.UpdateTask(request.Task.ToUpdateEntity());
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, Error[]>>(true);
+        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
     }
 }

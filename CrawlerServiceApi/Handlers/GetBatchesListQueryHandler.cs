@@ -15,9 +15,9 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class GetBatchesListQueryHandler(ICrawlerRepository repository)
     : IQueryHandler<GetBatchesListQuery, List<BatchDto>>
 {
-    public Task<OneOf<List<BatchDto>, Error[]>> Handle(GetBatchesListQuery request, CancellationToken cancellationToken)
+    public Task<OneOf<List<BatchDto>, ErrorOmd[]>> Handle(GetBatchesListQuery request, CancellationToken cancellationToken)
     {
-        return Task.FromResult<OneOf<List<BatchDto>, Error[]>>(repository.GetBatchesList()
+        return Task.FromResult<OneOf<List<BatchDto>, ErrorOmd[]>>(repository.GetBatchesList()
             .Select(batch => batch.ToDto()).ToList());
     }
 }

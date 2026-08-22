@@ -44,7 +44,7 @@ internal sealed class RunTaskCommandHandler : ICommandHandler<RunTaskCommand, bo
         _crawlerParameters = crawlerParameters;
     }
 
-    public Task<OneOf<bool, Error[]>> Handle(RunTaskCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<bool, ErrorOmd[]>> Handle(RunTaskCommand request, CancellationToken cancellationToken)
     {
         List<string> startPoints;
         using (IServiceScope scope = _scopeFactory.CreateScope())
@@ -53,7 +53,7 @@ internal sealed class RunTaskCommandHandler : ICommandHandler<RunTaskCommand, bo
             TaskModel? task = request.TaskName is null ? null : crawlerRepository.GetTaskByName(request.TaskName);
             if (task is null)
             {
-                return Task.FromResult<OneOf<bool, Error[]>>(new[]
+                return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
                 {
                     CrawlerServiceErrors.TaskWithNameNotFound(request.TaskName)
                 });
@@ -71,7 +71,7 @@ internal sealed class RunTaskCommandHandler : ICommandHandler<RunTaskCommand, bo
             NewPartsCreateLimit = request.NewPartsCreateLimit
         };
         _backgroundTaskQueue.QueueBackgroundWorkItem(token => Run(crawlRequest, token));
-        return Task.FromResult<OneOf<bool, Error[]>>(true);
+        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
     }
 
     private Task Run(CrawlRequest crawlRequest, CancellationToken cancellationToken)

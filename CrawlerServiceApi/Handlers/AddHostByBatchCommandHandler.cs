@@ -13,12 +13,12 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class AddHostByBatchCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<AddHostByBatchCommand, bool>
 {
-    public Task<OneOf<bool, Error[]>> Handle(AddHostByBatchCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<bool, ErrorOmd[]>> Handle(AddHostByBatchCommand request, CancellationToken cancellationToken)
     {
         Batch? batch = repository.GetBatchByName(request.BatchName);
         if (batch is null)
         {
-            return Task.FromResult<OneOf<bool, Error[]>>(new[]
+            return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
             {
                 CrawlerServiceErrors.BatchWithNameNotFound(request.BatchName)
             });
@@ -26,6 +26,6 @@ internal sealed class AddHostByBatchCommandHandler(ICrawlerRepository repository
 
         repository.AddHostNamesByBatch(batch, request.SchemeName, request.HostName);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, Error[]>>(true);
+        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
     }
 }

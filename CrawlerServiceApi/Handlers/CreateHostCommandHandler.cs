@@ -14,10 +14,10 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class CreateHostCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<CreateHostCommand, HostDto>
 {
-    public Task<OneOf<HostDto, Error[]>> Handle(CreateHostCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<HostDto, ErrorOmd[]>> Handle(CreateHostCommand request, CancellationToken cancellationToken)
     {
         HostModel created = repository.CreateHost(request.Host.ToEntity());
         repository.SaveChanges();
-        return Task.FromResult<OneOf<HostDto, Error[]>>(created.ToDto());
+        return Task.FromResult<OneOf<HostDto, ErrorOmd[]>>(created.ToDto());
     }
 }

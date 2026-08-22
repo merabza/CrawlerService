@@ -12,7 +12,7 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class UpdateStartPointCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<UpdateStartPointCommand, bool>
 {
-    public Task<OneOf<bool, Error[]>> Handle(UpdateStartPointCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<bool, ErrorOmd[]>> Handle(UpdateStartPointCommand request, CancellationToken cancellationToken)
     {
         repository.UpdateStartPoint(new TaskStartPoint
         {
@@ -21,6 +21,6 @@ internal sealed class UpdateStartPointCommandHandler(ICrawlerRepository reposito
             StartPoint = request.StartPoint.StartPoint
         });
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, Error[]>>(true);
+        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
     }
 }

@@ -15,10 +15,10 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class CreateTaskCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<CreateTaskCommand, TaskDto>
 {
-    public Task<OneOf<TaskDto, Error[]>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<TaskDto, ErrorOmd[]>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
         CrawlerDbModels.TaskModel created = repository.CreateTask(request.Task.ToCreateEntity());
         repository.SaveChanges();
-        return Task.FromResult<OneOf<TaskDto, Error[]>>(created.ToDto());
+        return Task.FromResult<OneOf<TaskDto, ErrorOmd[]>>(created.ToDto());
     }
 }

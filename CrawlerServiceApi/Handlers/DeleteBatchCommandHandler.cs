@@ -13,12 +13,12 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class DeleteBatchCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<DeleteBatchCommand, bool>
 {
-    public Task<OneOf<bool, Error[]>> Handle(DeleteBatchCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteBatchCommand request, CancellationToken cancellationToken)
     {
         Batch? batch = repository.GetBatchByName(request.Name);
         if (batch is null)
         {
-            return Task.FromResult<OneOf<bool, Error[]>>(new[]
+            return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
             {
                 CrawlerServiceErrors.BatchWithNameNotFound(request.Name)
             });
@@ -26,6 +26,6 @@ internal sealed class DeleteBatchCommandHandler(ICrawlerRepository repository)
 
         repository.DeleteBatch(batch);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, Error[]>>(true);
+        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
     }
 }

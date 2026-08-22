@@ -13,12 +13,12 @@ namespace CrawlerServiceApi.Handlers;
 internal sealed class DeleteSchemeCommandHandler(ICrawlerRepository repository)
     : ICommandHandler<DeleteSchemeCommand, bool>
 {
-    public Task<OneOf<bool, Error[]>> Handle(DeleteSchemeCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteSchemeCommand request, CancellationToken cancellationToken)
     {
         SchemeModel? scheme = repository.GetSchemeByName(request.Name);
         if (scheme is null)
         {
-            return Task.FromResult<OneOf<bool, Error[]>>(new[]
+            return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
             {
                 CrawlerServiceErrors.SchemeWithNameNotFound(request.Name)
             });
@@ -26,6 +26,6 @@ internal sealed class DeleteSchemeCommandHandler(ICrawlerRepository repository)
 
         repository.DeleteScheme(scheme);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, Error[]>>(true);
+        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
     }
 }

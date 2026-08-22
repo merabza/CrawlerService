@@ -12,12 +12,12 @@ namespace CrawlerServiceApi.Handlers;
 
 internal sealed class DeleteTaskCommandHandler(ICrawlerRepository repository) : ICommandHandler<DeleteTaskCommand, bool>
 {
-    public Task<OneOf<bool, Error[]>> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
+    public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
     {
         TaskModel? task = repository.GetTaskByName(request.Name);
         if (task is null)
         {
-            return Task.FromResult<OneOf<bool, Error[]>>(new[]
+            return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
             {
                 CrawlerServiceErrors.TaskWithNameNotFound(request.Name)
             });
@@ -25,6 +25,6 @@ internal sealed class DeleteTaskCommandHandler(ICrawlerRepository repository) : 
 
         repository.DeleteTask(task);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, Error[]>>(true);
+        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
     }
 }
