@@ -15,7 +15,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed class RunBatchCommandHandler : ICommandHandler<RunBatchCommand, bool>
+internal sealed class RunBatchCommandHandler : ICommandHandlerOmd<RunBatchCommand, bool>
 {
     private readonly IReCounterBackgroundTaskQueue _backgroundTaskQueue;
     private readonly IConfiguration _configuration;

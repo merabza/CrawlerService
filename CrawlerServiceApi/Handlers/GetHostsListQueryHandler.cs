@@ -13,7 +13,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetHostsListQueryHandler(ICrawlerRepository repository)
-    : IQueryHandler<GetHostsListQuery, List<HostDto>>
+    : IQueryHandlerOmd<GetHostsListQuery, List<HostDto>>
 {
     public Task<OneOf<List<HostDto>, ErrorOmd[]>> Handle(GetHostsListQuery request, CancellationToken cancellationToken)
     {

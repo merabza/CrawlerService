@@ -12,7 +12,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetBatchByNameQueryHandler(ICrawlerRepository repository)
-    : IQueryHandler<GetBatchByNameQuery, ApiNullableResult<BatchDto>>
+    : IQueryHandlerOmd<GetBatchByNameQuery, ApiNullableResult<BatchDto>>
 {
     public Task<OneOf<ApiNullableResult<BatchDto>, ErrorOmd[]>> Handle(GetBatchByNameQuery request,
         CancellationToken cancellationToken)

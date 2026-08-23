@@ -11,7 +11,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class DeleteBatchCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<DeleteBatchCommand, bool>
+    : ICommandHandlerOmd<DeleteBatchCommand, bool>
 {
     public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteBatchCommand request, CancellationToken cancellationToken)
     {

@@ -11,7 +11,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class DeleteSchemeCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<DeleteSchemeCommand, bool>
+    : ICommandHandlerOmd<DeleteSchemeCommand, bool>
 {
     public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteSchemeCommand request, CancellationToken cancellationToken)
     {

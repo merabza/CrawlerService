@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
-using CrawlerDbPersistence.Configurations;
 using CrawlerDbModels;
+using CrawlerDbPersistence.Configurations;
 using CrawlerRepoInterfaces;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
@@ -14,6 +14,9 @@ namespace DoCrawler.ToolActions;
 
 public /*open*/ class CrawlerToolAction : ToolAction
 {
+    protected readonly ILogger CrLogger;
+    protected readonly CrawlerParameters Par;
+    protected readonly DoCrawlerTaskModel? Task;
     private readonly ICrawlerRepository _crawlerRepository;
 
     private readonly IHttpClientFactory _httpClientFactory;
@@ -21,9 +24,6 @@ public /*open*/ class CrawlerToolAction : ToolAction
     private readonly ParseOnePageParameters _parseOnePageParameters;
     private readonly ICrawlProgressReporter? _progressReporter;
     private readonly string? _taskName;
-    protected readonly ILogger CrLogger;
-    protected readonly CrawlerParameters Par;
-    protected readonly DoCrawlerTaskModel? Task;
 
     //ციკლში ახალი ნაწილების შესაქმნელად დარჩენილი ლიმიტი: 0 = აღარ შეიქმნას, -1 = შეუზღუდავად
     private int _newPartsCreateLimit;

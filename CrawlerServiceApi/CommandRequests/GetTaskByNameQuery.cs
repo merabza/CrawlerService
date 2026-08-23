@@ -3,4 +3,4 @@ using SystemTools.MediatRMessagingAbstractions;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetTaskByNameQuery(string Name) : IQuery<ApiNullableResult<TaskDto>>;
+public sealed record GetTaskByNameQuery(string Name) : IQueryOmd<ApiNullableResult<TaskDto>>;

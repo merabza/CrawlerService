@@ -11,7 +11,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class AddHostByBatchCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<AddHostByBatchCommand, bool>
+    : ICommandHandlerOmd<AddHostByBatchCommand, bool>
 {
     public Task<OneOf<bool, ErrorOmd[]>> Handle(AddHostByBatchCommand request, CancellationToken cancellationToken)
     {

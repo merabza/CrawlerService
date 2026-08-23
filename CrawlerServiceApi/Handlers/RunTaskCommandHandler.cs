@@ -20,7 +20,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed class RunTaskCommandHandler : ICommandHandler<RunTaskCommand, bool>
+internal sealed class RunTaskCommandHandler : ICommandHandlerOmd<RunTaskCommand, bool>
 {
     private readonly IReCounterBackgroundTaskQueue _backgroundTaskQueue;
     private readonly IConfiguration _configuration;

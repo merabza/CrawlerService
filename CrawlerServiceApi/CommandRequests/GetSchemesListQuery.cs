@@ -4,4 +4,4 @@ using SystemTools.MediatRMessagingAbstractions;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetSchemesListQuery : IQuery<List<SchemeDto>>;
+public sealed record GetSchemesListQuery : IQueryOmd<List<SchemeDto>>;

@@ -12,7 +12,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class CreateBatchCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<CreateBatchCommand, BatchDto>
+    : ICommandHandlerOmd<CreateBatchCommand, BatchDto>
 {
     public Task<OneOf<BatchDto, ErrorOmd[]>> Handle(CreateBatchCommand request, CancellationToken cancellationToken)
     {

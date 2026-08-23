@@ -3,4 +3,4 @@ using SystemTools.MediatRMessagingAbstractions;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetBatchByNameQuery(string Name) : IQuery<ApiNullableResult<BatchDto>>;
+public sealed record GetBatchByNameQuery(string Name) : IQueryOmd<ApiNullableResult<BatchDto>>;

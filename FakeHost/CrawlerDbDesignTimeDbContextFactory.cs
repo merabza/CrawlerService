@@ -16,8 +16,8 @@ public sealed class CrawlerDbDesignTimeDbContextFactory : SqlServerDesignTimeDbC
     //ხოლო ConnectionStringSeed, როგორც დაცული ინფორმაცია, FakeHost-ის User Secrets-იდან (UserSecretsId წერია FakeHost.csproj-ში).
     //კონსტრუქტორი აუცილებლად უპარამეტრო უნდა იყოს, რადგან dotnet ef ამ კლასს თვითონ ქმნის რეფლექსიით
     // ReSharper disable once ConvertToPrimaryConstructor
-    public CrawlerDbDesignTimeDbContextFactory() : base(AssemblyReference.Assembly.GetName().Name!,
-        "ConnectionString", true)
+    public CrawlerDbDesignTimeDbContextFactory() : base(AssemblyReference.Assembly.GetName().Name!, "ConnectionString",
+        true)
     {
     }
 

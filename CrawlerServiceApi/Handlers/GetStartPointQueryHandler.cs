@@ -12,7 +12,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetStartPointQueryHandler(ICrawlerRepository repository)
-    : IQueryHandler<GetStartPointQuery, ApiNullableResult<TaskStartPointDto>>
+    : IQueryHandlerOmd<GetStartPointQuery, ApiNullableResult<TaskStartPointDto>>
 {
     public Task<OneOf<ApiNullableResult<TaskStartPointDto>, ErrorOmd[]>> Handle(GetStartPointQuery request,
         CancellationToken cancellationToken)

@@ -11,7 +11,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class RemoveHostByBatchCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<RemoveHostByBatchCommand, bool>
+    : ICommandHandlerOmd<RemoveHostByBatchCommand, bool>
 {
     public Task<OneOf<bool, ErrorOmd[]>> Handle(RemoveHostByBatchCommand request, CancellationToken cancellationToken)
     {

@@ -10,7 +10,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class UpdateStartPointCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<UpdateStartPointCommand, bool>
+    : ICommandHandlerOmd<UpdateStartPointCommand, bool>
 {
     public Task<OneOf<bool, ErrorOmd[]>> Handle(UpdateStartPointCommand request, CancellationToken cancellationToken)
     {

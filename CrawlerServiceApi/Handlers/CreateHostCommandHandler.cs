@@ -12,7 +12,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class CreateHostCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<CreateHostCommand, HostDto>
+    : ICommandHandlerOmd<CreateHostCommand, HostDto>
 {
     public Task<OneOf<HostDto, ErrorOmd[]>> Handle(CreateHostCommand request, CancellationToken cancellationToken)
     {

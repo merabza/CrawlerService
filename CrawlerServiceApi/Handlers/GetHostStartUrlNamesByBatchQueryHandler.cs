@@ -11,7 +11,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetHostStartUrlNamesByBatchQueryHandler(ICrawlerRepository repository)
-    : IQueryHandler<GetHostStartUrlNamesByBatchQuery, List<string>>
+    : IQueryHandlerOmd<GetHostStartUrlNamesByBatchQuery, List<string>>
 {
     public Task<OneOf<List<string>, ErrorOmd[]>> Handle(GetHostStartUrlNamesByBatchQuery request,
         CancellationToken cancellationToken)

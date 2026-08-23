@@ -12,7 +12,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class CreateSchemeCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<CreateSchemeCommand, SchemeDto>
+    : ICommandHandlerOmd<CreateSchemeCommand, SchemeDto>
 {
     public Task<OneOf<SchemeDto, ErrorOmd[]>> Handle(CreateSchemeCommand request, CancellationToken cancellationToken)
     {

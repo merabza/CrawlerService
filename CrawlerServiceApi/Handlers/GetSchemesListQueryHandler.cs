@@ -13,7 +13,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetSchemesListQueryHandler(ICrawlerRepository repository)
-    : IQueryHandler<GetSchemesListQuery, List<SchemeDto>>
+    : IQueryHandlerOmd<GetSchemesListQuery, List<SchemeDto>>
 {
     public Task<OneOf<List<SchemeDto>, ErrorOmd[]>> Handle(GetSchemesListQuery request,
         CancellationToken cancellationToken)

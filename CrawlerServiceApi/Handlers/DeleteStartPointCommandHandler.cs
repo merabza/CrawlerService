@@ -11,7 +11,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class DeleteStartPointCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<DeleteStartPointCommand, bool>
+    : ICommandHandlerOmd<DeleteStartPointCommand, bool>
 {
     public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteStartPointCommand request, CancellationToken cancellationToken)
     {

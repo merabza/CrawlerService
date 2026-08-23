@@ -9,7 +9,8 @@ using SystemTools.SystemToolsShared.Errors;
 
 namespace CrawlerServiceApi.Handlers;
 
-internal sealed class UpdateHostCommandHandler(ICrawlerRepository repository) : ICommandHandler<UpdateHostCommand, bool>
+internal sealed class UpdateHostCommandHandler(ICrawlerRepository repository)
+    : ICommandHandlerOmd<UpdateHostCommand, bool>
 {
     public Task<OneOf<bool, ErrorOmd[]>> Handle(UpdateHostCommand request, CancellationToken cancellationToken)
     {

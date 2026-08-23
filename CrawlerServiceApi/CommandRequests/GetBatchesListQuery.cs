@@ -4,4 +4,4 @@ using SystemTools.MediatRMessagingAbstractions;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetBatchesListQuery : IQuery<List<BatchDto>>;
+public sealed record GetBatchesListQuery : IQueryOmd<List<BatchDto>>;

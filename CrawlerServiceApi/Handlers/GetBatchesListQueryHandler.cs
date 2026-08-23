@@ -13,9 +13,10 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetBatchesListQueryHandler(ICrawlerRepository repository)
-    : IQueryHandler<GetBatchesListQuery, List<BatchDto>>
+    : IQueryHandlerOmd<GetBatchesListQuery, List<BatchDto>>
 {
-    public Task<OneOf<List<BatchDto>, ErrorOmd[]>> Handle(GetBatchesListQuery request, CancellationToken cancellationToken)
+    public Task<OneOf<List<BatchDto>, ErrorOmd[]>> Handle(GetBatchesListQuery request,
+        CancellationToken cancellationToken)
     {
         return Task.FromResult<OneOf<List<BatchDto>, ErrorOmd[]>>(repository.GetBatchesList()
             .Select(batch => batch.ToDto()).ToList());

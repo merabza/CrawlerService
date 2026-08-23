@@ -15,9 +15,9 @@ public sealed class OnePageCrawlerRunnerToolAction : CrawlerToolAction
 
     public OnePageCrawlerRunnerToolAction(ILogger logger, IHttpClientFactory httpClientFactory,
         ICrawlerRepository crawlerRepository, CrawlerParameters par, ParseOnePageParameters parseOnePageParameters,
-        string taskName, DoCrawlerTaskModel? task, string strUrName, int newPartsCreateLimit, bool deleteContentForReanalyze) :
-        base(logger, par, taskName, task, crawlerRepository, httpClientFactory, parseOnePageParameters,
-            newPartsCreateLimit)
+        string taskName, DoCrawlerTaskModel? task, string strUrName, int newPartsCreateLimit,
+        bool deleteContentForReanalyze) : base(logger, par, taskName, task, crawlerRepository, httpClientFactory,
+        parseOnePageParameters, newPartsCreateLimit)
     {
         _strUrName = strUrName;
         _deleteContentForReanalyze = deleteContentForReanalyze;

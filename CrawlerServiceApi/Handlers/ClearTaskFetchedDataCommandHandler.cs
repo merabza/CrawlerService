@@ -13,7 +13,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class ClearTaskFetchedDataCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<ClearTaskFetchedDataCommand, bool>
+    : ICommandHandlerOmd<ClearTaskFetchedDataCommand, bool>
 {
     public async Task<OneOf<bool, ErrorOmd[]>> Handle(ClearTaskFetchedDataCommand request,
         CancellationToken cancellationToken)

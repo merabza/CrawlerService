@@ -10,7 +10,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class UpdateSchemeCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<UpdateSchemeCommand, bool>
+    : ICommandHandlerOmd<UpdateSchemeCommand, bool>
 {
     public Task<OneOf<bool, ErrorOmd[]>> Handle(UpdateSchemeCommand request, CancellationToken cancellationToken)
     {

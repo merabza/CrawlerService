@@ -10,7 +10,8 @@ using SystemTools.SystemToolsShared.Errors;
 
 namespace CrawlerServiceApi.Handlers;
 
-internal sealed class DeleteTaskCommandHandler(ICrawlerRepository repository) : ICommandHandler<DeleteTaskCommand, bool>
+internal sealed class DeleteTaskCommandHandler(ICrawlerRepository repository)
+    : ICommandHandlerOmd<DeleteTaskCommand, bool>
 {
     public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
     {

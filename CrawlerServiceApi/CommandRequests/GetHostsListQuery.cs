@@ -4,4 +4,4 @@ using SystemTools.MediatRMessagingAbstractions;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetHostsListQuery : IQuery<List<HostDto>>;
+public sealed record GetHostsListQuery : IQueryOmd<List<HostDto>>;

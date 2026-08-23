@@ -10,7 +10,7 @@ using SystemTools.SystemToolsShared.Errors;
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class UpdateBatchCommandHandler(ICrawlerRepository repository)
-    : ICommandHandler<UpdateBatchCommand, bool>
+    : ICommandHandlerOmd<UpdateBatchCommand, bool>
 {
     public Task<OneOf<bool, ErrorOmd[]>> Handle(UpdateBatchCommand request, CancellationToken cancellationToken)
     {
