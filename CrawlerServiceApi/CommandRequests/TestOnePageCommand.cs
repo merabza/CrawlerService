@@ -2,7 +2,7 @@ using SystemTools.MediatRMessagingAbstractions;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed class TestOnePageCommand : ICommand<bool>
+public sealed class TestOnePageCommand : ICommandOmd<bool>
 {
     // ReSharper disable once ConvertToPrimaryConstructor
     public TestOnePageCommand(string? taskName, string? strUrName, string? userName, bool deleteContentForReanalyze,

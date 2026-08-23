@@ -3,4 +3,4 @@ using SystemTools.MediatRMessagingAbstractions;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record CreateTaskCommand(TaskDto Task) : ICommand<TaskDto>;
+public sealed record CreateTaskCommand(TaskDto Task) : ICommandOmd<TaskDto>;

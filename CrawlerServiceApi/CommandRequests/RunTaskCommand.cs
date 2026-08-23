@@ -2,7 +2,7 @@ using SystemTools.MediatRMessagingAbstractions;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed class RunTaskCommand : ICommand<bool>
+public sealed class RunTaskCommand : ICommandOmd<bool>
 {
     // ReSharper disable once ConvertToPrimaryConstructor
     public RunTaskCommand(string? taskName, string? userName, int newPartsCreateLimit)

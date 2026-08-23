@@ -3,4 +3,4 @@ using SystemTools.MediatRMessagingAbstractions;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record UpdateStartPointCommand(TaskStartPointDto StartPoint) : ICommand<bool>;
+public sealed record UpdateStartPointCommand(TaskStartPointDto StartPoint) : ICommandOmd<bool>;

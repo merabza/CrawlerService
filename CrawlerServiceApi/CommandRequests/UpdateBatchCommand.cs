@@ -3,4 +3,4 @@ using SystemTools.MediatRMessagingAbstractions;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record UpdateBatchCommand(BatchDto Batch) : ICommand<bool>;
+public sealed record UpdateBatchCommand(BatchDto Batch) : ICommandOmd<bool>;
