@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.Application.Abstractions\SystemTools.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
+    <ProjectReference Include="..\CrawlerRepoInterfaces\CrawlerRepoInterfaces.csproj" />
+    <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
+    <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,62 @@
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using CrawlerService.WebApi.CommandRequests;
+using CrawlerServiceReCounters;
+using DoCrawler.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.ReCounterAbstraction;
+using SystemTools.SharedKernel;
+
+namespace CrawlerService.WebApi.Handlers;
+
+// ReSharper disable once ClassNeverInstantiated.Global
+internal sealed class RunBatchCommandHandler : ICommandHandler<RunBatchCommand, bool>
+{
+    private readonly IReCounterBackgroundTaskQueue _backgroundTaskQueue;
+    private readonly IConfiguration _configuration;
+    private readonly CrawlerParameters _crawlerParameters;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILoggerFactory _loggerFactory;
+    private readonly IProgressDataManager _progressDataManager;
+    private readonly IServiceScopeFactory _scopeFactory;
+
+    public RunBatchCommandHandler(IServiceScopeFactory scopeFactory, IReCounterBackgroundTaskQueue backgroundTaskQueue,
+        IConfiguration configuration, IProgressDataManager progressDataManager, IHttpClientFactory httpClientFactory,
+        ILoggerFactory loggerFactory, CrawlerParameters crawlerParameters)
+    {
+        _scopeFactory = scopeFactory;
+        _backgroundTaskQueue = backgroundTaskQueue;
+        _configuration = configuration;
+        _progressDataManager = progressDataManager;
+        _httpClientFactory = httpClientFactory;
+        _loggerFactory = loggerFactory;
+        _crawlerParameters = crawlerParameters;
+    }
+
+    public Task<Result<bool>> Handle(RunBatchCommand request, CancellationToken cancellationToken)
+    {
+        var crawlRequest = new CrawlRequest
+        {
+            Kind = ECrawlKind.Batch,
+            BatchName = request.BatchName,
+            UserName = request.UserName,
+            NewPartsCreateLimit = request.NewPartsCreateLimit
+        };
+        _backgroundTaskQueue.QueueBackgroundWorkItem(token => Run(crawlRequest, token));
+        return Task.FromResult<Result<bool>>(true);
+    }
+
+    private Task Run(CrawlRequest crawlRequest, CancellationToken cancellationToken)
+    {
+        return Task.Run(async () =>
+        {
+            var crawlerReCounter = new CrawlerReCounter(_scopeFactory, _configuration, _progressDataManager,
+                _httpClientFactory, _loggerFactory, _crawlerParameters, crawlRequest);
+            await crawlerReCounter.Recount(cancellationToken);
+        }, cancellationToken);
+    }
+}

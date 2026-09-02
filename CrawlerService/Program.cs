@@ -1,8 +1,8 @@
 using System;
 using System.Reflection;
 using CrawlerService.DependencyInjection;
-using CrawlerServiceApi;
-using CrawlerServiceApi.DependencyInjection;
+using CrawlerService.WebApi;
+using CrawlerService.WebApi.DependencyInjection;
 using CrawlerServiceReCounters.DependencyInjection;
 using Figgle.Fonts;
 using Microsoft.AspNetCore.Builder;
