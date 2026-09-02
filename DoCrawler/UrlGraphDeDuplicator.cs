@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using CrawlerDbModels;
 using CrawlerRepoInterfaces;
+using CrawlerServiceRoot.Domain.UrlGraphNodes;
+using CrawlerServiceRoot.Domain.UrlModels;
 
 namespace DoCrawler;
 

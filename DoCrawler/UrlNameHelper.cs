@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Web;
-using CrawlerDbModels;
-using CrawlerDbPersistence.Configurations;
 using CrawlerRepoInterfaces;
+using CrawlerServiceDbPart.Db.Configurations;
+using CrawlerServiceRoot.Domain.UrlModels;
 using RobotsTxt;
 
 namespace DoCrawler;

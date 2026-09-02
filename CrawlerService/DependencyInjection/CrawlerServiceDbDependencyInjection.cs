@@ -1,7 +1,8 @@
 using System;
 using System.Net.Http;
-using CrawlerDbPersistence;
 using CrawlerRepoInterfaces;
+using CrawlerServiceDbPart.Db;
+using CrawlerServiceRoot.Application.Abstractions;
 using DoCrawler;
 using DoCrawler.Models;
 using LibCrawlerRepositories;
@@ -57,6 +58,7 @@ public static class CrawlerServiceDbDependencyInjection
         }
 
         services.AddContextByProvider<CrawlerDbContext>(result, connectionString, commandTimeout);
+        services.AddScoped<ICrawlerServiceApplicationDbContext>(sp => sp.GetRequiredService<CrawlerDbContext>());
 
         // 3. Repositories and the named crawler HttpClient (redirects disabled, as the crawler tracks them itself).
         services.AddSingleton<ICrawlerRepositoryCreatorFactory, CrawlerRepositoryCreatorFactory>()

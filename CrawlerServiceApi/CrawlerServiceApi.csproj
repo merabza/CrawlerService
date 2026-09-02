@@ -5,10 +5,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CrawlerDbModels\CrawlerDbModels.csproj" />
     <ProjectReference Include="..\CrawlerRepoInterfaces\CrawlerRepoInterfaces.csproj" />
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
+    <ProjectReference Include="..\..\CrawlerServiceRoot\CrawlerServiceRoot.Domain\CrawlerServiceRoot.Domain.csproj" />
     <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
     <ProjectReference Include="..\..\SystemTools\SystemTools.Application.Abstractions\SystemTools.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />

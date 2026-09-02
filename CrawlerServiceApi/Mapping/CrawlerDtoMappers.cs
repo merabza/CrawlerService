@@ -1,5 +1,9 @@
 using System.Linq;
-using CrawlerDbModels;
+using CrawlerServiceRoot.Domain.Batches;
+using CrawlerServiceRoot.Domain.HostModels;
+using CrawlerServiceRoot.Domain.SchemeModels;
+using CrawlerServiceRoot.Domain.TaskModels;
+using CrawlerServiceRoot.Domain.TaskStartPoints;
 using CrawlerServiceShared.Contracts;
 
 namespace CrawlerServiceApi.Mapping;

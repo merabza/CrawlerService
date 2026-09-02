@@ -1,8 +1,9 @@
 ﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDbModels;
 using CrawlerRepoInterfaces;
+using CrawlerServiceRoot.Domain.Batches;
+using CrawlerServiceRoot.Domain.BatchParts;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
 

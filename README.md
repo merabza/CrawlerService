@@ -17,11 +17,13 @@ Crawling runs as background processes with live progress streamed to clients ove
 
 ## Repository layout
 
-The solution (`CrawlerService.slnx`) spans four sibling repositories that must be cloned next to each other:
+The solution (`CrawlerService.slnx`) spans six sibling repositories that must be cloned next to each other:
 
 ```
 <root>\
 ├── CrawlerService\          this repository
+├── CrawlerServiceRoot\      domain entities and application abstractions (merabza/CrawlerServiceRoot)
+├── CrawlerServiceDbPart\    CrawlerDbContext and entity configurations   (merabza/CrawlerServiceDbPart)
 ├── CrawlerServiceShared\    shared API contracts and client   (merabza/CrawlerServiceShared)
 ├── SystemTools\             shared libraries                  (merabza/SystemTools)
 └── WebSystemTools\          shared web libraries              (merabza/WebSystemTools)
@@ -36,9 +38,9 @@ Projects in this repository:
 | `CrawlerServiceReCounters` | Background crawl process with SignalR progress |
 | `DoCrawler` | The crawl engine: fetching, HTML parsing, URL and term extraction |
 | `RobotsTxt` | robots.txt parser |
-| `CrawlerDbModels` | EF Core entities |
-| `CrawlerDbPersistence` | `CrawlerDbContext` and entity configurations |
 | `CrawlerRepoInterfaces` / `LibCrawlerRepositories` | Repository abstraction and implementation |
+
+EF Core entities (`CrawlerServiceRoot.Domain`), the `ICrawlerServiceApplicationDbContext` abstraction (`CrawlerServiceRoot.Application.Abstractions`) and `CrawlerDbContext` with its entity configurations (`CrawlerServiceDbPart.Db`) live in the sibling repositories [CrawlerServiceRoot](https://github.com/merabza/CrawlerServiceRoot) and [CrawlerServiceDbPart](https://github.com/merabza/CrawlerServiceDbPart).
 
 EF Core migrations and the design-time host live in a separate repository: [CrawlerServiceDbTools](https://github.com/merabza/CrawlerServiceDbTools).
 
@@ -49,7 +51,7 @@ EF Core migrations and the design-time host live in a separate repository: [Craw
 
 ## Getting started
 
-1. Clone the four repositories side by side (see layout above).
+1. Clone the six repositories side by side (see layout above).
 
 2. Build:
 

@@ -1,6 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using CrawlerDbModels;
+using CrawlerServiceRoot.Domain.ExtensionModels;
+using CrawlerServiceRoot.Domain.HostModels;
+using CrawlerServiceRoot.Domain.SchemeModels;
+using CrawlerServiceRoot.Domain.Terms;
+using CrawlerServiceRoot.Domain.TermTypes;
+using CrawlerServiceRoot.Domain.UrlModels;
 using RobotsTxt;
 
 namespace DoCrawler;

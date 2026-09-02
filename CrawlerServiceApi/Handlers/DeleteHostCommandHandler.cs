@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
+using CrawlerServiceRoot.Domain.HostModels;
 using CrawlerServiceShared.Contracts.Errors;
 using SystemTools.Application.Abstractions.Messaging;
 using SystemTools.SharedKernel;

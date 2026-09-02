@@ -1,4 +1,7 @@
-﻿using CrawlerDbModels;
+﻿using CrawlerServiceRoot.Domain.ExtensionModels;
+using CrawlerServiceRoot.Domain.HostModels;
+using CrawlerServiceRoot.Domain.SchemeModels;
+using CrawlerServiceRoot.Domain.UrlModels;
 
 namespace DoCrawler.Models;
 

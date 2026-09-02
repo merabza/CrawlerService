@@ -1,7 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using CrawlerDbModels;
+using CrawlerServiceRoot.Domain.Batches;
+using CrawlerServiceRoot.Domain.BatchParts;
+using CrawlerServiceRoot.Domain.ContentsAnalysis;
+using CrawlerServiceRoot.Domain.ExtensionModels;
+using CrawlerServiceRoot.Domain.HostModels;
+using CrawlerServiceRoot.Domain.SchemeModels;
+using CrawlerServiceRoot.Domain.TaskModels;
+using CrawlerServiceRoot.Domain.TaskStartPoints;
+using CrawlerServiceRoot.Domain.Terms;
+using CrawlerServiceRoot.Domain.TermsByUrls;
+using CrawlerServiceRoot.Domain.TermTypes;
+using CrawlerServiceRoot.Domain.UrlGraphNodes;
+using CrawlerServiceRoot.Domain.UrlModels;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace CrawlerRepoInterfaces;

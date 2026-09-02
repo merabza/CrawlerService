@@ -3,6 +3,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CrawlerDbModels\CrawlerDbModels.csproj" />
+    <ProjectReference Include="..\..\CrawlerServiceRoot\CrawlerServiceRoot.Domain\CrawlerServiceRoot.Domain.csproj" />
   </ItemGroup>
 </Project>

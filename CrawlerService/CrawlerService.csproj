@@ -5,11 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CrawlerDbPersistence\CrawlerDbPersistence.csproj" />
     <ProjectReference Include="..\CrawlerServiceApi\CrawlerServiceApi.csproj" />
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
     <ProjectReference Include="..\LibCrawlerRepositories\LibCrawlerRepositories.csproj" />
+    <ProjectReference Include="..\..\CrawlerServiceDbPart\CrawlerServiceDbPart.Db\CrawlerServiceDbPart.Db.csproj" />
+    <ProjectReference Include="..\..\CrawlerServiceRoot\CrawlerServiceRoot.Application.Abstractions\CrawlerServiceRoot.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\SystemTools\SystemTools.Application.Abstractions\SystemTools.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\SystemTools\SystemTools.DependencyInjection\SystemTools.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />

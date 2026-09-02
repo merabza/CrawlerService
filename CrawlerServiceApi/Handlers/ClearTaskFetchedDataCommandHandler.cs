@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
+using CrawlerServiceRoot.Domain.Batches;
+using CrawlerServiceRoot.Domain.TaskModels;
 using CrawlerServiceShared.Contracts.Errors;
 using Microsoft.EntityFrameworkCore.Storage;
 using SystemTools.Application.Abstractions.Messaging;

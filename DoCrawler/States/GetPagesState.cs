@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using CrawlerDbModels;
 using CrawlerRepoInterfaces;
+using CrawlerServiceRoot.Domain.BatchParts;
+using CrawlerServiceRoot.Domain.UrlModels;
 using DoCrawler.Models;
 using Microsoft.Extensions.Logging;
 

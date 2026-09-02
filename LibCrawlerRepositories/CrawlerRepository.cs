@@ -2,9 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using CrawlerDbModels;
-using CrawlerDbPersistence;
 using CrawlerRepoInterfaces;
+using CrawlerServiceRoot.Application.Abstractions;
+using CrawlerServiceRoot.Domain.Batches;
+using CrawlerServiceRoot.Domain.BatchParts;
+using CrawlerServiceRoot.Domain.ContentsAnalysis;
+using CrawlerServiceRoot.Domain.ExtensionModels;
+using CrawlerServiceRoot.Domain.HostModels;
+using CrawlerServiceRoot.Domain.HostsByBatches;
+using CrawlerServiceRoot.Domain.Robots;
+using CrawlerServiceRoot.Domain.SchemeModels;
+using CrawlerServiceRoot.Domain.TaskModels;
+using CrawlerServiceRoot.Domain.TaskStartPoints;
+using CrawlerServiceRoot.Domain.Terms;
+using CrawlerServiceRoot.Domain.TermsByUrls;
+using CrawlerServiceRoot.Domain.TermTypes;
+using CrawlerServiceRoot.Domain.UrlGraphNodes;
+using CrawlerServiceRoot.Domain.UrlModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -14,13 +28,13 @@ namespace LibCrawlerRepositories;
 public sealed class CrawlerRepository : ICrawlerRepository
 {
     private const int MaxChangesCount = 100000;
-    private readonly CrawlerDbContext _context;
+    private readonly ICrawlerServiceApplicationDbContext _context;
     private readonly ILogger<CrawlerRepository> _logger;
 
     private int _changesCount;
 
     // ReSharper disable once ConvertToPrimaryConstructor
-    public CrawlerRepository(CrawlerDbContext ctx, ILogger<CrawlerRepository> logger)
+    public CrawlerRepository(ICrawlerServiceApplicationDbContext ctx, ILogger<CrawlerRepository> logger)
     {
         _context = ctx;
         _logger = logger;
@@ -69,7 +83,7 @@ public sealed class CrawlerRepository : ICrawlerRepository
 
     public IDbContextTransaction GetTransaction()
     {
-        return _context.Database.BeginTransaction();
+        return _context.BeginTransaction();
     }
 
     public HostModel CheckAddHostName(string hostName)
