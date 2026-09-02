@@ -38,9 +38,9 @@ Projects in this repository:
 | `RobotsTxt` | robots.txt parser |
 | `CrawlerDbModels` | EF Core entities |
 | `CrawlerDbPersistence` | `CrawlerDbContext` and entity configurations |
-| `CrawlerDbMigration` | EF Core migrations |
 | `CrawlerRepoInterfaces` / `LibCrawlerRepositories` | Repository abstraction and implementation |
-| `FakeHost` | Design-time host for `dotnet ef` only; not deployed |
+
+EF Core migrations and the design-time host live in a separate repository: [CrawlerServiceDbTools](https://github.com/merabza/CrawlerServiceDbTools).
 
 ## Requirements
 
@@ -60,12 +60,11 @@ Projects in this repository:
 3. Configure secrets. `appsettings.json` contains placeholders only; supply real values via user secrets (or environment-specific appsettings):
 
    - `CrawlerService` project: `Data:CrawlerServiceDatabase:ConnectionString`, `ApiKeys:AppSettingsByApiKey`, `MediatRLicenseKey`
-   - `FakeHost` project: `ConnectionStringSeed` (used only by `dotnet ef`)
 
-4. Create the database:
+4. Create the database using the [CrawlerServiceDbTools](https://github.com/merabza/CrawlerServiceDbTools) solution:
 
    ```powershell
-   dotnet ef database update --project CrawlerDbMigration --startup-project FakeHost
+   dotnet ef database update --project CrawlerServiceDbTools.DbMigration --startup-project CrawlerServiceDbTools.FakeHost
    ```
 
 5. Run:

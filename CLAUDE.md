@@ -51,24 +51,23 @@ Project dependency chain (bottom-up):
 
 - `CrawlerDbModels` — EF entities (Batch, BatchPart, HostModel, SchemeModel, TaskModel, Term, TermByUrl, UrlModel, UrlGraphNode, Robot, …)
 - `CrawlerDbPersistence` — `CrawlerDbContext` + per-entity configurations
-- `CrawlerDbMigration` — migrations assembly (`Migrations/`)
 - `CrawlerRepoInterfaces` / `LibCrawlerRepositories` — repository interface / EF implementation
 - `RobotsTxt` — standalone robots.txt parser
 - `DoCrawler` — crawl engine: page fetching (named HttpClient `BatchPartRunner.CrawlerClient`, redirects handled manually, custom User-Agent), HtmlAgilityPack parsing, URL extraction/dedup, term extraction
 - `CrawlerServiceApi` — endpoints + MediatR handlers
 - `CrawlerServiceReCounters` — background crawl wrapper with SignalR progress
 - `CrawlerService` — the host (`Program.cs`): Serilog, Swagger, API-key auth, Windows-service support
-- `FakeHost` — not part of the runtime; exists solely as the EF design-time startup project
 
 Comments in the code are frequently in Georgian — keep them and match the surrounding style.
 
 ## EF Core migrations
 
-Design time goes through `FakeHost` (`CrawlerDbDesignTimeDbContextFactory`): the provider comes from FakeHost's appsettings.json, the connection string (`ConnectionStringSeed`) from FakeHost's user secrets. There is no auto-migration at startup.
+The migrations assembly (`CrawlerServiceDbTools.DbMigration`) and the EF design-time startup project (`CrawlerServiceDbTools.FakeHost`) live in a **separate repository**: `merabza/CrawlerServiceDbTools`, checked out locally at `D:\1WorkDotnet\CrawlerServiceDbTools\CrawlerServiceDbTools` (its solution tree carries its own clones of this repo and SystemTools). The design-time factory reads the connection string (`ConnectionString`) from that FakeHost's user secrets. There is no auto-migration at startup.
 
 ```powershell
-dotnet ef migrations add <Name> --project CrawlerDbMigration --startup-project FakeHost
-dotnet ef database update --project CrawlerDbMigration --startup-project FakeHost
+# run from D:\1WorkDotnet\CrawlerServiceDbTools\CrawlerServiceDbTools
+dotnet ef migrations add <Name> --project CrawlerServiceDbTools.DbMigration --startup-project CrawlerServiceDbTools.FakeHost
+dotnet ef database update --project CrawlerServiceDbTools.DbMigration --startup-project CrawlerServiceDbTools.FakeHost
 ```
 
 ## Configuration and deployment

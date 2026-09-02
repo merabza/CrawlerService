@@ -30,7 +30,6 @@
     <Project Path="../WebSystemTools/WebSystemTools.TestToolsData/WebSystemTools.TestToolsData.csproj" />
     <Project Path="../WebSystemTools/WebSystemTools.WindowsServiceTools/WebSystemTools.WindowsServiceTools.csproj" />
   </Folder>
-  <Project Path="CrawlerDbMigration/CrawlerDbMigration.csproj" />
   <Project Path="CrawlerDbModels/CrawlerDbModels.csproj" Id="84bef1ef-d430-47e7-82f1-15b1fb115aa0" />
   <Project Path="CrawlerDbPersistence/CrawlerDbPersistence.csproj" />
   <Project Path="CrawlerRepoInterfaces/CrawlerRepoInterfaces.csproj" Id="68465c19-a051-4bfe-9d78-bd87c5a39ddf" />
@@ -38,7 +37,6 @@
   <Project Path="CrawlerServiceApi/CrawlerServiceApi.csproj" />
   <Project Path="CrawlerServiceReCounters/CrawlerServiceReCounters.csproj" />
   <Project Path="DoCrawler/DoCrawler.csproj" />
-  <Project Path="FakeHost/FakeHost.csproj" />
   <Project Path="LibCrawlerRepositories/LibCrawlerRepositories.csproj" />
   <Project Path="RobotsTxt/RobotsTxt.csproj" />
 </Solution>
