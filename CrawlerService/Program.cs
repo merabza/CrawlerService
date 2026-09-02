@@ -1,9 +1,9 @@
 using System;
 using System.Reflection;
+using CrawlerService.Application.DependencyInjection;
 using CrawlerService.DependencyInjection;
 using CrawlerService.WebApi;
 using CrawlerService.WebApi.DependencyInjection;
-using CrawlerServiceReCounters.DependencyInjection;
 using Figgle.Fonts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,7 +52,7 @@ try
         .AddSignalRRecounterMessages(debugLogger)
         .AddApiKeyIdentity(debugLogger)
 
-        .AddCrawlerServiceReCounters(debugLogger)
+        .AddCrawlerServiceApplication(debugLogger, builder.Configuration)
         .AddCrawlerServiceDb(debugLogger, builder.Configuration)
         .AddHttpClient();
     // @formatter:on

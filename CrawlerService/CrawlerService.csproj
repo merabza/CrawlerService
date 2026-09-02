@@ -5,10 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CrawlerService.Application\CrawlerService.Application.csproj" />
     <ProjectReference Include="..\CrawlerService.WebApi\CrawlerService.WebApi.csproj" />
-    <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
-    <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
-    <ProjectReference Include="..\LibCrawlerRepositories\LibCrawlerRepositories.csproj" />
     <ProjectReference Include="..\..\CrawlerServiceDbPart\CrawlerServiceDbPart.Db\CrawlerServiceDbPart.Db.csproj" />
     <ProjectReference Include="..\..\CrawlerServiceRoot\CrawlerServiceRoot.Application.Abstractions\CrawlerServiceRoot.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\SystemTools\SystemTools.Application.Abstractions\SystemTools.Application.Abstractions.csproj" />

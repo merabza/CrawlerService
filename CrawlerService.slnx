@@ -37,11 +37,7 @@
     <Project Path="../WebSystemTools/WebSystemTools.TestToolsData/WebSystemTools.TestToolsData.csproj" />
     <Project Path="../WebSystemTools/WebSystemTools.WindowsServiceTools/WebSystemTools.WindowsServiceTools.csproj" />
   </Folder>
-  <Project Path="CrawlerRepoInterfaces/CrawlerRepoInterfaces.csproj" Id="68465c19-a051-4bfe-9d78-bd87c5a39ddf" />
+  <Project Path="CrawlerService.Application/CrawlerService.Application.csproj" Id="ac9d524b-631f-4787-9689-01e1722f8b77" />
   <Project Path="CrawlerService.WebApi/CrawlerService.WebApi.csproj" Id="3b3b9b5d-84c0-4f81-92db-b10b5af434e1" />
   <Project Path="CrawlerService/CrawlerService.csproj" />
-  <Project Path="CrawlerServiceReCounters/CrawlerServiceReCounters.csproj" />
-  <Project Path="DoCrawler/DoCrawler.csproj" />
-  <Project Path="LibCrawlerRepositories/LibCrawlerRepositories.csproj" />
-  <Project Path="RobotsTxt/RobotsTxt.csproj" />
 </Solution>

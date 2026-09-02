@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerRepoInterfaces;
+using CrawlerService.Application.Repositories;
 using CrawlerService.WebApi.CommandRequests;
 using CrawlerServiceRoot.Domain.Batches;
 using CrawlerServiceRoot.Domain.TaskModels;

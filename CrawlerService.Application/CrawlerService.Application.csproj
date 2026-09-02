@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CrawlerServiceRoot\CrawlerServiceRoot.Application.Abstractions\CrawlerServiceRoot.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\CrawlerServiceRoot\CrawlerServiceRoot.Domain\CrawlerServiceRoot.Domain.csproj" />
+    <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.BackgroundTasks\SystemTools.BackgroundTasks.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.SystemToolsShared\SystemTools.SystemToolsShared.csproj" />
+  </ItemGroup>
+
+</Project>

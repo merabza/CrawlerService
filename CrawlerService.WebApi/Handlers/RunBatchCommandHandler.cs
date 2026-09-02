@@ -1,9 +1,9 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CrawlerService.Application.Crawling.Models;
+using CrawlerService.Application.ReCounters;
 using CrawlerService.WebApi.CommandRequests;
-using CrawlerServiceReCounters;
-using DoCrawler.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

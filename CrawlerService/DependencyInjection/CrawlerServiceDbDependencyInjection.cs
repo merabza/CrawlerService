@@ -1,11 +1,6 @@
 using System;
-using System.Net.Http;
-using CrawlerRepoInterfaces;
 using CrawlerServiceDbPart.Db;
 using CrawlerServiceRoot.Application.Abstractions;
-using DoCrawler;
-using DoCrawler.Models;
-using LibCrawlerRepositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -21,14 +16,7 @@ public static class CrawlerServiceDbDependencyInjection
     {
         debugLogger?.Information("{MethodName} Started", nameof(AddCrawlerServiceDb));
 
-        // 1. Crawl parsing parameters (alphabet, punctuations, ...) are loaded from the crawler parameters file.
-        CrawlerParameters parametersLoader = CrawlerParameters.Create(configuration) ??
-                                             throw new InvalidOperationException(
-                                                 "Cannot load CrawlerParameters section from configuration");
-
-        services.AddSingleton(parametersLoader);
-
-        // 2. Database connection comes from configuration (Data:CrawlerServiceDatabase).
+        // Database connection comes from configuration (Data:CrawlerServiceDatabase).
         string? databaseProvider = configuration["Data:CrawlerServiceDatabase:DatabaseProvider"];
 
         if (!Enum.TryParse(databaseProvider ?? string.Empty, true, out EDatabaseProvider result))
@@ -59,13 +47,6 @@ public static class CrawlerServiceDbDependencyInjection
 
         services.AddContextByProvider<CrawlerDbContext>(result, connectionString, commandTimeout);
         services.AddScoped<ICrawlerServiceApplicationDbContext>(sp => sp.GetRequiredService<CrawlerDbContext>());
-
-        // 3. Repositories and the named crawler HttpClient (redirects disabled, as the crawler tracks them itself).
-        services.AddSingleton<ICrawlerRepositoryCreatorFactory, CrawlerRepositoryCreatorFactory>()
-            .AddScoped<ICrawlerRepository, CrawlerRepository>().AddHttpClient(BatchPartRunner.CrawlerClient)
-            .ConfigureHttpClient(client =>
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; CrawlerService/1.0)"))
-            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
 
         debugLogger?.Information("{MethodName} Finished", nameof(AddCrawlerServiceDb));
 

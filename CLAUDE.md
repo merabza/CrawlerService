@@ -47,18 +47,20 @@ ASP.NET Core minimal-API service that crawls websites and stores text-analysis r
 
 Request flow: `CrawlerServiceApi/Endpoints/V1/*` (minimal APIs, mapped by `UseCrawlerApiEndpoints`) → MediatR request from `CommandRequests/` → handler in `Handlers/` → `ICrawlerRepository` → `ICrawlerServiceApplicationDbContext` (implemented by `CrawlerDbContext`).
 
-Long-running crawls: the RunTask/RunBatch/TestOnePage handlers launch a `CrawlerReCounter` (project `CrawlerServiceReCounters`) — a background "ReCounter" process (SystemTools.ReCounterAbstraction) that streams progress to clients over SignalR. It drives the crawl engine in `DoCrawler`: `CrawlerRunnerToolAction` → `BatchPartRunner` → states (`GetPagesState`, `ParseOnePageState`). `ICrawlProgressReporter` bridges engine progress to SignalR; progress-reporting failures are swallowed by design — they must never abort a crawl.
+Long-running crawls: the RunTask/RunBatch/TestOnePage handlers launch a `CrawlerReCounter` (`CrawlerService.Application/ReCounters`) — a background "ReCounter" process (SystemTools.ReCounterAbstraction) that streams progress to clients over SignalR. It drives the crawl engine in `CrawlerService.Application/Crawling`: `CrawlerRunnerToolAction` → `BatchPartRunner` → states (`GetPagesState`, `ParseOnePageState`). `ICrawlProgressReporter` bridges engine progress to SignalR; progress-reporting failures are swallowed by design — they must never abort a crawl.
 
 Project dependency chain (bottom-up):
 
 - `CrawlerServiceRoot.Domain` (sibling repo CrawlerServiceRoot) — EF entities, one folder per entity: Batches/Batch, BatchParts/BatchPart, HostModels/HostModel, SchemeModels/SchemeModel, TaskModels/TaskModel, Terms/Term, TermsByUrls/TermByUrl, UrlModels/UrlModel, UrlGraphNodes/UrlGraphNode, Robots/Robot, …; namespace = `CrawlerServiceRoot.Domain.<Folder>`
 - `CrawlerServiceRoot.Application.Abstractions` — `ICrawlerServiceApplicationDbContext` (the 15 DbSets + `SaveChanges`/`BeginTransaction`/`Entry`/`Update`); repositories depend on this interface, never on the concrete context
-- `CrawlerServiceDbPart.Db` (sibling repo CrawlerServiceDbPart) — `CrawlerDbContext : DbContext, ICrawlerServiceApplicationDbContext` + per-entity configurations; DoCrawler references it only for the `*Configuration.*Length` constants
-- `CrawlerRepoInterfaces` / `LibCrawlerRepositories` — repository interface / EF implementation
-- `RobotsTxt` — standalone robots.txt parser
-- `DoCrawler` — crawl engine: page fetching (named HttpClient `BatchPartRunner.CrawlerClient`, redirects handled manually, custom User-Agent), HtmlAgilityPack parsing, URL extraction/dedup, term extraction
-- `CrawlerServiceApi` — endpoints + MediatR handlers
-- `CrawlerServiceReCounters` — background crawl wrapper with SignalR progress
+- `CrawlerServiceDbPart.Db` (sibling repo CrawlerServiceDbPart) — `CrawlerDbContext : DbContext, ICrawlerServiceApplicationDbContext` + per-entity configurations; `CrawlerService.Application` references it only for the `*Configuration.*Length` constants
+- `CrawlerService.Application` — the application layer, one folder per concern (namespace = `CrawlerService.Application.<Folder>`):
+  - `Repositories/` — `ICrawlerRepository` + its EF implementation `CrawlerRepository`, `ICrawlerRepositoryCreatorFactory` + `CrawlerRepositoryCreatorFactory`
+  - `RobotsTxt/` — standalone robots.txt parser (`Robots`, `RobotsFactory`, `UriFactory`, `Entities/`, `Enums/`)
+  - `Crawling/` — crawl engine: page fetching (named HttpClient `BatchPartRunner.CrawlerClient`, redirects handled manually, custom User-Agent), HtmlAgilityPack parsing, URL extraction/dedup, term extraction; `Models/`, `States/`, `ToolActions/`
+  - `ReCounters/` — `CrawlerReCounter` background crawl wrapper with SignalR progress, `CrawlRequest`, `ECrawlKind`
+  - `DependencyInjection/` — `AddCrawlerServiceApplication` registers `CrawlerParameters`, the repositories and the crawler HttpClient
+- `CrawlerService.WebApi` — endpoints + MediatR handlers
 - `CrawlerService` — the host (`Program.cs`): Serilog, Swagger, API-key auth, Windows-service support; `AddCrawlerServiceDb` registers `CrawlerDbContext` and forwards `ICrawlerServiceApplicationDbContext` to the same scoped instance
 
 Comments in the code are frequently in Georgian — keep them and match the surrounding style.

@@ -1,13 +1,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerRepoInterfaces;
+using CrawlerService.Application.Crawling;
+using CrawlerService.Application.Repositories;
 using CrawlerService.WebApi.CommandRequests;
 using CrawlerServiceRoot.Domain.Batches;
 using CrawlerServiceRoot.Domain.BatchParts;
 using CrawlerServiceShared.Contracts;
 using CrawlerServiceShared.Contracts.V1.Routes;
-using DoCrawler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

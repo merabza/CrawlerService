@@ -8,7 +8,7 @@ Crawling runs as background processes with live progress streamed to clients ove
 
 - Crawl configuration via **schemes**, **hosts**, **batches**, **tasks** and **start points**, managed over the API
 - Batch crawling with URL-graph construction and deduplication
-- robots.txt parsing and rule evaluation (`RobotsTxt` project)
+- robots.txt parsing and rule evaluation (`RobotsTxt` folder of `CrawlerService.Application`)
 - Term extraction driven by a configurable alphabet and punctuation table (`CrawlerParameters`)
 - Long-running crawls as background "ReCounter" processes with SignalR progress reporting
 - API-key authentication (per key, optionally bound to a remote IP)
@@ -34,11 +34,8 @@ Projects in this repository:
 | Project | Purpose |
 |---|---|
 | `CrawlerService` | Web host: Serilog, Swagger, API-key auth, DI wiring |
-| `CrawlerServiceApi` | Minimal-API endpoints (V1) and MediatR command/query handlers |
-| `CrawlerServiceReCounters` | Background crawl process with SignalR progress |
-| `DoCrawler` | The crawl engine: fetching, HTML parsing, URL and term extraction |
-| `RobotsTxt` | robots.txt parser |
-| `CrawlerRepoInterfaces` / `LibCrawlerRepositories` | Repository abstraction and implementation |
+| `CrawlerService.WebApi` | Minimal-API endpoints (V1) and MediatR command/query handlers |
+| `CrawlerService.Application` | Application layer, one folder per concern: `Repositories/` (repository abstraction and EF implementation), `Crawling/` (the crawl engine: fetching, HTML parsing, URL and term extraction), `RobotsTxt/` (robots.txt parser), `ReCounters/` (background crawl process with SignalR progress) |
 
 EF Core entities (`CrawlerServiceRoot.Domain`), the `ICrawlerServiceApplicationDbContext` abstraction (`CrawlerServiceRoot.Application.Abstractions`) and `CrawlerDbContext` with its entity configurations (`CrawlerServiceDbPart.Db`) live in the sibling repositories [CrawlerServiceRoot](https://github.com/merabza/CrawlerServiceRoot) and [CrawlerServiceDbPart](https://github.com/merabza/CrawlerServiceDbPart).
 

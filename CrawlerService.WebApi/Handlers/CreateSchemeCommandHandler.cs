@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using CrawlerRepoInterfaces;
+using CrawlerService.Application.Repositories;
 using CrawlerService.WebApi.CommandRequests;
 using CrawlerService.WebApi.Mapping;
 using CrawlerServiceRoot.Domain.SchemeModels;
