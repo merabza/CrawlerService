@@ -5,20 +5,18 @@ using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class AddStartPointCommandHandler(ICrawlerRepository repository)
-    : ICommandHandlerOmd<AddStartPointCommand, TaskStartPointDto>
+    : ICommandHandler<AddStartPointCommand, TaskStartPointDto>
 {
-    public Task<OneOf<TaskStartPointDto, ErrorOmd[]>> Handle(AddStartPointCommand request,
-        CancellationToken cancellationToken)
+    public Task<Result<TaskStartPointDto>> Handle(AddStartPointCommand request, CancellationToken cancellationToken)
     {
         TaskStartPoint added = repository.AddStartPoint(request.TaskId, request.StartPoint);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<TaskStartPointDto, ErrorOmd[]>>(added.ToDto());
+        return Task.FromResult<Result<TaskStartPointDto>>(added.ToDto());
     }
 }

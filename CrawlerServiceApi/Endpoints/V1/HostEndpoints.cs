@@ -1,14 +1,16 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts;
 using CrawlerServiceShared.Contracts.V1.Routes;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Serilog;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Endpoints.V1;
 
@@ -34,36 +36,39 @@ public static class HostEndpoints
         return true;
     }
 
-    private static async Task<IResult> GetHostsList(IMediator mediator, CancellationToken cancellationToken = default)
-    {
-        return (await mediator.Send(new GetHostsListQuery(), cancellationToken)).Match(Results.Ok, Results.BadRequest);
-    }
-
-    private static async Task<IResult> GetHostByName(IMediator mediator, [FromQuery] string name,
+    private static async Task<IResult> GetHostsList(IQueryHandler<GetHostsListQuery, List<HostDto>> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new GetHostByNameQuery(name), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new GetHostsListQuery(), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> CreateHost(IMediator mediator, [FromBody] HostDto host,
+    private static async Task<IResult> GetHostByName([FromQuery] string name,
+        IQueryHandler<GetHostByNameQuery, ApiNullableResult<HostDto>> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new CreateHostCommand(host), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new GetHostByNameQuery(name), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> UpdateHost(IMediator mediator, [FromBody] HostDto host,
-        CancellationToken cancellationToken = default)
+    private static async Task<IResult> CreateHost([FromBody] HostDto host,
+        ICommandHandler<CreateHostCommand, HostDto> handler, CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new UpdateHostCommand(host), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new CreateHostCommand(host), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> DeleteHost(IMediator mediator, [FromQuery] string name,
-        CancellationToken cancellationToken = default)
+    private static async Task<IResult> UpdateHost([FromBody] HostDto host,
+        ICommandHandler<UpdateHostCommand, bool> handler, CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new DeleteHostCommand(name), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new UpdateHostCommand(host), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
+    }
+
+    private static async Task<IResult> DeleteHost([FromQuery] string name,
+        ICommandHandler<DeleteHostCommand, bool> handler, CancellationToken cancellationToken = default)
+    {
+        return (await handler.Handle(new DeleteHostCommand(name), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 }

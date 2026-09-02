@@ -6,22 +6,20 @@ using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts.Errors;
 using Microsoft.EntityFrameworkCore.Storage;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class ClearTaskFetchedDataCommandHandler(ICrawlerRepository repository)
-    : ICommandHandlerOmd<ClearTaskFetchedDataCommand, bool>
+    : ICommandHandler<ClearTaskFetchedDataCommand, bool>
 {
-    public async Task<OneOf<bool, ErrorOmd[]>> Handle(ClearTaskFetchedDataCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(ClearTaskFetchedDataCommand request, CancellationToken cancellationToken)
     {
         TaskModel? task = repository.GetTaskByName(request.Name);
         if (task is null)
         {
-            return new[] { CrawlerServiceErrors.TaskWithNameNotFound(request.Name) };
+            return CrawlerServiceErrors.TaskWithNameNotFound(request.Name);
         }
 
         //Batch იქმნება ამოცანის სახელით პირველი გაშვებისას; თუ არ არსებობს, გასასუფთავებელი არაფერია

@@ -1,5 +1,5 @@
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record AddHostByBatchCommand(string BatchName, string SchemeName, string HostName) : ICommandOmd<bool>;
+public sealed record AddHostByBatchCommand(string BatchName, string SchemeName, string HostName) : ICommand<bool>;

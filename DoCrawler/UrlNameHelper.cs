@@ -4,7 +4,6 @@ using System.Web;
 using CrawlerDbModels;
 using CrawlerDbPersistence.Configurations;
 using CrawlerRepoInterfaces;
-using LanguageExt;
 using RobotsTxt;
 
 namespace DoCrawler;
@@ -14,28 +13,28 @@ public static class UrlNameHelper
     //pre-check-ისთვის: მითითებულ batch part-ში ეს გვერდი უკვე გაანალიზებულია თუ არა.
     public static bool IsPageAlreadyAnalyzed(ICrawlerRepository crawlerRepository, int batchPartId, string pageAddress)
     {
-        Option<int> urlId = GetUrlId(crawlerRepository, pageAddress);
-        if (urlId.IsNone)
+        int? urlId = GetUrlId(crawlerRepository, pageAddress);
+        if (urlId is null)
         {
             return false;
         }
 
-        return crawlerRepository.GetContentAnalysis(batchPartId, (int)urlId) is not null;
+        return crawlerRepository.GetContentAnalysis(batchPartId, urlId.Value) is not null;
     }
 
-    private static Option<int> GetUrlId(ICrawlerRepository crawlerRepository, string urName)
+    private static int? GetUrlId(ICrawlerRepository crawlerRepository, string urName)
     {
         Uri? myUri = UriFactory.GetUri(urName);
         if (myUri is null)
         {
-            return new Option<int>();
+            return null;
         }
 
         string? host = myUri.Host.Truncate(HostModelConfiguration.HostNameLength);
         if (string.IsNullOrWhiteSpace(host))
         {
             //host = "InvalidHostName";
-            return new Option<int>();
+            return null;
         }
 
         string absolutePath = myUri.AbsolutePath;
@@ -44,50 +43,45 @@ public static class UrlNameHelper
         if (string.IsNullOrWhiteSpace(extension))
         {
             //extension = "NoExtension";
-            return new Option<int>();
+            return null;
         }
 
         string? scheme = myUri.Scheme.Truncate(SchemeModelConfiguration.SchemeNameLength);
         if (string.IsNullOrWhiteSpace(scheme))
         {
             //scheme = "InvalidSchemeName";
-            return new Option<int>();
+            return null;
         }
 
         int hostModelId = crawlerRepository.GetHostId(host);
         int extensionId = crawlerRepository.GetExtensionId(extension);
         int schemeInt = crawlerRepository.GetSchemeId(scheme);
 
-        Option<Uri> checkedUrlResult = ToCheckedUrlName(urName);
-        if (checkedUrlResult.IsNone)
+        Uri? checkedUrlResult = ToCheckedUrlName(urName);
+        if (checkedUrlResult is null)
         {
             //Invalid Uri
-            return new Option<int>();
+            return null;
         }
 
-        int urlHashCode = ((Uri)checkedUrlResult).AbsoluteUri.GetDeterministicHashCode();
+        int urlHashCode = checkedUrlResult.AbsoluteUri.GetDeterministicHashCode();
 
         //UrlModel? url = _procData.GetUrlByHashCode(urlHashCode);
 
         if (hostModelId == 0 || extensionId == 0 || schemeInt == 0)
         {
-            return new Option<int>();
+            return null;
         }
 
         UrlModel? url = crawlerRepository.GetUrl(hostModelId, extensionId, schemeInt, urlHashCode,
-            ((Uri)checkedUrlResult).AbsoluteUri);
+            checkedUrlResult.AbsoluteUri);
 
-        if (url is not null)
-        {
-            return url.UrlId;
-        }
-
-        return new Option<int>();
+        return url?.UrlId;
     }
 
     //URL-ის სტრიქონიდან აგებს იმავე "checked" სახელს, რასაც GetUrlData იყენებს —
     //რომ pre-check-ისა და გაშვების დროს URL-ის რეზოლუცია ემთხვეოდეს.
-    internal static Option<Uri> ToCheckedUrlName(string rawUrl)
+    internal static Uri? ToCheckedUrlName(string rawUrl)
     {
         Uri? uri = UriFactory.GetUri(rawUrl);
         if (uri is null)

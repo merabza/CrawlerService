@@ -4,28 +4,23 @@ using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts.Errors;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
-internal sealed class DeleteHostCommandHandler(ICrawlerRepository repository)
-    : ICommandHandlerOmd<DeleteHostCommand, bool>
+internal sealed class DeleteHostCommandHandler(ICrawlerRepository repository) : ICommandHandler<DeleteHostCommand, bool>
 {
-    public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteHostCommand request, CancellationToken cancellationToken)
+    public Task<Result<bool>> Handle(DeleteHostCommand request, CancellationToken cancellationToken)
     {
         HostModel? host = repository.GetHostByName(request.Name);
         if (host is null)
         {
-            return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
-            {
-                CrawlerServiceErrors.HostWithNameNotFound(request.Name)
-            });
+            return Task.FromResult<Result<bool>>(CrawlerServiceErrors.HostWithNameNotFound(request.Name));
         }
 
         repository.DeleteHost(host);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
+        return Task.FromResult<Result<bool>>(true);
     }
 }

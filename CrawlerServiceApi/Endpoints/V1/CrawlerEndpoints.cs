@@ -7,17 +7,16 @@ using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts;
 using CrawlerServiceShared.Contracts.V1.Routes;
 using DoCrawler;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using OneOf;
 using Serilog;
+using SystemTools.Application.Abstractions.Messaging;
 using SystemTools.ReCounterAbstraction;
 using SystemTools.ReCounterContracts;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Endpoints.V1;
 
@@ -47,8 +46,8 @@ public static class CrawlerEndpoints
     }
 
     // POST api/v1/crawler/runbatch
-    private static async Task<IResult> RunBatch(HttpRequest httpRequest, IMediator mediator,
-        IProgressDataManager progressDataManager, [FromQuery] string? batchName,
+    private static async Task<IResult> RunBatch(HttpRequest httpRequest, IProgressDataManager progressDataManager,
+        [FromQuery] string? batchName, ICommandHandler<RunBatchCommand, bool> handler,
         [FromQuery] int newPartsCreateLimit = 0, [FromQuery] int progressDelaySeconds = 1,
         CancellationToken cancellationToken = default)
     {
@@ -59,14 +58,14 @@ public static class CrawlerEndpoints
             true, cancellationToken);
 
         var command = new RunBatchCommand(batchName, userName, newPartsCreateLimit);
-        OneOf<bool, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        Result<bool> result = await handler.Handle(command, cancellationToken);
 
-        return result.Match(Results.Ok, Results.BadRequest);
+        return result.Match(Results.Ok, failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
     // POST api/v1/crawler/runtask
-    private static async Task<IResult> RunTask(HttpRequest httpRequest, IMediator mediator,
-        IProgressDataManager progressDataManager, [FromBody] RunTaskRequest request,
+    private static async Task<IResult> RunTask(HttpRequest httpRequest, IProgressDataManager progressDataManager,
+        [FromBody] RunTaskRequest request, ICommandHandler<RunTaskCommand, bool> handler,
         CancellationToken cancellationToken = default)
     {
         string? userName = httpRequest.HttpContext.User.Identity?.Name;
@@ -76,14 +75,14 @@ public static class CrawlerEndpoints
             true, cancellationToken);
 
         var command = new RunTaskCommand(request.TaskName, userName, request.NewPartsCreateLimit);
-        OneOf<bool, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        Result<bool> result = await handler.Handle(command, cancellationToken);
 
-        return result.Match(Results.Ok, Results.BadRequest);
+        return result.Match(Results.Ok, failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
     // POST api/v1/crawler/testonepage
-    private static async Task<IResult> TestOnePage(HttpRequest httpRequest, IMediator mediator,
-        IProgressDataManager progressDataManager, [FromBody] TestOnePageRequest request,
+    private static async Task<IResult> TestOnePage(HttpRequest httpRequest, IProgressDataManager progressDataManager,
+        [FromBody] TestOnePageRequest request, ICommandHandler<TestOnePageCommand, bool> handler,
         CancellationToken cancellationToken = default)
     {
         string? userName = httpRequest.HttpContext.User.Identity?.Name;
@@ -94,9 +93,9 @@ public static class CrawlerEndpoints
 
         var command = new TestOnePageCommand(request.TaskName, request.Url, userName, request.DeleteContentForReanalyze,
             request.NewPartsCreateLimit);
-        OneOf<bool, ErrorOmd[]> result = await mediator.Send(command, cancellationToken);
+        Result<bool> result = await handler.Handle(command, cancellationToken);
 
-        return result.Match(Results.Ok, Results.BadRequest);
+        return result.Match(Results.Ok, failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
     // GET api/v1/crawler/precheck

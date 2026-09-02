@@ -1,6 +1,6 @@
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record UpdateBatchCommand(BatchDto Batch) : ICommandOmd<bool>;
+public sealed record UpdateBatchCommand(BatchDto Batch) : ICommand<bool>;

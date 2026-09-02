@@ -5,19 +5,18 @@ using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class CreateBatchCommandHandler(ICrawlerRepository repository)
-    : ICommandHandlerOmd<CreateBatchCommand, BatchDto>
+    : ICommandHandler<CreateBatchCommand, BatchDto>
 {
-    public Task<OneOf<BatchDto, ErrorOmd[]>> Handle(CreateBatchCommand request, CancellationToken cancellationToken)
+    public Task<Result<BatchDto>> Handle(CreateBatchCommand request, CancellationToken cancellationToken)
     {
         Batch created = repository.CreateBatch(request.Batch.ToEntity());
         repository.SaveChanges();
-        return Task.FromResult<OneOf<BatchDto, ErrorOmd[]>>(created.ToDto());
+        return Task.FromResult<Result<BatchDto>>(created.ToDto());
     }
 }

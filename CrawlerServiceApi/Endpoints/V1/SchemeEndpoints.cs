@@ -1,14 +1,16 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts;
 using CrawlerServiceShared.Contracts.V1.Routes;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Serilog;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Endpoints.V1;
 
@@ -34,37 +36,39 @@ public static class SchemeEndpoints
         return true;
     }
 
-    private static async Task<IResult> GetSchemesList(IMediator mediator, CancellationToken cancellationToken = default)
-    {
-        return (await mediator.Send(new GetSchemesListQuery(), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
-    }
-
-    private static async Task<IResult> GetSchemeByName(IMediator mediator, [FromQuery] string name,
+    private static async Task<IResult> GetSchemesList(IQueryHandler<GetSchemesListQuery, List<SchemeDto>> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new GetSchemeByNameQuery(name), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new GetSchemesListQuery(), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> CreateScheme(IMediator mediator, [FromBody] SchemeDto scheme,
+    private static async Task<IResult> GetSchemeByName([FromQuery] string name,
+        IQueryHandler<GetSchemeByNameQuery, ApiNullableResult<SchemeDto>> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new CreateSchemeCommand(scheme), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new GetSchemeByNameQuery(name), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> UpdateScheme(IMediator mediator, [FromBody] SchemeDto scheme,
-        CancellationToken cancellationToken = default)
+    private static async Task<IResult> CreateScheme([FromBody] SchemeDto scheme,
+        ICommandHandler<CreateSchemeCommand, SchemeDto> handler, CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new UpdateSchemeCommand(scheme), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new CreateSchemeCommand(scheme), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> DeleteScheme(IMediator mediator, [FromQuery] string name,
-        CancellationToken cancellationToken = default)
+    private static async Task<IResult> UpdateScheme([FromBody] SchemeDto scheme,
+        ICommandHandler<UpdateSchemeCommand, bool> handler, CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new DeleteSchemeCommand(name), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new UpdateSchemeCommand(scheme), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
+    }
+
+    private static async Task<IResult> DeleteScheme([FromQuery] string name,
+        ICommandHandler<DeleteSchemeCommand, bool> handler, CancellationToken cancellationToken = default)
+    {
+        return (await handler.Handle(new DeleteSchemeCommand(name), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 }

@@ -7,15 +7,14 @@ using DoCrawler.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 using SystemTools.ReCounterAbstraction;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed class RunBatchCommandHandler : ICommandHandlerOmd<RunBatchCommand, bool>
+internal sealed class RunBatchCommandHandler : ICommandHandler<RunBatchCommand, bool>
 {
     private readonly IReCounterBackgroundTaskQueue _backgroundTaskQueue;
     private readonly IConfiguration _configuration;
@@ -38,7 +37,7 @@ internal sealed class RunBatchCommandHandler : ICommandHandlerOmd<RunBatchComman
         _crawlerParameters = crawlerParameters;
     }
 
-    public Task<OneOf<bool, ErrorOmd[]>> Handle(RunBatchCommand request, CancellationToken cancellationToken)
+    public Task<Result<bool>> Handle(RunBatchCommand request, CancellationToken cancellationToken)
     {
         var crawlRequest = new CrawlRequest
         {
@@ -48,7 +47,7 @@ internal sealed class RunBatchCommandHandler : ICommandHandlerOmd<RunBatchComman
             NewPartsCreateLimit = request.NewPartsCreateLimit
         };
         _backgroundTaskQueue.QueueBackgroundWorkItem(token => Run(crawlRequest, token));
-        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
+        return Task.FromResult<Result<bool>>(true);
     }
 
     private Task Run(CrawlRequest crawlRequest, CancellationToken cancellationToken)

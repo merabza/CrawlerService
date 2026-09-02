@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using SystemTools.Application.Abstractions;
 using SystemTools.ReCounterAbstraction.DependencyInjection;
 using WebSystemTools.ApiExceptionHandler.DependencyInjection;
 using WebSystemTools.ApiKeyIdentity.DependencyInjection;
-using WebSystemTools.MediatorTools.DependencyInjection;
 using WebSystemTools.SerilogLogger;
 using WebSystemTools.SignalRRecounterMessages.DependencyInjection;
 using WebSystemTools.SwaggerTools.DependencyInjection;
@@ -43,13 +43,12 @@ try
     // @formatter:off
     builder.Services
         //SystemTools
+        .AddApplication(debugLogger,
+            typeof(AssemblyReference),
+            typeof(WebSystemTools.SignalRRecounterMessages.AssemblyReference))
         .AddReCounterAbstraction(debugLogger) //ReCounter
         //WebSystemTools
         .AddSwagger(debugLogger, true, versionCount, appName)
-        .AddMediator(debugLogger,
-            builder.Configuration,
-            AssemblyReference.Assembly,
-            WebSystemTools.SignalRRecounterMessages.AssemblyReference.Assembly)
         .AddSignalRRecounterMessages(debugLogger)
         .AddApiKeyIdentity(debugLogger)
 

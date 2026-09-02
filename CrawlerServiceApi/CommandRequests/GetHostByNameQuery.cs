@@ -1,6 +1,6 @@
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetHostByNameQuery(string Name) : IQueryOmd<ApiNullableResult<HostDto>>;
+public sealed record GetHostByNameQuery(string Name) : IQuery<ApiNullableResult<HostDto>>;

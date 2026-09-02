@@ -1,6 +1,6 @@
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetSchemeByNameQuery(string Name) : IQueryOmd<ApiNullableResult<SchemeDto>>;
+public sealed record GetSchemeByNameQuery(string Name) : IQuery<ApiNullableResult<SchemeDto>>;

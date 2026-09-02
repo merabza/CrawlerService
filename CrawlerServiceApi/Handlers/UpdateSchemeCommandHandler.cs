@@ -3,19 +3,18 @@ using System.Threading.Tasks;
 using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class UpdateSchemeCommandHandler(ICrawlerRepository repository)
-    : ICommandHandlerOmd<UpdateSchemeCommand, bool>
+    : ICommandHandler<UpdateSchemeCommand, bool>
 {
-    public Task<OneOf<bool, ErrorOmd[]>> Handle(UpdateSchemeCommand request, CancellationToken cancellationToken)
+    public Task<Result<bool>> Handle(UpdateSchemeCommand request, CancellationToken cancellationToken)
     {
         repository.UpdateScheme(request.Scheme.ToEntity());
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
+        return Task.FromResult<Result<bool>>(true);
     }
 }

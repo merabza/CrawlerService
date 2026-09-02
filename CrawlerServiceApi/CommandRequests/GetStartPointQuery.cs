@@ -1,7 +1,6 @@
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetStartPointQuery(int TaskId, string StartPoint)
-    : IQueryOmd<ApiNullableResult<TaskStartPointDto>>;
+public sealed record GetStartPointQuery(int TaskId, string StartPoint) : IQuery<ApiNullableResult<TaskStartPointDto>>;

@@ -4,28 +4,24 @@ using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts.Errors;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class AddHostByBatchCommandHandler(ICrawlerRepository repository)
-    : ICommandHandlerOmd<AddHostByBatchCommand, bool>
+    : ICommandHandler<AddHostByBatchCommand, bool>
 {
-    public Task<OneOf<bool, ErrorOmd[]>> Handle(AddHostByBatchCommand request, CancellationToken cancellationToken)
+    public Task<Result<bool>> Handle(AddHostByBatchCommand request, CancellationToken cancellationToken)
     {
         Batch? batch = repository.GetBatchByName(request.BatchName);
         if (batch is null)
         {
-            return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
-            {
-                CrawlerServiceErrors.BatchWithNameNotFound(request.BatchName)
-            });
+            return Task.FromResult<Result<bool>>(CrawlerServiceErrors.BatchWithNameNotFound(request.BatchName));
         }
 
         repository.AddHostNamesByBatch(batch, request.SchemeName, request.HostName);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
+        return Task.FromResult<Result<bool>>(true);
     }
 }

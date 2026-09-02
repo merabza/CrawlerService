@@ -1,6 +1,6 @@
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record CreateTaskCommand(TaskDto Task) : ICommandOmd<TaskDto>;
+public sealed record CreateTaskCommand(TaskDto Task) : ICommand<TaskDto>;

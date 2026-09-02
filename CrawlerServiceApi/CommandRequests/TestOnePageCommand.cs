@@ -1,8 +1,8 @@
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed class TestOnePageCommand : ICommandOmd<bool>
+public sealed class TestOnePageCommand : ICommand<bool>
 {
     // ReSharper disable once ConvertToPrimaryConstructor
     public TestOnePageCommand(string? taskName, string? strUrName, string? userName, bool deleteContentForReanalyze,

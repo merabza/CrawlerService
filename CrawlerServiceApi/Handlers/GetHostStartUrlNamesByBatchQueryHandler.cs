@@ -4,21 +4,19 @@ using System.Threading.Tasks;
 using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetHostStartUrlNamesByBatchQueryHandler(ICrawlerRepository repository)
-    : IQueryHandlerOmd<GetHostStartUrlNamesByBatchQuery, List<string>>
+    : IQueryHandler<GetHostStartUrlNamesByBatchQuery, List<string>>
 {
-    public Task<OneOf<List<string>, ErrorOmd[]>> Handle(GetHostStartUrlNamesByBatchQuery request,
+    public Task<Result<List<string>>> Handle(GetHostStartUrlNamesByBatchQuery request,
         CancellationToken cancellationToken)
     {
         Batch? batch = repository.GetBatchByName(request.BatchName);
-        return Task.FromResult<OneOf<List<string>, ErrorOmd[]>>(batch is null
-            ? []
-            : repository.GetHostStartUrlNamesByBatch(batch));
+        List<string> startUrlNames = batch is null ? [] : repository.GetHostStartUrlNamesByBatch(batch);
+        return Task.FromResult<Result<List<string>>>(startUrlNames);
     }
 }

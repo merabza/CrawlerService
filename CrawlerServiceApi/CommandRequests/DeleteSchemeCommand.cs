@@ -1,5 +1,5 @@
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record DeleteSchemeCommand(string Name) : ICommandOmd<bool>;
+public sealed record DeleteSchemeCommand(string Name) : ICommand<bool>;

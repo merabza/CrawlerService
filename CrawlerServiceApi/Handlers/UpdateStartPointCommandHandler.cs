@@ -3,16 +3,15 @@ using System.Threading.Tasks;
 using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class UpdateStartPointCommandHandler(ICrawlerRepository repository)
-    : ICommandHandlerOmd<UpdateStartPointCommand, bool>
+    : ICommandHandler<UpdateStartPointCommand, bool>
 {
-    public Task<OneOf<bool, ErrorOmd[]>> Handle(UpdateStartPointCommand request, CancellationToken cancellationToken)
+    public Task<Result<bool>> Handle(UpdateStartPointCommand request, CancellationToken cancellationToken)
     {
         repository.UpdateStartPoint(new TaskStartPoint
         {
@@ -21,6 +20,6 @@ internal sealed class UpdateStartPointCommandHandler(ICrawlerRepository reposito
             StartPoint = request.StartPoint.StartPoint
         });
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
+        return Task.FromResult<Result<bool>>(true);
     }
 }

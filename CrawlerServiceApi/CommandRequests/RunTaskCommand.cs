@@ -1,8 +1,8 @@
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed class RunTaskCommand : ICommandOmd<bool>
+public sealed class RunTaskCommand : ICommand<bool>
 {
     // ReSharper disable once ConvertToPrimaryConstructor
     public RunTaskCommand(string? taskName, string? userName, int newPartsCreateLimit)

@@ -10,11 +10,11 @@
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
     <ProjectReference Include="..\LibCrawlerRepositories\LibCrawlerRepositories.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.Application.Abstractions\SystemTools.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\SystemTools\SystemTools.DependencyInjection\SystemTools.DependencyInjection.csproj" />
     <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.ApiExceptionHandler\WebSystemTools.ApiExceptionHandler.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.ApiKeyIdentity\WebSystemTools.ApiKeyIdentity.csproj" />
-    <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.MediatorTools\WebSystemTools.MediatorTools.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.SerilogLogger\WebSystemTools.SerilogLogger.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.SignalRRecounterMessages\WebSystemTools.SignalRRecounterMessages.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.SwaggerTools\WebSystemTools.SwaggerTools.csproj" />

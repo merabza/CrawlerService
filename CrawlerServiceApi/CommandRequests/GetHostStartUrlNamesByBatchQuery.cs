@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetHostStartUrlNamesByBatchQuery(string BatchName) : IQueryOmd<List<string>>;
+public sealed record GetHostStartUrlNamesByBatchQuery(string BatchName) : IQuery<List<string>>;

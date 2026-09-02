@@ -10,7 +10,7 @@
     <ProjectReference Include="..\CrawlerServiceReCounters\CrawlerServiceReCounters.csproj" />
     <ProjectReference Include="..\DoCrawler\DoCrawler.csproj" />
     <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.MediatRMessagingAbstractions\SystemTools.MediatRMessagingAbstractions.csproj" />
+    <ProjectReference Include="..\..\SystemTools\SystemTools.Application.Abstractions\SystemTools.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetTasksListQuery : IQueryOmd<List<TaskDto>>;
+public sealed record GetTasksListQuery : IQuery<List<TaskDto>>;

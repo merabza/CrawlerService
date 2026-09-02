@@ -1,8 +1,8 @@
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed class RunBatchCommand : ICommandOmd<bool>
+public sealed class RunBatchCommand : ICommand<bool>
 {
     // ReSharper disable once ConvertToPrimaryConstructor
     public RunBatchCommand(string? batchName, string? userName, int newPartsCreateLimit)

@@ -1,14 +1,16 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts;
 using CrawlerServiceShared.Contracts.V1.Routes;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Serilog;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Endpoints.V1;
 
@@ -38,58 +40,62 @@ public static class BatchEndpoints
         return true;
     }
 
-    private static async Task<IResult> GetBatchesList(IMediator mediator, CancellationToken cancellationToken = default)
-    {
-        return (await mediator.Send(new GetBatchesListQuery(), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
-    }
-
-    private static async Task<IResult> GetBatchByName(IMediator mediator, [FromQuery] string name,
+    private static async Task<IResult> GetBatchesList(IQueryHandler<GetBatchesListQuery, List<BatchDto>> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new GetBatchByNameQuery(name), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new GetBatchesListQuery(), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> CreateBatch(IMediator mediator, [FromBody] BatchDto batch,
+    private static async Task<IResult> GetBatchByName([FromQuery] string name,
+        IQueryHandler<GetBatchByNameQuery, ApiNullableResult<BatchDto>> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new CreateBatchCommand(batch), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new GetBatchByNameQuery(name), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> UpdateBatch(IMediator mediator, [FromBody] BatchDto batch,
+    private static async Task<IResult> CreateBatch([FromBody] BatchDto batch,
+        ICommandHandler<CreateBatchCommand, BatchDto> handler, CancellationToken cancellationToken = default)
+    {
+        return (await handler.Handle(new CreateBatchCommand(batch), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
+    }
+
+    private static async Task<IResult> UpdateBatch([FromBody] BatchDto batch,
+        ICommandHandler<UpdateBatchCommand, bool> handler, CancellationToken cancellationToken = default)
+    {
+        return (await handler.Handle(new UpdateBatchCommand(batch), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
+    }
+
+    private static async Task<IResult> DeleteBatch([FromQuery] string name,
+        ICommandHandler<DeleteBatchCommand, bool> handler, CancellationToken cancellationToken = default)
+    {
+        return (await handler.Handle(new DeleteBatchCommand(name), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
+    }
+
+    private static async Task<IResult> GetHostStartUrlNamesByBatch([FromQuery] string batchName,
+        IQueryHandler<GetHostStartUrlNamesByBatchQuery, List<string>> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new UpdateBatchCommand(batch), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new GetHostStartUrlNamesByBatchQuery(batchName), cancellationToken)).Match(
+            Results.Ok, failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> DeleteBatch(IMediator mediator, [FromQuery] string name,
+    private static async Task<IResult> AddHostByBatch([FromBody] HostByBatchRequest request,
+        ICommandHandler<AddHostByBatchCommand, bool> handler, CancellationToken cancellationToken = default)
+    {
+        return (await handler.Handle(new AddHostByBatchCommand(request.BatchName, request.SchemeName, request.HostName),
+            cancellationToken)).Match(Results.Ok, failure => Results.BadRequest(failure.Error.ToErrorArray()));
+    }
+
+    private static async Task<IResult> RemoveHostByBatch([FromQuery] string batchName, [FromQuery] string schemeName,
+        [FromQuery] string hostName, ICommandHandler<RemoveHostByBatchCommand, bool> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new DeleteBatchCommand(name), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
-    }
-
-    private static async Task<IResult> GetHostStartUrlNamesByBatch(IMediator mediator, [FromQuery] string batchName,
-        CancellationToken cancellationToken = default)
-    {
-        return (await mediator.Send(new GetHostStartUrlNamesByBatchQuery(batchName), cancellationToken)).Match(
-            Results.Ok, Results.BadRequest);
-    }
-
-    private static async Task<IResult> AddHostByBatch(IMediator mediator, [FromBody] HostByBatchRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        return (await mediator.Send(new AddHostByBatchCommand(request.BatchName, request.SchemeName, request.HostName),
-            cancellationToken)).Match(Results.Ok, Results.BadRequest);
-    }
-
-    private static async Task<IResult> RemoveHostByBatch(IMediator mediator, [FromQuery] string batchName,
-        [FromQuery] string schemeName, [FromQuery] string hostName, CancellationToken cancellationToken = default)
-    {
-        return (await mediator.Send(new RemoveHostByBatchCommand(batchName, schemeName, hostName), cancellationToken))
-            .Match(Results.Ok, Results.BadRequest);
+        return (await handler.Handle(new RemoveHostByBatchCommand(batchName, schemeName, hostName), cancellationToken))
+            .Match(Results.Ok, failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 }

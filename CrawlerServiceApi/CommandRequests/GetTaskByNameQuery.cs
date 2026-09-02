@@ -1,6 +1,6 @@
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetTaskByNameQuery(string Name) : IQueryOmd<ApiNullableResult<TaskDto>>;
+public sealed record GetTaskByNameQuery(string Name) : IQuery<ApiNullableResult<TaskDto>>;

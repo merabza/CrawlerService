@@ -1,6 +1,6 @@
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record UpdateHostCommand(HostDto Host) : ICommandOmd<bool>;
+public sealed record UpdateHostCommand(HostDto Host) : ICommand<bool>;

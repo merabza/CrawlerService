@@ -5,19 +5,18 @@ using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class CreateTaskCommandHandler(ICrawlerRepository repository)
-    : ICommandHandlerOmd<CreateTaskCommand, TaskDto>
+    : ICommandHandler<CreateTaskCommand, TaskDto>
 {
-    public Task<OneOf<TaskDto, ErrorOmd[]>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
+    public Task<Result<TaskDto>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
         TaskModel created = repository.CreateTask(request.Task.ToCreateEntity());
         repository.SaveChanges();
-        return Task.FromResult<OneOf<TaskDto, ErrorOmd[]>>(created.ToDto());
+        return Task.FromResult<Result<TaskDto>>(created.ToDto());
     }
 }

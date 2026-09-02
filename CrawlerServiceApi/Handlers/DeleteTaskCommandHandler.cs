@@ -4,28 +4,23 @@ using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts.Errors;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
-internal sealed class DeleteTaskCommandHandler(ICrawlerRepository repository)
-    : ICommandHandlerOmd<DeleteTaskCommand, bool>
+internal sealed class DeleteTaskCommandHandler(ICrawlerRepository repository) : ICommandHandler<DeleteTaskCommand, bool>
 {
-    public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
+    public Task<Result<bool>> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
     {
         TaskModel? task = repository.GetTaskByName(request.Name);
         if (task is null)
         {
-            return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
-            {
-                CrawlerServiceErrors.TaskWithNameNotFound(request.Name)
-            });
+            return Task.FromResult<Result<bool>>(CrawlerServiceErrors.TaskWithNameNotFound(request.Name));
         }
 
         repository.DeleteTask(task);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
+        return Task.FromResult<Result<bool>>(true);
     }
 }

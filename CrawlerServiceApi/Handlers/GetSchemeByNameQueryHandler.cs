@@ -5,20 +5,19 @@ using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetSchemeByNameQueryHandler(ICrawlerRepository repository)
-    : IQueryHandlerOmd<GetSchemeByNameQuery, ApiNullableResult<SchemeDto>>
+    : IQueryHandler<GetSchemeByNameQuery, ApiNullableResult<SchemeDto>>
 {
-    public Task<OneOf<ApiNullableResult<SchemeDto>, ErrorOmd[]>> Handle(GetSchemeByNameQuery request,
+    public Task<Result<ApiNullableResult<SchemeDto>>> Handle(GetSchemeByNameQuery request,
         CancellationToken cancellationToken)
     {
         SchemeModel? scheme = repository.GetSchemeByName(request.Name);
-        return Task.FromResult<OneOf<ApiNullableResult<SchemeDto>, ErrorOmd[]>>(
+        return Task.FromResult<Result<ApiNullableResult<SchemeDto>>>(
             new ApiNullableResult<SchemeDto> { Value = scheme?.ToDto() });
     }
 }

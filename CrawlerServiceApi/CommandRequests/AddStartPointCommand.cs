@@ -1,6 +1,6 @@
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record AddStartPointCommand(int TaskId, string StartPoint) : ICommandOmd<TaskStartPointDto>;
+public sealed record AddStartPointCommand(int TaskId, string StartPoint) : ICommand<TaskStartPointDto>;

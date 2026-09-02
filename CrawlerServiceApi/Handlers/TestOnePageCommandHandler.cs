@@ -12,15 +12,14 @@ using DoCrawler.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 using SystemTools.ReCounterAbstraction;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed class TestOnePageCommandHandler : ICommandHandlerOmd<TestOnePageCommand, bool>
+internal sealed class TestOnePageCommandHandler : ICommandHandler<TestOnePageCommand, bool>
 {
     private readonly IReCounterBackgroundTaskQueue _backgroundTaskQueue;
     private readonly IConfiguration _configuration;
@@ -45,7 +44,7 @@ internal sealed class TestOnePageCommandHandler : ICommandHandlerOmd<TestOnePage
         _crawlerParameters = crawlerParameters;
     }
 
-    public Task<OneOf<bool, ErrorOmd[]>> Handle(TestOnePageCommand request, CancellationToken cancellationToken)
+    public Task<Result<bool>> Handle(TestOnePageCommand request, CancellationToken cancellationToken)
     {
         List<string> startPoints;
         using (IServiceScope scope = _scopeFactory.CreateScope())
@@ -54,10 +53,7 @@ internal sealed class TestOnePageCommandHandler : ICommandHandlerOmd<TestOnePage
             TaskModel? task = request.TaskName is null ? null : crawlerRepository.GetTaskByName(request.TaskName);
             if (task is null)
             {
-                return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
-                {
-                    CrawlerServiceErrors.TaskWithNameNotFound(request.TaskName)
-                });
+                return Task.FromResult<Result<bool>>(CrawlerServiceErrors.TaskWithNameNotFound(request.TaskName));
             }
 
             startPoints = [.. task.StartPoints.Select(sp => sp.StartPoint)];
@@ -74,7 +70,7 @@ internal sealed class TestOnePageCommandHandler : ICommandHandlerOmd<TestOnePage
             NewPartsCreateLimit = request.NewPartsCreateLimit
         };
         _backgroundTaskQueue.QueueBackgroundWorkItem(token => Run(crawlRequest, token));
-        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
+        return Task.FromResult<Result<bool>>(true);
     }
 
     private Task Run(CrawlRequest crawlRequest, CancellationToken cancellationToken)

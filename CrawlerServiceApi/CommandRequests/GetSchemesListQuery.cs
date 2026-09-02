@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetSchemesListQuery : IQueryOmd<List<SchemeDto>>;
+public sealed record GetSchemesListQuery : IQuery<List<SchemeDto>>;

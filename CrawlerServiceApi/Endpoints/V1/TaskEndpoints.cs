@@ -1,14 +1,16 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts;
 using CrawlerServiceShared.Contracts.V1.Routes;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Serilog;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Endpoints.V1;
 
@@ -40,71 +42,75 @@ public static class TaskEndpoints
         return true;
     }
 
-    private static async Task<IResult> GetTasksList(IMediator mediator, CancellationToken cancellationToken = default)
-    {
-        return (await mediator.Send(new GetTasksListQuery(), cancellationToken)).Match(Results.Ok, Results.BadRequest);
-    }
-
-    private static async Task<IResult> GetTaskByName(IMediator mediator, [FromQuery] string name,
+    private static async Task<IResult> GetTasksList(IQueryHandler<GetTasksListQuery, List<TaskDto>> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new GetTaskByNameQuery(name), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new GetTasksListQuery(), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> CreateTask(IMediator mediator, [FromBody] TaskDto task,
+    private static async Task<IResult> GetTaskByName([FromQuery] string name,
+        IQueryHandler<GetTaskByNameQuery, ApiNullableResult<TaskDto>> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new CreateTaskCommand(task), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new GetTaskByNameQuery(name), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> UpdateTask(IMediator mediator, [FromBody] TaskDto task,
+    private static async Task<IResult> CreateTask([FromBody] TaskDto task,
+        ICommandHandler<CreateTaskCommand, TaskDto> handler, CancellationToken cancellationToken = default)
+    {
+        return (await handler.Handle(new CreateTaskCommand(task), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
+    }
+
+    private static async Task<IResult> UpdateTask([FromBody] TaskDto task,
+        ICommandHandler<UpdateTaskCommand, bool> handler, CancellationToken cancellationToken = default)
+    {
+        return (await handler.Handle(new UpdateTaskCommand(task), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
+    }
+
+    private static async Task<IResult> DeleteTask([FromQuery] string name,
+        ICommandHandler<DeleteTaskCommand, bool> handler, CancellationToken cancellationToken = default)
+    {
+        return (await handler.Handle(new DeleteTaskCommand(name), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
+    }
+
+    private static async Task<IResult> ClearTaskFetchedData([FromQuery] string name,
+        ICommandHandler<ClearTaskFetchedDataCommand, bool> handler, CancellationToken cancellationToken = default)
+    {
+        return (await handler.Handle(new ClearTaskFetchedDataCommand(name), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
+    }
+
+    private static async Task<IResult> GetStartPoint([FromQuery] int taskId, [FromQuery] string startPoint,
+        IQueryHandler<GetStartPointQuery, ApiNullableResult<TaskStartPointDto>> handler,
         CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new UpdateTaskCommand(task), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new GetStartPointQuery(taskId, startPoint), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> DeleteTask(IMediator mediator, [FromQuery] string name,
-        CancellationToken cancellationToken = default)
+    private static async Task<IResult> AddStartPoint([FromBody] AddStartPointRequest request,
+        ICommandHandler<AddStartPointCommand, TaskStartPointDto> handler, CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new DeleteTaskCommand(name), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new AddStartPointCommand(request.TaskId, request.StartPoint), cancellationToken))
+            .Match(Results.Ok, failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> ClearTaskFetchedData(IMediator mediator, [FromQuery] string name,
-        CancellationToken cancellationToken = default)
+    private static async Task<IResult> UpdateStartPoint([FromBody] TaskStartPointDto startPoint,
+        ICommandHandler<UpdateStartPointCommand, bool> handler, CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new ClearTaskFetchedDataCommand(name), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
+        return (await handler.Handle(new UpdateStartPointCommand(startPoint), cancellationToken)).Match(Results.Ok,
+            failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 
-    private static async Task<IResult> GetStartPoint(IMediator mediator, [FromQuery] int taskId,
-        [FromQuery] string startPoint, CancellationToken cancellationToken = default)
+    private static async Task<IResult> DeleteStartPoint([FromQuery] int taskId, [FromQuery] string startPoint,
+        ICommandHandler<DeleteStartPointCommand, bool> handler, CancellationToken cancellationToken = default)
     {
-        return (await mediator.Send(new GetStartPointQuery(taskId, startPoint), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
-    }
-
-    private static async Task<IResult> AddStartPoint(IMediator mediator, [FromBody] AddStartPointRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        return (await mediator.Send(new AddStartPointCommand(request.TaskId, request.StartPoint), cancellationToken))
-            .Match(Results.Ok, Results.BadRequest);
-    }
-
-    private static async Task<IResult> UpdateStartPoint(IMediator mediator, [FromBody] TaskStartPointDto startPoint,
-        CancellationToken cancellationToken = default)
-    {
-        return (await mediator.Send(new UpdateStartPointCommand(startPoint), cancellationToken)).Match(Results.Ok,
-            Results.BadRequest);
-    }
-
-    private static async Task<IResult> DeleteStartPoint(IMediator mediator, [FromQuery] int taskId,
-        [FromQuery] string startPoint, CancellationToken cancellationToken = default)
-    {
-        return (await mediator.Send(new DeleteStartPointCommand(taskId, startPoint), cancellationToken)).Match(
-            Results.Ok, Results.BadRequest);
+        return (await handler.Handle(new DeleteStartPointCommand(taskId, startPoint), cancellationToken)).Match(
+            Results.Ok, failure => Results.BadRequest(failure.Error.ToErrorArray()));
     }
 }

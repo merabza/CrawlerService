@@ -5,20 +5,19 @@ using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetStartPointQueryHandler(ICrawlerRepository repository)
-    : IQueryHandlerOmd<GetStartPointQuery, ApiNullableResult<TaskStartPointDto>>
+    : IQueryHandler<GetStartPointQuery, ApiNullableResult<TaskStartPointDto>>
 {
-    public Task<OneOf<ApiNullableResult<TaskStartPointDto>, ErrorOmd[]>> Handle(GetStartPointQuery request,
+    public Task<Result<ApiNullableResult<TaskStartPointDto>>> Handle(GetStartPointQuery request,
         CancellationToken cancellationToken)
     {
         TaskStartPoint? startPoint = repository.GetStartPoint(request.TaskId, request.StartPoint);
-        return Task.FromResult<OneOf<ApiNullableResult<TaskStartPointDto>, ErrorOmd[]>>(
+        return Task.FromResult<Result<ApiNullableResult<TaskStartPointDto>>>(
             new ApiNullableResult<TaskStartPointDto> { Value = startPoint?.ToDto() });
     }
 }

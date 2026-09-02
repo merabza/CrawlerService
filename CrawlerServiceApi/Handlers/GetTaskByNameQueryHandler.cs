@@ -5,20 +5,19 @@ using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetTaskByNameQueryHandler(ICrawlerRepository repository)
-    : IQueryHandlerOmd<GetTaskByNameQuery, ApiNullableResult<TaskDto>>
+    : IQueryHandler<GetTaskByNameQuery, ApiNullableResult<TaskDto>>
 {
-    public Task<OneOf<ApiNullableResult<TaskDto>, ErrorOmd[]>> Handle(GetTaskByNameQuery request,
+    public Task<Result<ApiNullableResult<TaskDto>>> Handle(GetTaskByNameQuery request,
         CancellationToken cancellationToken)
     {
         TaskModel? task = repository.GetTaskByName(request.Name);
-        return Task.FromResult<OneOf<ApiNullableResult<TaskDto>, ErrorOmd[]>>(
+        return Task.FromResult<Result<ApiNullableResult<TaskDto>>>(
             new ApiNullableResult<TaskDto> { Value = task?.ToDto() });
     }
 }

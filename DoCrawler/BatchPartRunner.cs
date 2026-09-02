@@ -16,7 +16,6 @@ using CrawlerRepoInterfaces;
 using CrawlerServiceShared.Contracts;
 using DoCrawler.Models;
 using DoCrawler.States;
-using LanguageExt;
 using Microsoft.Extensions.Logging;
 using RobotsTxt;
 using RobotsTxt.Entities;
@@ -695,25 +694,25 @@ public sealed class BatchPartRunner
         ExtensionModel extensionModel = TrySaveExtension(crawlerRepository, extension);
         SchemeModel schemeModel = TrySaveScheme(crawlerRepository, scheme);
 
-        Option<Uri> checkedUrlResult = UrlNameHelper.ToCheckedUrlName(urName);
-        if (checkedUrlResult.IsNone)
+        Uri? checkedUrlResult = UrlNameHelper.ToCheckedUrlName(urName);
+        if (checkedUrlResult is null)
         {
             return null;
         }
 
-        int urlHashCode = ((Uri)checkedUrlResult).AbsoluteUri.GetDeterministicHashCode();
+        int urlHashCode = checkedUrlResult.AbsoluteUri.GetDeterministicHashCode();
 
         UrlModel? url = _procData.GetUrlByHashCode(urlHashCode);
 
-        if ((url is null || url.UrlName != ((Uri)checkedUrlResult).AbsoluteUri) && hostModel.HostId != 0 &&
+        if ((url is null || url.UrlName != checkedUrlResult.AbsoluteUri) && hostModel.HostId != 0 &&
             extensionModel.ExtId != 0 && schemeModel.SchId != 0)
         {
             url = crawlerRepository.GetUrl(hostModel.HostId, extensionModel.ExtId, schemeModel.SchId, urlHashCode,
-                ((Uri)checkedUrlResult).AbsoluteUri);
+                checkedUrlResult.AbsoluteUri);
         }
 
-        var urlData = new UrlData(hostModel, extensionModel, schemeModel, ((Uri)checkedUrlResult).AbsoluteUri,
-            absolutePath, urlHashCode, url);
+        var urlData = new UrlData(hostModel, extensionModel, schemeModel, checkedUrlResult.AbsoluteUri, absolutePath,
+            urlHashCode, url);
 
         return urlData;
     }

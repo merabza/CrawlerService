@@ -5,20 +5,19 @@ using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetBatchByNameQueryHandler(ICrawlerRepository repository)
-    : IQueryHandlerOmd<GetBatchByNameQuery, ApiNullableResult<BatchDto>>
+    : IQueryHandler<GetBatchByNameQuery, ApiNullableResult<BatchDto>>
 {
-    public Task<OneOf<ApiNullableResult<BatchDto>, ErrorOmd[]>> Handle(GetBatchByNameQuery request,
+    public Task<Result<ApiNullableResult<BatchDto>>> Handle(GetBatchByNameQuery request,
         CancellationToken cancellationToken)
     {
         Batch? batch = repository.GetBatchByName(request.Name);
-        return Task.FromResult<OneOf<ApiNullableResult<BatchDto>, ErrorOmd[]>>(
+        return Task.FromResult<Result<ApiNullableResult<BatchDto>>>(
             new ApiNullableResult<BatchDto> { Value = batch?.ToDto() });
     }
 }

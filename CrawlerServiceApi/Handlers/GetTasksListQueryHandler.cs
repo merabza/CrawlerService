@@ -6,18 +6,16 @@ using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceApi.Mapping;
 using CrawlerServiceShared.Contracts;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class GetTasksListQueryHandler(ICrawlerRepository repository)
-    : IQueryHandlerOmd<GetTasksListQuery, List<TaskDto>>
+    : IQueryHandler<GetTasksListQuery, List<TaskDto>>
 {
-    public Task<OneOf<List<TaskDto>, ErrorOmd[]>> Handle(GetTasksListQuery request, CancellationToken cancellationToken)
+    public Task<Result<List<TaskDto>>> Handle(GetTasksListQuery request, CancellationToken cancellationToken)
     {
-        return Task.FromResult<OneOf<List<TaskDto>, ErrorOmd[]>>(repository.GetTasksList().Select(task => task.ToDto())
-            .ToList());
+        return Task.FromResult<Result<List<TaskDto>>>(repository.GetTasksList().Select(task => task.ToDto()).ToList());
     }
 }

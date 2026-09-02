@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using CrawlerServiceShared.Contracts;
-using SystemTools.MediatRMessagingAbstractions;
+using SystemTools.Application.Abstractions.Messaging;
 
 namespace CrawlerServiceApi.CommandRequests;
 
-public sealed record GetBatchesListQuery : IQueryOmd<List<BatchDto>>;
+public sealed record GetBatchesListQuery : IQuery<List<BatchDto>>;

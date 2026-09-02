@@ -4,28 +4,24 @@ using CrawlerDbModels;
 using CrawlerRepoInterfaces;
 using CrawlerServiceApi.CommandRequests;
 using CrawlerServiceShared.Contracts.Errors;
-using OneOf;
-using SystemTools.MediatRMessagingAbstractions;
-using SystemTools.SystemToolsShared.Errors;
+using SystemTools.Application.Abstractions.Messaging;
+using SystemTools.SharedKernel;
 
 namespace CrawlerServiceApi.Handlers;
 
 internal sealed class DeleteSchemeCommandHandler(ICrawlerRepository repository)
-    : ICommandHandlerOmd<DeleteSchemeCommand, bool>
+    : ICommandHandler<DeleteSchemeCommand, bool>
 {
-    public Task<OneOf<bool, ErrorOmd[]>> Handle(DeleteSchemeCommand request, CancellationToken cancellationToken)
+    public Task<Result<bool>> Handle(DeleteSchemeCommand request, CancellationToken cancellationToken)
     {
         SchemeModel? scheme = repository.GetSchemeByName(request.Name);
         if (scheme is null)
         {
-            return Task.FromResult<OneOf<bool, ErrorOmd[]>>(new[]
-            {
-                CrawlerServiceErrors.SchemeWithNameNotFound(request.Name)
-            });
+            return Task.FromResult<Result<bool>>(CrawlerServiceErrors.SchemeWithNameNotFound(request.Name));
         }
 
         repository.DeleteScheme(scheme);
         repository.SaveChanges();
-        return Task.FromResult<OneOf<bool, ErrorOmd[]>>(true);
+        return Task.FromResult<Result<bool>>(true);
     }
 }
