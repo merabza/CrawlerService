@@ -83,15 +83,15 @@ public sealed partial class ParseOnePageState // : State
     private static string ExtractText(HtmlNode htmlDocDocumentNode)
     {
         HtmlNodeCollection textNodes = htmlDocDocumentNode.SelectNodes("//text()");
-        //if (textNodes is null)
-        //{
-        //    return string.Empty;
-        //}
+        if (textNodes is null)
+        {
+            return string.Empty;
+        }
 
         var sb = new StringBuilder();
         foreach (HtmlNode node in textNodes)
         {
-            if (node.ParentNode.Name is "script" or "style")
+            if (node.ParentNode?.Name is "script" or "style")
             {
                 continue;
             }
@@ -110,7 +110,7 @@ public sealed partial class ParseOnePageState // : State
                 continue;
             }
 
-            if (node.ParentNode.Name == "b")
+            if (node.ParentNode?.Name is "b")
             {
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (node.ParentNode.NextSibling != null)
