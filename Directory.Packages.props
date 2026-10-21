@@ -4,10 +4,10 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="CrawlerServiceDbPart.Db" Version="0.0.9790.31381" />
-    <PackageVersion Include="CrawlerServiceRoot.Application.Abstractions" Version="0.0.9790.31374" />
-    <PackageVersion Include="CrawlerServiceRoot.Domain" Version="0.0.9790.31374" />
-    <PackageVersion Include="CrawlerServiceShared.Contracts" Version="1.0.9790.31389" />
+    <PackageVersion Include="CrawlerServiceDbPart.Db" Version="0.0.9790.33486" />
+    <PackageVersion Include="CrawlerServiceRoot.Application.Abstractions" Version="0.0.9790.33473" />
+    <PackageVersion Include="CrawlerServiceRoot.Domain" Version="0.0.9790.33473" />
+    <PackageVersion Include="CrawlerServiceShared.Contracts" Version="1.0.9790.33498" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.11" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.35.0.4138" />
     <PackageVersion Include="Figgle.Fonts" Version="0.6.6" />
@@ -17,17 +17,17 @@
     <PackageVersion Include="HtmlAgilityPack" Version="1.13.1" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.13" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.13" />
-    <PackageVersion Include="SystemTools.Application.Abstractions" Version="1.0.9790.31339" />
-    <PackageVersion Include="SystemTools.BackgroundTasks" Version="1.0.9790.31339" />
-    <PackageVersion Include="SystemTools.DependencyInjection" Version="1.0.9790.31339" />
-    <PackageVersion Include="SystemTools.ReCounterAbstraction" Version="1.0.9790.31339" />
-    <PackageVersion Include="SystemTools.SystemToolsShared" Version="1.0.9790.31339" />
-    <PackageVersion Include="WebSystemTools.ApiExceptionHandler" Version="1.0.9790.31491" />
-    <PackageVersion Include="WebSystemTools.ApiKeyIdentity" Version="1.0.9790.31491" />
-    <PackageVersion Include="WebSystemTools.SerilogLogger" Version="1.0.9790.31491" />
-    <PackageVersion Include="WebSystemTools.SignalRRecounterMessages" Version="1.0.9790.31491" />
-    <PackageVersion Include="WebSystemTools.SwaggerTools" Version="1.0.9790.31491" />
-    <PackageVersion Include="WebSystemTools.TestToolsApi" Version="1.0.9790.31491" />
-    <PackageVersion Include="WebSystemTools.WindowsServiceTools" Version="1.0.9790.31491" />
+    <PackageVersion Include="SystemTools.Application.Abstractions" Version="1.0.9790.33334" />
+    <PackageVersion Include="SystemTools.BackgroundTasks" Version="1.0.9790.33334" />
+    <PackageVersion Include="SystemTools.DependencyInjection" Version="1.0.9790.33334" />
+    <PackageVersion Include="SystemTools.ReCounterAbstraction" Version="1.0.9790.33334" />
+    <PackageVersion Include="SystemTools.SystemToolsShared" Version="1.0.9790.33334" />
+    <PackageVersion Include="WebSystemTools.ApiExceptionHandler" Version="1.0.9790.33710" />
+    <PackageVersion Include="WebSystemTools.ApiKeyIdentity" Version="1.0.9790.33710" />
+    <PackageVersion Include="WebSystemTools.SerilogLogger" Version="1.0.9790.33710" />
+    <PackageVersion Include="WebSystemTools.SignalRRecounterMessages" Version="1.0.9790.33710" />
+    <PackageVersion Include="WebSystemTools.SwaggerTools" Version="1.0.9790.33710" />
+    <PackageVersion Include="WebSystemTools.TestToolsApi" Version="1.0.9790.33710" />
+    <PackageVersion Include="WebSystemTools.WindowsServiceTools" Version="1.0.9790.33710" />
   </ItemGroup>
 </Project>
