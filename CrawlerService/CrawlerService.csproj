@@ -7,11 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CrawlerService.Application\CrawlerService.Application.csproj" />
     <ProjectReference Include="..\CrawlerService.WebApi\CrawlerService.WebApi.csproj" />
-    <ProjectReference Include="..\..\CrawlerServiceDbPart\CrawlerServiceDbPart.Db\CrawlerServiceDbPart.Db.csproj" />
-    <ProjectReference Include="..\..\CrawlerServiceRoot\CrawlerServiceRoot.Application.Abstractions\CrawlerServiceRoot.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.Application.Abstractions\SystemTools.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.DependencyInjection\SystemTools.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.ApiExceptionHandler\WebSystemTools.ApiExceptionHandler.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.ApiKeyIdentity\WebSystemTools.ApiKeyIdentity.csproj" />
     <ProjectReference Include="..\..\WebSystemTools\WebSystemTools.SerilogLogger\WebSystemTools.SerilogLogger.csproj" />
@@ -26,11 +21,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CrawlerServiceDbPart.Db" />
+    <PackageReference Include="CrawlerServiceRoot.Application.Abstractions" />
     <PackageReference Include="Figgle.Fonts" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="SystemTools.Application.Abstractions" />
+    <PackageReference Include="SystemTools.DependencyInjection" />
+    <PackageReference Include="SystemTools.ReCounterAbstraction" />
 
 
 

@@ -7,18 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CrawlerServiceRoot.Application.Abstractions" />
+    <PackageReference Include="CrawlerServiceRoot.Domain" />
+    <PackageReference Include="CrawlerServiceShared.Contracts" />
     <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.Extensions.Http" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\CrawlerServiceRoot\CrawlerServiceRoot.Application.Abstractions\CrawlerServiceRoot.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\..\CrawlerServiceRoot\CrawlerServiceRoot.Domain\CrawlerServiceRoot.Domain.csproj" />
-    <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.BackgroundTasks\SystemTools.BackgroundTasks.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.SystemToolsShared\SystemTools.SystemToolsShared.csproj" />
+    <PackageReference Include="SystemTools.BackgroundTasks" />
+    <PackageReference Include="SystemTools.ReCounterAbstraction" />
+    <PackageReference Include="SystemTools.SystemToolsShared" />
   </ItemGroup>
 
 </Project>

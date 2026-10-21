@@ -7,10 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CrawlerServiceShared\CrawlerServiceShared.Contracts\CrawlerServiceShared.Contracts.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.Application.Abstractions\SystemTools.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\..\SystemTools\SystemTools.ReCounterAbstraction\SystemTools.ReCounterAbstraction.csproj" />
     <ProjectReference Include="..\CrawlerService.Application\CrawlerService.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CrawlerServiceShared.Contracts" />
+    <PackageReference Include="SystemTools.Application.Abstractions" />
+    <PackageReference Include="SystemTools.ReCounterAbstraction" />
   </ItemGroup>
 
 </Project>
